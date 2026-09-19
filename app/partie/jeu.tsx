@@ -167,7 +167,9 @@ export default function Jeu({
   useEffect(() => {
     if (!chronoActif || enPause || retour || chargement || !question) return;
 
-    const t = setInterval(() => {
+    // Nom explicite : « t » est déjà pris par le dictionnaire au-dessus.
+    // Le masquer ici faisait lire t.partie sur un identifiant de minuteur.
+    const minuterie = setInterval(() => {
       const reste = Math.max(0, DUREE_MS - (Date.now() - debutRef.current));
       setRestant(reste);
 
@@ -184,12 +186,12 @@ export default function Jeu({
       }
 
       if (reste === 0) {
-        clearInterval(t);
+        clearInterval(minuterie);
         void repondre(null);
       }
     }, 100);
 
-    return () => clearInterval(t);
+    return () => clearInterval(minuterie);
   }, [chronoActif, enPause, retour, chargement, question, repondre]);
 
   // --- Question suivante --------------------------------------------------

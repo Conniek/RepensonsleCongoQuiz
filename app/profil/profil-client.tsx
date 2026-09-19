@@ -20,6 +20,7 @@ type Maitrise = { categorie: string; etoiles: number };
 
 type Etat = {
   xp: number;
+  pseudo: string | null;
   rang: string;
   rang_seuil: number;
   rang_suivant: string | null;
@@ -37,6 +38,35 @@ export default function ProfilClient() {
   const t = dictionnaire();
   const [etat, setEtat] = useState<Etat | null>(null);
   const [pret, setPret] = useState(false);
+  const [confirmation, setConfirmation] = useState(false);
+  const [motCle, setMotCle] = useState("");
+  const [messageDonnees, setMessageDonnees] = useState<string | null>(null);
+
+  async function exporter() {
+    const supabase = creerClientNavigateur();
+    const { data } = await supabase.rpc("exporter_mes_donnees");
+    if (!data) return;
+    // Téléchargement côté navigateur : aucune donnée personnelle ne transite
+    // par un serveur tiers.
+    const lien = document.createElement("a");
+    lien.href = URL.createObjectURL(
+      new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
+    );
+    lien.download = "repensons-le-congo-mes-donnees.json";
+    lien.click();
+    URL.revokeObjectURL(lien.href);
+  }
+
+  async function supprimer() {
+    const supabase = creerClientNavigateur();
+    const { error } = await supabase.rpc("supprimer_mon_compte");
+    if (error) {
+      setMessageDonnees(t.compte.erreurGenerique(error.message));
+      return;
+    }
+    await supabase.auth.signOut();
+    window.location.href = "/";
+  }
 
   useEffect(() => {
     let annule = false;
@@ -72,7 +102,7 @@ export default function ProfilClient() {
 
   return (
     <>
-      <h1 tabIndex={-1}>{t.profil.titre}</h1>
+      <h1 tabIndex={-1}>{etat.pseudo ?? t.profil.titre}</h1>
 
       <section aria-labelledby="titre-rang">
         <h2 id="titre-rang">{t.profil.titreRang}</h2>
@@ -181,7 +211,72 @@ export default function ProfilClient() {
       <section aria-labelledby="titre-compte">
         <h2 id="titre-compte">{t.profil.titreCompte}</h2>
         <p>{etat.anonyme ? t.profil.compteAnonyme : t.profil.compteSynchronise}</p>
+        <p>
+          <Link href="/compte">
+            {etat.anonyme ? t.profil.creerUnCompte : t.profil.gererMonCompte}
+          </Link>
+        </p>
       </section>
+
+      {!etat.anonyme && (
+        <section aria-labelledby="titre-donnees">
+          <h2 id="titre-donnees">{t.compte.titreDonnees}</h2>
+
+          <div role="status" aria-live="polite">
+            {messageDonnees && <p>{messageDonnees}</p>}
+          </div>
+
+          <p>{t.compte.exporterAide}</p>
+          <p>
+            <button type="button" onClick={exporter}>
+              {t.compte.exporter}
+            </button>
+          </p>
+
+          <p>{t.compte.supprimerAide}</p>
+          {!confirmation ? (
+            <p>
+              <button type="button" onClick={() => setConfirmation(true)}>
+                {t.compte.supprimer}
+              </button>
+            </p>
+          ) : (
+            <>
+              <p>{t.compte.supprimerConfirmation}</p>
+              <p>
+                <label htmlFor="mot-cle">{t.compte.supprimerMotCle}</label>
+                <br />
+                <input
+                  id="mot-cle"
+                  type="text"
+                  value={motCle}
+                  onChange={(e) => setMotCle(e.target.value)}
+                />
+              </p>
+              <p>
+                <button
+                  type="button"
+                  aria-disabled={motCle !== t.compte.supprimerMotCle || undefined}
+                  onClick={() => {
+                    if (motCle === t.compte.supprimerMotCle) void supprimer();
+                  }}
+                >
+                  {t.compte.supprimerValider}
+                </button>{" "}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setConfirmation(false);
+                    setMotCle("");
+                  }}
+                >
+                  {t.compte.annuler}
+                </button>
+              </p>
+            </>
+          )}
+        </section>
+      )}
     </>
   );
 }

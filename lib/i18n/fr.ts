@@ -210,7 +210,76 @@ export const fr = {
     colEtoiles: "Étoiles sur 6",
     titreCompte: "Ton compte",
     compteAnonyme:
-      "Tu joues sans compte. Ta progression est enregistrée, mais elle est liée à ce navigateur : elle sera perdue si tu changes d’appareil. La création de compte arrivera bientôt.",
+      "Tu joues sans compte. Ta progression est enregistrée, mais elle est liée à ce navigateur : elle sera perdue si tu changes d’appareil.",
+    creerUnCompte: "Créer un compte pour conserver ma progression",
+    gererMonCompte: "Gérer mon compte",
+    connecteAvec: (email: string) => `Tu es connecté avec ${email}.`,
     compteSynchronise: "Ta progression est synchronisée avec ton compte.",
   },
+  compte: {
+    titre: "Ton compte",
+    descriptionMeta:
+      "Crée un compte pour retrouver ta progression sur tous tes appareils.",
+
+    facultatif:
+      "Le compte est facultatif. Tu peux jouer, progresser et gagner des badges sans en créer un. Il sert uniquement à retrouver ta progression si tu changes d’appareil ou de navigateur.",
+
+    titreCreation: "Créer un compte",
+    progressionConservee:
+      "Ta progression actuelle sera conservée : tes parties, tes étoiles, tes badges et ton expérience restent attachés à ton compte.",
+    titreConnexion: "Se connecter",
+    dejaUnCompte: "J’ai déjà un compte",
+    pasDeCompte: "Je n’ai pas encore de compte",
+
+    email: "Adresse e-mail",
+    motDePasse: "Mot de passe",
+    motDePasseAide: "Au moins 8 caractères.",
+    pseudo: "Pseudo",
+    pseudoAide:
+      "Entre 2 et 24 caractères. Il sera visible des autres joueurs quand les défis arriveront.",
+
+    creer: "Créer mon compte",
+    connecter: "Me connecter",
+    deconnecter: "Me déconnecter",
+    envoi: "Envoi en cours…",
+
+    confirmationEnvoyee: (email: string) =>
+      `Un e-mail de confirmation vient d’être envoyé à ${email}. Ouvre-le pour activer ton compte. En attendant, tu peux continuer à jouer normalement.`,
+    connecte: "Tu es connecté. Ta progression est synchronisée.",
+
+    erreurEmailUtilise:
+      "Cette adresse est déjà associée à un compte. Connecte-toi avec ce compte. Attention : la progression enregistrée sur cet appareil ne sera alors plus accessible.",
+    erreurIdentifiants: "Adresse e-mail ou mot de passe incorrect.",
+    erreurPseudoPris: "Ce pseudo est déjà pris. Essaie-en un autre.",
+    erreurPseudoLongueur: "Le pseudo doit contenir entre 2 et 24 caractères.",
+    erreurMotDePasseCourt: "Le mot de passe doit contenir au moins 8 caractères.",
+    erreurGenerique: (message: string) => `Une erreur est survenue : ${message}`,
+
+    motDePasseOublie: "Mot de passe oublié ?",
+    titreReinitialisation: "Réinitialiser ton mot de passe",
+    reinitialisationTexte:
+      "Indique ton adresse e-mail. Tu recevras un lien pour choisir un nouveau mot de passe.",
+    envoyerLien: "Envoyer le lien",
+    lienEnvoye:
+      "Si un compte existe avec cette adresse, un lien vient d’être envoyé. Pense à regarder tes indésirables.",
+    titreNouveauMotDePasse: "Choisir un nouveau mot de passe",
+    nouveauMotDePasse: "Nouveau mot de passe",
+    enregistrer: "Enregistrer",
+    motDePasseChange: "Ton mot de passe a été modifié. Tu peux te connecter.",
+
+    titreDonnees: "Tes données",
+    exporter: "Télécharger mes données",
+    exporterAide:
+      "Un fichier contenant ton profil, tes parties, tes réponses, tes étoiles et tes badges.",
+    supprimer: "Supprimer mon compte",
+    supprimerAide:
+      "La suppression est définitive. Ton profil, tes parties, ta progression et tes badges sont effacés et ne peuvent pas être restaurés.",
+    supprimerConfirmation:
+      "Cette action est définitive. Pour confirmer, écris SUPPRIMER dans le champ ci-dessous.",
+    supprimerMotCle: "SUPPRIMER",
+    supprimerValider: "Supprimer définitivement",
+    annuler: "Annuler",
+    compteSupprime: "Ton compte a été supprimé.",
+  },
+
 } as const;
