@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profil — Repensons le Congo Quiz</title>
+  
+</head>
+<body>
+
+<a href="#contenu">Aller au contenu principal</a>
+
+<header>
+  <p>Repensons le Congo Quiz</p>
+  <nav aria-label="Navigation principale">
+    <ul>
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="quiz-speciaux.html">Quiz spéciaux</a></li>
+      <li><a href="profil.html" aria-current="page">Profil</a></li>
+      <li><a href="offre.html">Offre Plus</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="contenu">
+  <h1>Ton profil</h1>
+
+  <h2>Rang</h2>
+  <p>Explorateur du Congo, niveau 7.</p>
+  <p>
+    <label for="rang">Progression vers le rang suivant</label>
+    <progress id="rang" value="320" max="500">320 sur 500 points</progress>
+  </p>
+
+  <h2>Statistiques</h2>
+  <dl>
+    <dt>Parties jouées</dt><dd>48</dd>
+    <dt>Taux de réussite</dt><dd>78 %</dd>
+    <dt>Série en cours</dt><dd><time datetime="P12D">12 jours</time></dd>
+    <dt>Meilleure série</dt><dd><time datetime="P19D">19 jours</time></dd>
+  </dl>
+
+  <h2 id="badges">Badges</h2>
+  <h3>Obtenus</h3>
+  <ul>
+    <li>
+      <h4>Première victoire</h4>
+      <p>Obtenu le <time datetime="2026-08-02">2 août 2026</time>.</p>
+    </li>
+    <li>
+      <h4>Série de 7</h4>
+      <p>Obtenu le <time datetime="2026-08-14">14 août 2026</time>.</p>
+    </li>
+    <li>
+      <h4>Incollable</h4>
+      <p>Obtenu le <time datetime="2026-09-03">3 septembre 2026</time>. Sept bonnes réponses sur sept.</p>
+    </li>
+  </ul>
+
+  <h3>À débloquer</h3>
+  <ul>
+    <li>
+      <h4>Explorateur</h4>
+      <p>Jouer dans six catégories différentes.</p>
+      <p>
+        <label for="b-explorateur">Progression du badge Explorateur</label>
+        <progress id="b-explorateur" value="4" max="6">4 sur 6</progress>
+      </p>
+    </li>
+    <li>
+      <h4>Vétéran</h4>
+      <p>Jouer cinquante parties.</p>
+      <p>
+        <label for="b-veteran">Progression du badge Vétéran</label>
+        <progress id="b-veteran" value="48" max="50">48 sur 50</progress>
+      </p>
+    </li>
+  </ul>
+
+  <h2>Maîtrise par catégorie</h2>
+  <table>
+    <caption>Étoiles obtenues et taux de réussite dans chaque catégorie</caption>
+    <thead>
+      <tr>
+        <th scope="col">Catégorie</th>
+        <th scope="col">Étoiles sur 6</th>
+        <th scope="col">Taux de réussite</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><th scope="row">Géographie &amp; 26 provinces</th><td>4</td><td>60 %</td></tr>
+      <tr><th scope="row">Histoire</th><td>3</td><td>50 %</td></tr>
+      <tr><th scope="row">Musique</th><td>2</td><td>35 %</td></tr>
+      <tr><th scope="row">Nature &amp; environnement</th><td>0</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Ton compte</h2>
+  <p>Tu joues sans compte. Ta progression est enregistrée sur cet appareil uniquement.</p>
+  <ul>
+    <li><a href="compte.html">Créer un compte et conserver ma progression</a></li>
+    <li><a href="donnees.html">Exporter ou supprimer mes données</a></li>
+  </ul>
+</main>
+
+</body>
+</html>

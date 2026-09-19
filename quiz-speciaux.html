@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz spéciaux — Repensons le Congo Quiz</title>
+</head>
+<body>
+
+<a href="#contenu">Aller au contenu principal</a>
+
+<header>
+  <p>Repensons le Congo Quiz</p>
+  <nav aria-label="Navigation principale">
+    <ul>
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="quiz-speciaux.html" aria-current="page">Quiz spéciaux</a></li>
+      <li><a href="profil.html">Profil</a></li>
+      <li><a href="offre.html">Offre Plus</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="contenu">
+  <h1>Quiz spéciaux</h1>
+  <p>
+    Des parcours thématiques pour approfondir un sujet. Inclus dans l'offre
+    Plus.
+  </p>
+
+  <h2>Histoire politique</h2>
+  <ul>
+    <li>
+      <h3>Lumumba, de Stanleyville au 17 janvier</h3>
+      <p>34 questions rattachées.</p>
+      <p><a href="quiz.html">Jouer ce quiz</a></p>
+    </li>
+    <li>
+      <h3>Mobutu, trente-deux ans de pouvoir</h3>
+      <p>41 questions rattachées.</p>
+      <p><a href="quiz.html">Jouer ce quiz</a></p>
+    </li>
+    <li>
+      <h3>Pierre Mulele et la rébellion des Simba</h3>
+      <p>2 questions rattachées.</p>
+      <!-- Un quiz sans assez de contenu reste annoncé, atteignable, et
+           explique lui-même pourquoi il est indisponible. Il ne disparaît pas
+           et ne devient pas un bouton mort. -->
+      <button type="button" aria-disabled="true" aria-describedby="dispo-mulele">
+        Jouer ce quiz
+      </button>
+      <p id="dispo-mulele">
+        Ce quiz ouvrira dès qu'il comptera au moins trois questions.
+      </p>
+    </li>
+  </ul>
+
+  <h2>Musique</h2>
+  <ul>
+    <li>
+      <h3>Franco et l'OK Jazz</h3>
+      <p>19 questions rattachées.</p>
+      <p><a href="quiz.html">Jouer ce quiz</a></p>
+    </li>
+    <li>
+      <h3>Wenge Musica, qui est parti avec qui</h3>
+      <p>12 questions rattachées.</p>
+      <p><a href="quiz.html">Jouer ce quiz</a></p>
+    </li>
+  </ul>
+
+  <h2>Langues</h2>
+  <ul>
+    <li>
+      <!-- lang sur le fragment en lingala : sans cela, la synthèse vocale
+           prononce « mbote » avec les règles du français. -->
+      <h3>Lingala, les premiers mots — <span lang="ln">Mbote na yo</span></h3>
+      <p>Parcours en 5 niveaux. Audio par des locuteurs natifs.</p>
+      <p><a href="offre.html">Découvrir le parcours Lingala</a></p>
+    </li>
+  </ul>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Géographie et 26 provinces — Repensons le Congo Quiz</title>
+  <meta name="description" content="228 questions sur la géographie de la République démocratique du Congo : les 26 provinces, le fleuve Congo, les reliefs et les ressources. Trois niveaux de difficulté.">
+  <link rel="canonical" href="https://repensonslecongo.app/categorie/geographie">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://repensonslecongo.app/" },
+      { "@type": "ListItem", "position": 2, "name": "Catégories", "item": "https://repensonslecongo.app/categories" },
+      { "@type": "ListItem", "position": 3, "name": "Géographie et 26 provinces" }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<a href="#contenu">Aller au contenu principal</a>
+
+<header>
+  <p>Repensons le Congo Quiz</p>
+  <nav aria-label="Navigation principale">
+    <ul>
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="quiz-speciaux.html">Quiz spéciaux</a></li>
+      <li><a href="profil.html">Profil</a></li>
+      <li><a href="offre.html">Offre Plus</a></li>
+    </ul>
+  </nav>
+
+  <!-- Fil d'Ariane : ol, car l'ordre porte du sens. -->
+  <nav aria-label="Fil d'Ariane">
+    <ol>
+      <li><a href="index.html">Accueil</a></li>
+      <li><a href="categories.html">Catégories</a></li>
+      <li><a href="categorie.html" aria-current="page">Géographie &amp; 26 provinces</a></li>
+    </ol>
+  </nav>
+</header>
+
+<main id="contenu">
+  <h1 tabindex="-1">Géographie et 26 provinces</h1>
+  <p>
+    228 questions sur les territoires, les ressources et les paysages de la
+    République démocratique du Congo, des 26 provinces issues du découpage de
+    2015 au cours du fleuve Congo.
+  </p>
+  <p>Maîtrise : 4 étoiles sur 6.</p>
+
+  <h2>Choisis ton niveau</h2>
+  <!-- Le parcours est ordonné : chaque niveau se débloque avec le précédent.
+       Donc <ol> et non <ul>. -->
+  <ol>
+    <li>
+      <h3>Facile</h3>
+      <p>Terminé. 2 étoiles sur 2.</p>
+      <p><a href="quiz.html">Rejouer le niveau facile</a></p>
+    </li>
+    <li>
+      <h3>Moyen</h3>
+      <p>En cours. 1 étoile sur 2.</p>
+      <p><a href="quiz.html">Jouer le niveau moyen</a></p>
+    </li>
+    <li>
+      <h3>Difficile</h3>
+      <p>Verrouillé. 0 étoile sur 2.</p>
+      <!-- aria-disabled plutôt que l'attribut disabled : un bouton disabled
+           sort de l'ordre de tabulation, donc l'utilisateur de lecteur
+           d'écran ne le rencontre jamais et n'apprend pas pourquoi il est
+           verrouillé. Ici il reste atteignable, annoncé indisponible, et
+           aria-describedby donne la condition. -->
+      <button type="button" aria-disabled="true" aria-describedby="cond-difficile">
+        Jouer le niveau difficile
+      </button>
+      <p id="cond-difficile">
+        Remporte deux parties au niveau moyen pour débloquer ce niveau.
+      </p>
+    </li>
+  </ol>
+
+  <h2>Comment gagner une étoile</h2>
+  <p>
+    Une partie compte sept questions. Pour la remporter il faut atteindre
+    900 points et au moins cinq bonnes réponses sur sept. Deux victoires
+    débloquent le niveau suivant.
+  </p>
+</main>
+
+<footer>
+  <nav aria-label="Navigation secondaire">
+    <ul>
+      <li><a href="a-propos.html">À propos</a></li>
+      <li><a href="accessibilite.html">Accessibilité</a></li>
+    </ul>
+  </nav>
+</footer>
+
+</body>
+</html>

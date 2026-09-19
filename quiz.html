@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Question 3 sur 7 — Géographie — Repensons le Congo Quiz</title>
+</head>
+<body>
+
+<a href="#contenu">Aller au contenu principal</a>
+
+<header>
+  <p>Repensons le Congo Quiz</p>
+  <!-- Pendant une partie, la navigation principale est retirée : un lien
+       cliqué par erreur fait perdre la partie en cours. Il ne reste qu'une
+       sortie unique et explicite. -->
+</header>
+
+<main id="contenu">
+  <!-- tabindex="-1" : le focus est déplacé ici au chargement de chaque
+       question, pour que le lecteur d'écran reparte du titre. Sans cela, le
+       focus reste sur le bouton de la question précédente, qui n'existe plus. -->
+  <h1 tabindex="-1">Question 3 sur 7</h1>
+
+  <p>
+    <label for="avancement">Avancement dans la partie</label>
+    <progress id="avancement" value="3" max="7">3 sur 7</progress>
+  </p>
+
+  <h2>Temps restant</h2>
+  <!-- Le compteur se met à jour dix fois par seconde. Annoncé en direct, il
+       sature le lecteur d'écran et rend l'écran inutilisable. La valeur
+       visuelle est donc masquée aux technologies d'assistance, et seules les
+       alertes de seuil sont annoncées, dans une région à part. -->
+  <p aria-hidden="true">12,4 secondes</p>
+  <p role="status" aria-live="polite" id="alerte-temps"><!-- « 10 secondes », « 5 secondes » --></p>
+  <p>
+    <button type="button">Mettre en pause</button>
+    <button type="button">Désactiver le chronomètre</button>
+  </p>
+  <p>
+    Le chronomètre peut être désactivé à tout moment. Une partie sans
+    chronomètre ne rapporte pas de bonus de rapidité.
+  </p>
+
+  <article aria-labelledby="enonce">
+    <h2>Énoncé</h2>
+
+    <p>Catégorie : Géographie &amp; 26 provinces. Difficulté : moyenne.</p>
+
+    <!-- L'image porte une question : son alt décrit ce qu'il faut voir pour
+         répondre, jamais « illustration de la question ». -->
+    <figure>
+      <img src="images/congo_river.webp" alt="Un large fleuve bordé de forêt dense, traversé par une pirogue." width="900" height="600">
+    </figure>
+
+    <p id="enonce">Quel est le seul fleuve au monde à traverser deux fois l'équateur&nbsp;?</p>
+
+    <!-- Décision : des boutons, pas des boutons radio. Un bouton radio
+         suppose qu'on choisit puis qu'on valide, et qu'on peut changer
+         d'avis. Ici le clic EST la réponse, elle est définitive et
+         chronométrée. Le bouton dit la vérité de l'interaction.
+         aria-labelledby rattache le groupe à l'énoncé. -->
+    <ul aria-labelledby="enonce">
+      <li><button type="button">Le fleuve Congo</button></li>
+      <li><button type="button">Le Nil</button></li>
+      <li><button type="button">L'Amazone</button></li>
+      <li><button type="button">Le Zambèze</button></li>
+    </ul>
+  </article>
+
+  <!-- Région de retour, présente dès le chargement et vide. Une région live
+       insérée après coup dans le DOM n'est pas annoncée de façon fiable. -->
+  <div role="status" aria-live="polite" id="retour"></div>
+
+  <p><a href="resultat.html">Quitter la partie</a></p>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Le titre porte la marque ET la fonction. C'est la première chose
+       annoncée par le lecteur d'écran au chargement, et le principal signal
+       pour les moteurs comme pour les modèles de langage. -->
+  <title>Repensons le Congo Quiz — apprendre la RDC en jouant</title>
+
+  <meta name="description" content="Repensons le Congo Quiz est une application gratuite de 1 445 questions sourcées sur la République démocratique du Congo : histoire, géographie, musique, langues, nature, économie.">
+  <link rel="canonical" href="https://repensonslecongo.app/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Repensons le Congo Quiz">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:title" content="Repensons le Congo Quiz — apprendre la RDC en jouant">
+  <meta property="og:description" content="1 445 questions sourcées sur la République démocratique du Congo. Gratuit, sans publicité intrusive, jouable hors ligne.">
+  <meta property="og:url" content="https://repensonslecongo.app/">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="manifest" href="manifest.webmanifest">
+
+  <!-- Données structurées : voir SEO-GEO.md pour le détail et la
+       justification de chaque bloc. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://repensonslecongo.app/#site",
+        "name": "Repensons le Congo Quiz",
+        "alternateName": "Repensons le Congo",
+        "url": "https://repensonslecongo.app/",
+        "inLanguage": "fr-FR",
+        "description": "Application de quiz éducatif sur la République démocratique du Congo, avec 1 445 questions sourcées."
+      },
+      {
+        "@type": "WebApplication",
+        "@id": "https://repensonslecongo.app/#app",
+        "name": "Repensons le Congo Quiz",
+        "url": "https://repensonslecongo.app/",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web, iOS, Android",
+        "inLanguage": "fr-FR",
+        "about": {
+          "@type": "Country",
+          "name": "République démocratique du Congo",
+          "sameAs": "https://www.wikidata.org/wiki/Q974"
+        },
+        "educationalLevel": "Tous publics",
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Gratuit",
+            "price": "0",
+            "priceCurrency": "EUR",
+            "description": "1 445 questions réparties en 12 catégories, sans limite."
+          },
+          {
+            "@type": "Offer",
+            "name": "Repensons le Congo Plus",
+            "price": "11.99",
+            "priceCurrency": "EUR",
+            "description": "Quiz spéciaux thématiques et modules événementiels, par an."
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<!-- Plusieurs liens d'évitement : la page est longue, un seul lien vers le
+     contenu oblige à tout parcourir pour atteindre les catégories. -->
+<nav aria-label="Accès rapide">
+  <ul>
+    <li><a href="#contenu">Aller au contenu</a></li>
+    <li><a href="#progression">Aller à ma progression</a></li>
+    <li><a href="#categories">Aller aux catégories</a></li>
+  </ul>
+</nav>
+
+<!-- aria-label sur la bannière : le lecteur d'écran annonce « bannière
+     Repensons le Congo Quiz » dès l'entrée dans la région. -->
+<header aria-label="Repensons le Congo Quiz">
+  <p><a href="index.html">Repensons le Congo Quiz</a></p>
+
+  <nav aria-label="Navigation principale">
+    <ul>
+      <li><a href="index.html" aria-current="page">Accueil</a></li>
+      <li><a href="categories.html">Catégories</a></li>
+      <li><a href="quiz-speciaux.html">Quiz spéciaux</a></li>
+      <li><a href="profil.html">Profil</a></li>
+      <li><a href="offre.html">Offre Plus</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="contenu">
+  <!-- Le h1 dit la marque et la fonction. Le slogan passe en sous-titre :
+       il reste visible pour l'œil, sans voler la première annonce. -->
+  <h1 tabindex="-1">Repensons le Congo Quiz</h1>
+  <p>Un grand pays, mille histoires. Joue, apprends et célèbre le Congo.</p>
+
+  <!-- Paragraphe d'orientation. Il sert trois publics d'un coup : quelqu'un
+       au lecteur d'écran qui veut savoir où il est, un moteur de recherche,
+       et un modèle de langage qui doit pouvoir répondre « qu'est-ce que
+       c'est » en une phrase. -->
+  <p>
+    Repensons le Congo Quiz est une application gratuite de culture générale
+    sur la République démocratique du Congo. Elle réunit 1 445 questions
+    réparties en 12 catégories, chacune accompagnée d'une explication et d'un
+    lien vers sa source.
+  </p>
+
+  <!-- Chaque section est une région nommée : elle apparaît dans le rotor du
+       lecteur d'écran, ce qui est la façon normale d'explorer une page
+       longue. Sans aria-labelledby, une section n'est pas une région. -->
+  <section id="progression" aria-labelledby="titre-progression">
+    <h2 id="titre-progression">Ta progression</h2>
+
+    <!-- L'information est portée par le TEXTE. L'élément <progress> ne fait
+         que la redoubler visuellement, et il est masqué aux technologies
+         d'assistance : sa valeur est annoncée de façon inégale selon les
+         lecteurs, et l'annoncer deux fois alourdit sans rien apporter. -->
+    <p>
+      Rang actuel : <strong>Explorateur du Congo</strong>, niveau 7.
+      Il te reste <strong>180 points</strong> à gagner pour atteindre le rang
+      suivant, Connaisseur du Congo. Tu as 320 points sur les 500 nécessaires.
+    </p>
+    <progress value="320" max="500" aria-hidden="true"></progress>
+
+    <p>Tu as répondu correctement à 78&nbsp;% des questions posées.</p>
+    <p>Tu joues <time datetime="P12D">12 jours d'affilée</time>. Reviens demain pour ne pas perdre ta série.</p>
+  </section>
+
+  <section aria-labelledby="titre-defi">
+    <h2 id="titre-defi">Le quiz du jour</h2>
+    <h3>Connais-tu vraiment Kinshasa&nbsp;?</h3>
+    <p>Sept questions sur la capitale. Tu gagneras 50 points d'expérience en le terminant.</p>
+    <p><a href="quiz.html">Jouer le quiz du jour sur Kinshasa</a></p>
+  </section>
+
+  <section aria-labelledby="titre-badges">
+    <h2 id="titre-badges">Tes badges</h2>
+    <p>Tu as obtenu 3 badges sur 8.</p>
+    <ul>
+      <li>Série de 7, obtenu. Tu as joué sept jours de suite.</li>
+      <li>Incollable, obtenu. Tu as répondu juste aux sept questions d'une partie.</li>
+      <li>Explorateur, en cours. Tu as joué dans 4 catégories sur les 6 nécessaires.</li>
+    </ul>
+    <p><a href="profil.html#badges">Voir les 8 badges et leurs conditions</a></p>
+  </section>
+
+  <section id="categories" aria-labelledby="titre-categories">
+    <h2 id="titre-categories">Les catégories</h2>
+    <p>12 catégories, de l'histoire précoloniale à la rumba. Voici les quatre où tu as le plus progressé.</p>
+
+    <ul>
+      <li>
+        <h3><a href="categorie.html">Géographie et 26 provinces</a></h3>
+        <p>228 questions. Tu as gagné 4 étoiles sur 6 et réussi 60&nbsp;% des questions.</p>
+      </li>
+      <li>
+        <h3><a href="categorie.html">Histoire</a></h3>
+        <p>164 questions. Tu as gagné 3 étoiles sur 6 et réussi 50&nbsp;% des questions.</p>
+      </li>
+      <li>
+        <h3><a href="categorie.html">Musique</a></h3>
+        <p>121 questions. Tu as gagné 2 étoiles sur 6 et réussi 35&nbsp;% des questions.</p>
+      </li>
+      <li>
+        <h3><a href="categorie.html">Nature et environnement</a></h3>
+        <p>58 questions. Tu n'as pas encore gagné d'étoile dans cette catégorie.</p>
+      </li>
+    </ul>
+
+    <p><a href="categories.html">Voir les 12 catégories</a></p>
+  </section>
+</main>
+
+<footer aria-label="Informations sur le site">
+  <nav aria-label="Navigation secondaire">
+    <ul>
+      <li><a href="a-propos.html">À propos du projet</a></li>
+      <li><a href="accessibilite.html">Déclaration d'accessibilité</a></li>
+      <li><a href="confidentialite.html">Confidentialité</a></li>
+      <li><a href="mentions-legales.html">Mentions légales</a></li>
+    </ul>
+  </nav>
+</footer>
+
+</body>
+</html>

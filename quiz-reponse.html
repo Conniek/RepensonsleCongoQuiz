@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Question 3 sur 7, répondue — Géographie — Repensons le Congo Quiz</title>
+</head>
+<body>
+
+<!-- Même écran que quiz.html, après réponse. Fichier séparé pour pouvoir
+     tester cet état au lecteur d'écran sans JavaScript. -->
+
+<a href="#contenu">Aller au contenu principal</a>
+
+<header>
+  <p>Repensons le Congo Quiz</p>
+</header>
+
+<main id="contenu">
+  <h1 tabindex="-1">Question 3 sur 7</h1>
+
+  <p>
+    <label for="avancement">Avancement dans la partie</label>
+    <progress id="avancement" value="3" max="7">3 sur 7</progress>
+  </p>
+
+  <article aria-labelledby="enonce">
+    <h2>Énoncé</h2>
+    <p id="enonce">Quel est le seul fleuve au monde à traverser deux fois l'équateur&nbsp;?</p>
+
+    <ul aria-labelledby="enonce">
+      <!-- Après réponse, tous les boutons passent en aria-disabled et l'état
+           est porté par du TEXTE, pas seulement par une couleur : le critère
+           WCAG « utilisation de la couleur » l'impose, et c'est aussi ce qui
+           rend l'écran lisible en plein soleil. -->
+      <li><button type="button" aria-disabled="true">Le fleuve Congo — bonne réponse, votre choix</button></li>
+      <li><button type="button" aria-disabled="true">Le Nil</button></li>
+      <li><button type="button" aria-disabled="true">L'Amazone</button></li>
+      <li><button type="button" aria-disabled="true">Le Zambèze</button></li>
+    </ul>
+  </article>
+
+  <!-- Le contenu est injecté dans une région déjà présente : le lecteur
+       d'écran annonce la correction sans que le focus bouge. -->
+  <div role="status" aria-live="polite" id="retour">
+    <h2>Bonne réponse</h2>
+    <p>
+      Le fleuve Congo traverse l'équateur à deux reprises, en raison de la
+      courbe que dessine son cours à travers la cuvette centrale.
+    </p>
+    <p>125 points, plus 48 points de bonus de rapidité.</p>
+    <p>
+      Source :
+      <a href="https://www.britannica.com/place/Congo-River" rel="noopener">
+        Congo River, Encyclopædia Britannica
+      </a>
+      (nouvelle fenêtre)
+    </p>
+  </div>
+
+  <p><button type="button">Question suivante</button></p>
+</main>
+
+</body>
+</html>
