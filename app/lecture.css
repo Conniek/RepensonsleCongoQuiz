@@ -1,0 +1,129 @@
+/* =========================================================================
+   FEUILLE DE LECTURE — TEMPORAIRE
+   =========================================================================
+   Strict minimum pour rendre les écrans confortables à relire pendant le
+   développement. Ce n'est PAS le design de l'application.
+
+   La phase 6 remplacera ce fichier. Règles à tenir jusque-là :
+     - aucune couleur ne porte d'information à elle seule ;
+     - aucune règle ici ne doit être nécessaire à la compréhension : le
+       critère de recette reste « l'application est utilisable feuilles de
+       style désactivées » ;
+     - supprimer ce fichier ne doit rien casser.
+   ========================================================================= */
+
+:root {
+  --texte: #1a1a1a;
+  --discret: #5b6670;
+  --bord: #d8dee4;
+  --fond: #fbfbf9;
+  --accent: #0d5c8a;
+  --succes: #0f6b3f;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0 1rem 4rem;
+  max-width: 44rem;
+  margin-inline: auto;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--texte);
+  background: var(--fond);
+}
+
+h1 { font-size: 1.75rem; line-height: 1.25; margin: 1.5rem 0 .5rem; }
+h2 { font-size: 1.25rem; margin: 2rem 0 .5rem; }
+h3 { font-size: 1.0625rem; margin: 0 0 .25rem; }
+
+a { color: var(--accent); }
+
+/* Le focus doit rester perceptible en toute circonstance. */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Les liens d'évitement n'apparaissent qu'au focus. */
+.evitement ul { list-style: none; padding: 0; margin: 0; }
+.evitement a {
+  position: absolute;
+  left: -9999px;
+}
+.evitement a:focus {
+  position: static;
+  display: inline-block;
+  padding: .5rem;
+  background: var(--accent);
+  color: #fff;
+}
+
+header, footer {
+  border-bottom: 1px solid var(--bord);
+  padding: .75rem 0;
+}
+footer { border-bottom: 0; border-top: 1px solid var(--bord); margin-top: 3rem; }
+
+header nav ul, footer nav ul, .ariane {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0;
+  margin: .25rem 0 0;
+}
+.ariane li + li::before { content: "› "; color: var(--discret); }
+
+.cartes { list-style: none; padding: 0; display: grid; gap: .75rem; }
+.cartes > li {
+  border: 1px solid var(--bord);
+  border-radius: .5rem;
+  padding: .875rem 1rem;
+  background: #fff;
+}
+
+.reponses { list-style: none; padding: 0; display: grid; gap: .5rem; }
+.reponses button {
+  width: 100%;
+  text-align: left;
+  padding: .75rem 1rem;
+  font: inherit;
+  border: 1px solid var(--bord);
+  border-radius: .5rem;
+  background: #fff;
+  cursor: pointer;
+}
+/* La couleur ne fait que RENFORCER : l'état est déjà écrit dans le texte
+   du bouton (« — bonne réponse »). */
+.reponses button.bonne { border-color: var(--succes); border-width: 2px; }
+.reponses button[aria-disabled="true"] { cursor: default; }
+
+.enonce { font-size: 1.25rem; font-weight: 600; }
+.chrono { font-size: 1.5rem; font-variant-numeric: tabular-nums; margin: 0; }
+.meta, .note { color: var(--discret); font-size: .9375rem; }
+
+dl { display: grid; grid-template-columns: auto 1fr; gap: .25rem 1rem; }
+dt { font-weight: 600; }
+dd { margin: 0; }
+
+figure { margin: 1rem 0; }
+img { max-width: 100%; height: auto; border-radius: .5rem; }
+
+progress { width: 100%; height: .5rem; }
+
+/* Visible du lecteur d'écran, invisible à l'œil. */
+.visuellement-masque {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
