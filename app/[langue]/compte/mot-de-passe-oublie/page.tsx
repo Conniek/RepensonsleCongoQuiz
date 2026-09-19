@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import { creerClientNavigateur } from "@/lib/supabase/client";
-import { dictionnaire } from "@/lib/i18n";
+import { dictionnaire, estLangue, LANGUE_PAR_DEFAUT, type Langue } from "@/lib/i18n";
+import { useParams } from "next/navigation";
 
 export default function MotDePasseOublie() {
-  const t = dictionnaire();
+  const p = useParams();
+  const langue = (estLangue(String(p?.langue)) ? String(p?.langue) : LANGUE_PAR_DEFAUT) as Langue;
+  const t = dictionnaire(langue);
   const [email, setEmail] = useState("");
   const [envoye, setEnvoye] = useState(false);
   const [envoi, setEnvoi] = useState(false);
@@ -15,7 +18,7 @@ export default function MotDePasseOublie() {
     setEnvoi(true);
     const supabase = creerClientNavigateur();
     await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: `${window.location.origin}/compte/nouveau-mot-de-passe`,
+      redirectTo: `${window.location.origin}/${langue}/compte/nouveau-mot-de-passe`,
     });
     // Le message est le même que l'adresse existe ou non : révéler
     // l'existence d'un compte permettrait d'énumérer les inscrits.

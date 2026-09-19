@@ -1,49 +1,41 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { creerClientServeur } from "@/lib/supabase/serveur";
-import { slugifier, type Niveau } from "@/lib/slug";
-import { dictionnaire } from "@/lib/i18n";
+import { dictionnaire, estLangue } from "@/lib/i18n";
+import type { Niveau } from "@/lib/slug";
 
-const t = dictionnaire();
-
-export const metadata = { title: t.resultat.titrePage };
+export const metadata = { title: "Résultat" };
 
 export default async function PageResultat({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ langue: string; id: string }>;
 }) {
-  const { id } = await params;
+  const { langue, id } = await params;
+  if (!estLangue(langue)) notFound();
+  const t = dictionnaire(langue);
   const supabase = await creerClientServeur();
 
   // La politique de sécurité garantit qu'on ne lit que ses propres parties.
   const { data: partie } = await supabase
-    .from("partie")
-    .select("*")
-    .eq("id", id)
-    .single();
-
+    .from("partie").select("*").eq("id", id).single();
   if (!partie) notFound();
 
-  const { data: reponses } = await supabase
-    .from("reponse")
-    .select("position, correcte, points")
-    .eq("partie_id", id)
-    .order("position");
-
-  const { data: badges } = await supabase
-    .from("badge")
-    .select("id, libelle, condition");
+  const [{ data: reponses }, { data: categorie }] = await Promise.all([
+    supabase.from("reponse").select("position, correcte, points")
+      .eq("partie_id", id).order("position"),
+    supabase.from("categorie_publique").select("libelle, slug")
+      .eq("langue", langue).eq("categorie_id", partie.categorie_id).maybeSingle(),
+  ]);
 
   const gagnee = partie.points >= 900 && partie.bonnes >= 5;
   const niveau = partie.niveau as Niveau;
   const gagnes = (partie.badges_gagnes ?? []) as string[];
+  const libelle = categorie?.libelle ?? partie.categorie_id;
 
   return (
     <>
-      <h1 tabIndex={-1}>
-        {gagnee ? t.resultat.remportee : t.resultat.terminee}
-      </h1>
+      <h1 tabIndex={-1}>{gagnee ? t.resultat.remportee : t.resultat.terminee}</h1>
 
       <section aria-labelledby="titre-score">
         <h2 id="titre-score">{t.resultat.titreScore}</h2>
@@ -57,12 +49,9 @@ export default async function PageResultat({
           <dt>{t.resultat.conditionVictoire}</dt>
           <dd>
             {t.resultat.conditionTexte}{" "}
-            {gagnee
-              ? t.resultat.conditionAtteinte
-              : t.resultat.conditionNonAtteinte}
+            {gagnee ? t.resultat.conditionAtteinte : t.resultat.conditionNonAtteinte}
           </dd>
         </dl>
-
         {partie.deck_complete && <p className="note">{t.resultat.deckComplete}</p>}
         {!partie.chrono_actif && <p className="note">{t.resultat.sansChrono}</p>}
       </section>
@@ -70,17 +59,7 @@ export default async function PageResultat({
       {gagnes.length > 0 && (
         <section aria-labelledby="titre-badges">
           <h2 id="titre-badges">{t.badges.nouveaux(gagnes.length)}</h2>
-          <ul>
-            {gagnes.map((idBadge) => {
-              const b = badges?.find((x) => x.id === idBadge);
-              return (
-                <li key={idBadge}>
-                  <strong>{b?.libelle ?? idBadge}</strong>
-                  {b?.condition ? ` — ${b.condition}.` : ""}
-                </li>
-              );
-            })}
-          </ul>
+          <ul>{gagnes.map((b) => <li key={b}><strong>{b}</strong></li>)}</ul>
         </section>
       )}
 
@@ -99,23 +78,19 @@ export default async function PageResultat({
         <h2 id="titre-suite">{t.resultat.titreSuite}</h2>
         <ul>
           <li>
-            <Link
-              href={`/partie?categorie=${encodeURIComponent(partie.categorie)}&niveau=${niveau}`}
-            >
+            <Link href={`/${langue}/partie?categorie=${partie.categorie_id}&niveau=${niveau}`}>
               {t.resultat.rejouer(t.niveaux[niveau])}
             </Link>
           </li>
-          <li>
-            <Link href={`/categorie/${slugifier(partie.categorie)}`}>
-              {t.partie.retourCategorie(partie.categorie)}
-            </Link>
-          </li>
-          <li>
-            <Link href="/profil">{t.resultat.voirProgression}</Link>
-          </li>
-          <li>
-            <Link href="/">{t.commun.retourAccueil}</Link>
-          </li>
+          {categorie && (
+            <li>
+              <Link href={`/${langue}/categorie/${categorie.slug}`}>
+                {t.partie.retourCategorie(libelle)}
+              </Link>
+            </li>
+          )}
+          <li><Link href={`/${langue}/profil`}>{t.resultat.voirProgression}</Link></li>
+          <li><Link href={`/${langue}`}>{t.commun.retourAccueil}</Link></li>
         </ul>
       </section>
     </>

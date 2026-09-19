@@ -3,12 +3,15 @@
 import { useState } from "react";
 import Link from "next/link";
 import { creerClientNavigateur } from "@/lib/supabase/client";
-import { dictionnaire } from "@/lib/i18n";
+import { dictionnaire, estLangue, LANGUE_PAR_DEFAUT, type Langue } from "@/lib/i18n";
+import { useParams } from "next/navigation";
 
 /** Page atteinte depuis le lien reçu par e-mail. Supabase établit la session
  *  automatiquement à l'arrivée, il ne reste qu'à choisir le mot de passe. */
 export default function NouveauMotDePasse() {
-  const t = dictionnaire();
+  const p = useParams();
+  const langue = (estLangue(String(p?.langue)) ? String(p?.langue) : LANGUE_PAR_DEFAUT) as Langue;
+  const t = dictionnaire(langue);
   const [motDePasse, setMotDePasse] = useState("");
   const [fait, setFait] = useState(false);
   const [erreur, setErreur] = useState<string | null>(null);
@@ -41,7 +44,7 @@ export default function NouveauMotDePasse() {
           <>
             <p>{t.compte.motDePasseChange}</p>
             <p>
-              <Link href="/compte">{t.compte.connecter}</Link>
+              <Link href={`/${langue}/compte`}>{t.compte.connecter}</Link>
             </p>
           </>
         )}

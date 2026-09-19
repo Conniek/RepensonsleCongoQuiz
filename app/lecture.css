@@ -128,6 +128,5 @@ progress { width: 100%; height: .5rem; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 
-/* Badge non encore obtenu. La couleur ne fait que RENFORCER : l'état et
-   l'avancement sont déjà écrits dans le texte de la ligne. */
 .badge-verrouille { color: var(--discret); }
+.selecteur-langue ul { list-style: none; display: flex; gap: .75rem; padding: 0; margin: .25rem 0 0; }

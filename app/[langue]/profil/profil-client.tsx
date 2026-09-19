@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { creerClientNavigateur } from "@/lib/supabase/client";
 import { assurerSession } from "@/lib/session";
-import { slugifier } from "@/lib/slug";
-import { dictionnaire } from "@/lib/i18n";
+import { dictionnaire, type Langue } from "@/lib/i18n";
 
 type Badge = {
   id: string;
@@ -16,7 +15,7 @@ type Badge = {
   obtenu: boolean;
 };
 
-type Maitrise = { categorie: string; etoiles: number };
+type Maitrise = { categorie_id: string; libelle: string; slug: string; etoiles: number };
 
 type Etat = {
   xp: number;
@@ -34,8 +33,8 @@ type Etat = {
   maitrise: Maitrise[];
 };
 
-export default function ProfilClient() {
-  const t = dictionnaire();
+export default function ProfilClient({ langue }: { langue: Langue }) {
+  const t = dictionnaire(langue);
   const [etat, setEtat] = useState<Etat | null>(null);
   const [pret, setPret] = useState(false);
   const [confirmation, setConfirmation] = useState(false);
@@ -65,7 +64,7 @@ export default function ProfilClient() {
       return;
     }
     await supabase.auth.signOut();
-    window.location.href = "/";
+    window.location.href = `/${langue}`;
   }
 
   useEffect(() => {
@@ -74,7 +73,7 @@ export default function ProfilClient() {
       try {
         await assurerSession();
         const supabase = creerClientNavigateur();
-        const { data } = await supabase.rpc("progression");
+        const { data } = await supabase.rpc("progression", { p_langue: langue });
         if (!annule && data) setEtat(data as Etat);
       } finally {
         if (!annule) setPret(true);
@@ -83,7 +82,7 @@ export default function ProfilClient() {
     return () => {
       annule = true;
     };
-  }, []);
+  }, [langue]);
 
   if (!pret) return <p>{t.profil.chargement}</p>;
 
@@ -194,10 +193,10 @@ export default function ProfilClient() {
             </thead>
             <tbody>
               {etat.maitrise.map((m) => (
-                <tr key={m.categorie}>
+                <tr key={m.categorie_id}>
                   <th scope="row">
-                    <Link href={`/categorie/${slugifier(m.categorie)}`}>
-                      {m.categorie}
+                    <Link href={`/${langue}/categorie/${m.slug}`}>
+                      {m.libelle}
                     </Link>
                   </th>
                   <td>{m.etoiles}</td>
@@ -212,7 +211,7 @@ export default function ProfilClient() {
         <h2 id="titre-compte">{t.profil.titreCompte}</h2>
         <p>{etat.anonyme ? t.profil.compteAnonyme : t.profil.compteSynchronise}</p>
         <p>
-          <Link href="/compte">
+          <Link href={`/${langue}/compte`}>
             {etat.anonyme ? t.profil.creerUnCompte : t.profil.gererMonCompte}
           </Link>
         </p>

@@ -282,4 +282,22 @@ export const fr = {
     compteSupprime: "Ton compte a été supprimé.",
   },
 
+  langues: {
+    fr: "Français",
+    en: "English",
+    choisir: "Choisir la langue",
+    changerVers: (langue: string) => `Lire cette page en ${langue}`,
+  },
+
+  disponibilite: {
+    categorieIndisponible:
+      "Cette catégorie n’est pas encore disponible dans cette langue.",
+    traductionEnCours: (pourcentage: number) =>
+      `Traduction en cours : ${pourcentage} % des questions sont disponibles.`,
+    banniereLangue:
+      "La version anglaise est en cours de traduction. Seules les catégories complètes sont jouables pour l’instant.",
+    aucuneCategorie:
+      "Aucune catégorie n’est encore disponible dans cette langue. Reviens bientôt.",
+  },
+
 } as const;

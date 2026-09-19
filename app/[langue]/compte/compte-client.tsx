@@ -5,12 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { creerClientNavigateur } from "@/lib/supabase/client";
 import { assurerSession } from "@/lib/session";
-import { dictionnaire } from "@/lib/i18n";
+import { dictionnaire, type Langue } from "@/lib/i18n";
 
 type Mode = "creation" | "connexion";
 
-export default function CompteClient() {
-  const t = dictionnaire();
+export default function CompteClient({ langue }: { langue: Langue }) {
+  const t = dictionnaire(langue);
   const router = useRouter();
   const supabase = creerClientNavigateur();
 
@@ -104,7 +104,7 @@ export default function CompteClient() {
         setErreur(t.compte.erreurIdentifiants);
         return;
       }
-      router.push("/profil");
+      router.push(`/${langue}/profil`);
       router.refresh();
     } finally {
       setEnvoi(false);
@@ -113,7 +113,7 @@ export default function CompteClient() {
 
   async function seDeconnecter() {
     await supabase.auth.signOut();
-    router.push("/");
+    router.push(`/${langue}`);
     router.refresh();
   }
 
@@ -133,7 +133,7 @@ export default function CompteClient() {
           </button>
         </p>
         <p>
-          <Link href="/profil">{t.resultat.voirProgression}</Link>
+          <Link href={`/${langue}/profil`}>{t.resultat.voirProgression}</Link>
         </p>
       </>
     );
@@ -264,7 +264,7 @@ export default function CompteClient() {
           </form>
 
           <p>
-            <Link href="/compte/mot-de-passe-oublie">
+            <Link href={`/${langue}/compte/mot-de-passe-oublie`}>
               {t.compte.motDePasseOublie}
             </Link>
           </p>

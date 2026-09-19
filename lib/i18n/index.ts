@@ -1,21 +1,22 @@
 import { fr } from "./fr";
+import { en } from "./en";
 
-/** Le français fait référence : toute autre langue doit fournir exactement
- *  les mêmes clés, avec les mêmes signatures. TypeScript le vérifie. */
+/** Le français fait référence : toute autre langue fournit exactement les
+ *  mêmes clés, avec les mêmes signatures. TypeScript le vérifie. */
 export type Dictionnaire = typeof fr;
 
-const DICTIONNAIRES = { fr } satisfies Record<string, Dictionnaire>;
+const DICTIONNAIRES = { fr, en };
 
-export type Langue = keyof typeof DICTIONNAIRES;
+export const LANGUES = ["fr", "en"] as const;
+export type Langue = (typeof LANGUES)[number];
 export const LANGUE_PAR_DEFAUT: Langue = "fr";
 
-/** Renvoie le dictionnaire d'une langue.
- *
- *  Aujourd'hui une seule langue est disponible et l'argument est optionnel.
- *  Le jour où il y en aura plusieurs, la langue viendra du segment d'URL et
- *  cette fonction sera le seul point à modifier. */
+export function estLangue(valeur: string): valeur is Langue {
+  return (LANGUES as readonly string[]).includes(valeur);
+}
+
 export function dictionnaire(langue: Langue = LANGUE_PAR_DEFAUT): Dictionnaire {
   return DICTIONNAIRES[langue] ?? DICTIONNAIRES[LANGUE_PAR_DEFAUT];
 }
 
-export { fr };
+export { fr, en };

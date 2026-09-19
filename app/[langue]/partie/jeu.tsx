@@ -4,32 +4,22 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { creerClientNavigateur } from "@/lib/supabase/client";
 import { assurerSession } from "@/lib/session";
-import { slugifier, type Niveau } from "@/lib/slug";
-import { dictionnaire } from "@/lib/i18n";
+import type { Niveau } from "@/lib/slug";
+import { dictionnaire, type Langue } from "@/lib/i18n";
 
 const DUREE_MS = 15_000;
 
 type Question = {
-  id: string;
-  enonce: string;
-  reponses: string[];
-  categorie: string;
-  sous_categorie: string | null;
-  difficulte: number;
-  image_id: string | null;
-  image_alt: string | null;
+  id: string; enonce: string; reponses: string[]; categorie_id: string;
+  sous_categorie: string | null; difficulte: number;
+  image_id: string | null; image_alt: string | null;
 };
 
 type Retour = {
-  correcte: boolean;
-  bonne_reponse: number;
-  explication: string | null;
-  source_url: string | null;
-  source_titre: string | null;
-  points: number;
+  correcte: boolean; bonne_reponse: number; explication: string | null;
+  source_url: string | null; source_titre: string | null; points: number;
 };
 
-/** Mélange une copie du tableau (Fisher-Yates). */
 function melanger<T>(t: T[]): T[] {
   const a = [...t];
   for (let i = a.length - 1; i > 0; i--) {
@@ -40,15 +30,12 @@ function melanger<T>(t: T[]): T[] {
 }
 
 export default function Jeu({
-  categorie,
-  niveau,
-  mode = "solo",
+  langue, categorieId, niveau, mode = "solo",
 }: {
-  categorie: string;
-  niveau: Niveau;
+  langue: Langue; categorieId: string; niveau: Niveau;
   mode?: "solo" | "defi_du_jour";
 }) {
-  const t = dictionnaire();
+  const t = dictionnaire(langue);
   const router = useRouter();
   const supabase = creerClientNavigateur();
 
@@ -58,69 +45,59 @@ export default function Jeu({
   const [questions, setQuestions] = useState<Question[]>([]);
   const [position, setPosition] = useState(0);
 
-  // L'ordre d'affichage est mélangé, mais l'index envoyé au serveur reste
-  // celui du tableau d'origine. Indispensable : dans la banque actuelle,
-  // 77 % des bonnes réponses occupent la première position.
+  // L'ordre d'affichage est mélangé mais l'index envoyé au serveur reste
+  // celui du tableau d'origine : dans la banque, 77 % des bonnes réponses
+  // occupent la première position.
   const [ordre, setOrdre] = useState<number[]>([]);
-
   const [retour, setRetour] = useState<Retour | null>(null);
   const [restant, setRestant] = useState(DUREE_MS);
   const [enPause, setEnPause] = useState(false);
   const [chronoActif, setChronoActif] = useState(true);
   const [alerteTemps, setAlerteTemps] = useState("");
+  const [libelleCategorie, setLibelleCategorie] = useState(categorieId);
 
   const debutRef = useRef<number>(0);
   const titreRef = useRef<HTMLHeadingElement>(null);
   const seuilRef = useRef<number>(99);
 
-  // --- Création de la partie ---------------------------------------------
   useEffect(() => {
     let annule = false;
-
     (async () => {
       try {
         const session = await assurerSession();
-        if (!session) throw new Error("Session indisponible");
+        if (!session) throw new Error("Session");
 
         const { data: deck, error: e1 } = await supabase.rpc("composer_deck", {
-          p_categorie: categorie,
-          p_niveau: niveau,
-          p_longueur: 7,
+          p_categorie_id: categorieId, p_niveau: niveau,
+          p_langue: langue, p_longueur: 7,
         });
         if (e1) throw e1;
-        if (!deck?.length) throw new Error("Aucune question disponible");
+        if (!deck?.length) throw new Error("deck");
 
         const ids = deck.map((d: { question_id: string }) => d.question_id);
         const complete = deck.some((d: { complete: boolean }) => d.complete);
 
-        const { data: partie, error: e2 } = await supabase
-          .from("partie")
-          .insert({
-            utilisateur_id: session.user.id,
-            mode,
-            categorie,
-            niveau,
-            deck: ids,
-            deck_complete: complete,
-            chrono_actif: chronoActif,
-          })
-          .select("id")
-          .single();
+        const { data: partie, error: e2 } = await supabase.from("partie").insert({
+          utilisateur_id: session.user.id, mode, categorie_id: categorieId,
+          niveau, langue, deck: ids, deck_complete: complete,
+          chrono_actif: chronoActif,
+        }).select("id").single();
         if (e2) throw e2;
 
         const { data: qs, error: e3 } = await supabase
-          .from("question_publique")
-          .select("*")
-          .in("id", ids);
+          .from("question_publique").select("*")
+          .eq("langue", langue).in("id", ids);
         if (e3) throw e3;
 
-        // Respecter l'ordre du deck fixé par le serveur.
         const parId = new Map((qs as Question[]).map((q) => [q.id, q]));
-        const ordonnees = ids
-          .map((id: string) => parId.get(id))
-          .filter(Boolean) as Question[];
+        const ordonnees = ids.map((id: string) => parId.get(id)).filter(Boolean) as Question[];
+
+        const { data: cat } = await supabase
+          .from("categorie_publique").select("libelle")
+          .eq("langue", langue).eq("categorie_id", categorieId).maybeSingle();
 
         if (annule) return;
+        setLibelleCategorie(cat?.libelle ?? categorieId);
         setPartieId(partie.id);
         setQuestions(ordonnees);
         setOrdre(melanger(ordonnees[0].reponses.map((_, i) => i)));
@@ -128,115 +105,79 @@ export default function Jeu({
         setChargement(false);
       } catch (e) {
         if (!annule) {
-          setErreur(e instanceof Error ? e.message : "Erreur inattendue");
+          setErreur(e instanceof Error ? e.message : "Erreur");
           setChargement(false);
         }
       }
     })();
-
-    return () => {
-      annule = true;
-    };
+    return () => { annule = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categorie, niveau, mode]);
+  }, [categorieId, niveau, langue, mode]);
 
   const question = questions[position];
 
-  // --- Réponse ------------------------------------------------------------
-  const repondre = useCallback(
-    async (choix: number | null) => {
-      if (!partieId || retour) return;
-      const duree = Date.now() - debutRef.current;
+  const repondre = useCallback(async (choix: number | null) => {
+    if (!partieId || retour) return;
+    const duree = Date.now() - debutRef.current;
+    const { data, error } = await supabase.rpc("valider_reponse", {
+      p_partie_id: partieId, p_position: position,
+      p_choix: choix, p_duree_ms: chronoActif ? duree : null,
+    });
+    if (error) { setErreur(error.message); return; }
+    setRetour(data as Retour);
+  }, [partieId, position, retour, chronoActif, supabase]);
 
-      const { data, error } = await supabase.rpc("valider_reponse", {
-        p_partie_id: partieId,
-        p_position: position,
-        p_choix: choix,
-        p_duree_ms: chronoActif ? duree : null,
-      });
-      if (error) {
-        setErreur(error.message);
-        return;
-      }
-      setRetour(data as Retour);
-    },
-    [partieId, position, retour, chronoActif, supabase]
-  );
-
-  // --- Chronomètre --------------------------------------------------------
   useEffect(() => {
     if (!chronoActif || enPause || retour || chargement || !question) return;
 
-    // Nom explicite : « t » est déjà pris par le dictionnaire au-dessus.
-    // Le masquer ici faisait lire t.partie sur un identifiant de minuteur.
+    // Nom explicite : « t » est pris par le dictionnaire.
     const minuterie = setInterval(() => {
       const reste = Math.max(0, DUREE_MS - (Date.now() - debutRef.current));
       setRestant(reste);
 
-      // Le compteur visuel est masqué aux technologies d'assistance : il se
-      // met à jour dix fois par seconde et saturerait le lecteur d'écran.
-      // Seuls les seuils sont annoncés, dans une région distincte.
       const s = Math.ceil(reste / 1000);
       if (s <= 5 && seuilRef.current > 5) {
-        seuilRef.current = 5;
-        setAlerteTemps(t.partie.alerte5);
+        seuilRef.current = 5; setAlerteTemps(t.partie.alerte5);
       } else if (s <= 10 && seuilRef.current > 10) {
-        seuilRef.current = 10;
-        setAlerteTemps(t.partie.alerte10);
+        seuilRef.current = 10; setAlerteTemps(t.partie.alerte10);
       }
 
-      if (reste === 0) {
-        clearInterval(minuterie);
-        void repondre(null);
-      }
+      if (reste === 0) { clearInterval(minuterie); void repondre(null); }
     }, 100);
 
     return () => clearInterval(minuterie);
-  }, [chronoActif, enPause, retour, chargement, question, repondre]);
+  }, [chronoActif, enPause, retour, chargement, question, repondre, t]);
 
-  // --- Question suivante --------------------------------------------------
   async function suivante() {
     if (position + 1 < questions.length) {
       const p = position + 1;
-      setPosition(p);
-      setRetour(null);
+      setPosition(p); setRetour(null);
       setOrdre(melanger(questions[p].reponses.map((_, i) => i)));
-      setRestant(DUREE_MS);
-      setAlerteTemps("");
-      seuilRef.current = 99;
-      debutRef.current = Date.now();
-      // Le focus repart du titre : sans cela il reste sur un bouton qui
-      // vient de disparaître, et la personne est projetée en haut du
-      // document sans explication.
+      setRestant(DUREE_MS); setAlerteTemps("");
+      seuilRef.current = 99; debutRef.current = Date.now();
+      // Le focus repart du titre, sinon il reste sur un bouton disparu.
       requestAnimationFrame(() => titreRef.current?.focus());
     } else {
-      const { error } = await supabase.rpc("terminer_partie", {
-        p_partie_id: partieId,
-      });
-      if (error) {
-        setErreur(error.message);
-        return;
-      }
-      router.push(`/resultat/${partieId}`);
+      const { error } = await supabase.rpc("terminer_partie", { p_partie_id: partieId });
+      if (error) { setErreur(error.message); return; }
+      router.push(`/${langue}/resultat/${partieId}`);
     }
   }
 
   if (chargement) return <p>{t.partie.preparation}</p>;
+
   if (erreur) {
-    const verrouille = /verrouill/i.test(erreur);
+    const verrouille = /verrouill|locked|42501/i.test(erreur);
+    const indispo = /disponible|P0002/i.test(erreur);
     return (
       <>
         <h1 tabIndex={-1}>{t.partie.titrePage}</h1>
         <p role="alert">
-          {verrouille
-            ? t.partie.niveauVerrouille
+          {verrouille ? t.partie.niveauVerrouille
+            : indispo ? t.disponibilite.categorieIndisponible
             : t.partie.erreurDemarrage(erreur)}
         </p>
-        <p>
-          <a href={`/categorie/${slugifier(categorie)}`}>
-            {t.partie.retourCategorie(categorie)}
-          </a>
-        </p>
+        <p><a href={`/${langue}`}>{t.commun.retourAccueil}</a></p>
       </>
     );
   }
@@ -251,7 +192,7 @@ export default function Jeu({
       <p>
         <label htmlFor="avancement">{t.partie.avancement}</label>{" "}
         <progress id="avancement" value={position + 1} max={questions.length}>
-          {position + 1} sur {questions.length}
+          {position + 1} / {questions.length}
         </progress>
       </p>
 
@@ -259,6 +200,8 @@ export default function Jeu({
         <h2 id="titre-chrono">{t.partie.titreChrono}</h2>
         {chronoActif ? (
           <>
+            {/* Masqué aux technologies d'assistance : dix mises à jour par
+                seconde satureraient le lecteur d'écran. */}
             <p aria-hidden="true" className="chrono">
               {t.partie.secondes((restant / 1000).toFixed(1))}
             </p>
@@ -272,11 +215,8 @@ export default function Jeu({
             </p>
           </>
         ) : (
-          <p>
-            {t.partie.chronoDesactive}
-          </p>
+          <p>{t.partie.chronoDesactive}</p>
         )}
-        {/* Région d'alerte distincte, présente dès le chargement. */}
         <p role="status" aria-live="polite" className="visuellement-masque">
           {alerteTemps}
         </p>
@@ -285,46 +225,32 @@ export default function Jeu({
       <article aria-labelledby="enonce">
         <h2 className="visuellement-masque">{t.partie.enonce}</h2>
         <p className="meta">
-          {t.partie.meta(question.categorie, question.sous_categorie, question.difficulte)}
+          {t.partie.meta(libelleCategorie, question.sous_categorie, question.difficulte)}
         </p>
 
         {question.image_id && (
           <figure>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={`/images/${question.image_id}.webp`}
-              alt={question.image_alt ?? ""}
-              loading="lazy"
-              width={900}
-              height={600}
-            />
+            <img src={`/images/${question.image_id}.webp`}
+                 alt={question.image_alt ?? ""} loading="lazy"
+                 width={900} height={600} />
           </figure>
         )}
 
-        <p id="enonce" className="enonce">
-          {question.enonce}
-        </p>
+        <p id="enonce" className="enonce">{question.enonce}</p>
 
-        {/* Des boutons, pas des boutons radio : le clic EST la réponse,
-            définitive et chronométrée. */}
+        {/* Des boutons, pas des boutons radio : le clic EST la réponse. */}
         <ul aria-labelledby="enonce" className="reponses">
           {ordre.map((indexOrigine) => {
-            const texte = question.reponses[indexOrigine];
             const estBonne = retour?.bonne_reponse === indexOrigine;
-            let suffixe = "";
-            if (retour) {
-              if (estBonne) suffixe = t.partie.bonneReponseSuffixe;
-            }
             return (
               <li key={indexOrigine}>
-                <button
-                  type="button"
-                  aria-disabled={retour ? true : undefined}
-                  onClick={() => repondre(indexOrigine)}
-                  className={retour && estBonne ? "bonne" : undefined}
-                >
-                  {texte}
-                  {suffixe}
+                <button type="button"
+                        aria-disabled={retour ? true : undefined}
+                        onClick={() => repondre(indexOrigine)}
+                        className={retour && estBonne ? "bonne" : undefined}>
+                  {question.reponses[indexOrigine]}
+                  {retour && estBonne ? t.partie.bonneReponseSuffixe : ""}
                 </button>
               </li>
             );
@@ -332,8 +258,8 @@ export default function Jeu({
         </ul>
       </article>
 
-      {/* Région de retour, présente dès le chargement et vide : une région
-          live insérée après coup n'est pas annoncée de façon fiable. */}
+      {/* Région présente dès le chargement : une région live insérée après
+          coup n'est pas annoncée de façon fiable. */}
       <div role="status" aria-live="polite">
         {retour && (
           <>
@@ -357,8 +283,7 @@ export default function Jeu({
         <p>
           <button type="button" onClick={suivante}>
             {position + 1 < questions.length
-              ? t.partie.questionSuivante
-              : t.partie.voirResultat}
+              ? t.partie.questionSuivante : t.partie.voirResultat}
           </button>
         </p>
       )}

@@ -4,42 +4,27 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { creerClientNavigateur } from "@/lib/supabase/client";
 import { assurerSession } from "@/lib/session";
-import { dictionnaire } from "@/lib/i18n";
+import { dictionnaire, type Langue } from "@/lib/i18n";
 
 type Badge = {
-  id: string;
-  libelle: string;
-  condition: string;
-  objectif: number;
-  avancement: number;
-  obtenu: boolean;
+  id: string; libelle: string; condition: string;
+  objectif: number; avancement: number; obtenu: boolean;
 };
 
 type Etat = {
-  xp: number;
-  rang: string;
-  rang_seuil: number;
-  rang_suivant: string | null;
-  xp_rang_suivant: number | null;
-  serie_jours: number;
-  serie_record: number;
-  parties: number;
-  taux_reussite: number | null;
-  badges: Badge[];
+  xp: number; pseudo: string | null; rang: string; rang_seuil: number;
+  rang_suivant: string | null; xp_rang_suivant: number | null;
+  serie_jours: number; serie_record: number; parties: number;
+  taux_reussite: number | null; badges: Badge[];
 };
 
 type Defi = {
-  categorie: string;
-  niveau: string;
-  recompense_xp: number;
-  fait: boolean;
+  categorie_id: string; libelle: string; slug: string;
+  niveau: string; recompense_xp: number; fait: boolean;
 };
 
-/** Progression du joueur et défi du jour.
- *  Données personnelles, donc chargées après montage : la page d'accueil
- *  reste rendue sur le serveur et indexable. */
-export default function Progression() {
-  const t = dictionnaire();
+export default function Progression({ langue }: { langue: Langue }) {
+  const t = dictionnaire(langue);
   const [etat, setEtat] = useState<Etat | null>(null);
   const [defi, setDefi] = useState<Defi | null>(null);
   const [pret, setPret] = useState(false);
@@ -51,8 +36,8 @@ export default function Progression() {
         await assurerSession();
         const supabase = creerClientNavigateur();
         const [p, d] = await Promise.all([
-          supabase.rpc("progression"),
-          supabase.rpc("defi_du_jour"),
+          supabase.rpc("progression", { p_langue: langue }),
+          supabase.rpc("defi_du_jour", { p_langue: langue }),
         ]);
         if (annule) return;
         if (p.data) setEtat(p.data as Etat);
@@ -61,10 +46,8 @@ export default function Progression() {
         if (!annule) setPret(true);
       }
     })();
-    return () => {
-      annule = true;
-    };
-  }, []);
+    return () => { annule = true; };
+  }, [langue]);
 
   if (!pret) {
     return (
@@ -77,7 +60,6 @@ export default function Progression() {
 
   const enCours = etat?.xp_rang_suivant != null;
   const restant = enCours ? etat!.xp_rang_suivant! - etat!.xp : 0;
-
   const obtenus = etat?.badges.filter((b) => b.obtenu) ?? [];
   const restants = (etat?.badges.length ?? 0) - obtenus.length;
 
@@ -88,39 +70,28 @@ export default function Progression() {
 
         {etat && etat.parties > 0 ? (
           <>
-            {/* L'information est portée par le TEXTE. L'élément <progress>
-                ne fait que la redoubler visuellement : sa valeur est
-                annoncée de façon inégale selon les lecteurs d'écran. */}
+            {/* L'information est portée par le TEXTE ; <progress> ne fait
+                que la redoubler visuellement. */}
             <p>
               {t.progression.rangActuel} <strong>{etat.rang}</strong>.{" "}
               {enCours
-                ? t.progression.resteAvantRang(
-                    restant,
-                    etat.rang_suivant!,
-                    etat.xp,
-                    etat.xp_rang_suivant!
-                  )
+                ? t.progression.resteAvantRang(restant, etat.rang_suivant!, etat.xp, etat.xp_rang_suivant!)
                 : t.progression.rangMaximal(etat.xp)}
             </p>
             {enCours && (
-              <progress
-                value={etat.xp - etat.rang_seuil}
-                max={etat.xp_rang_suivant! - etat.rang_seuil}
-                aria-hidden="true"
-              />
+              <progress value={etat.xp - etat.rang_seuil}
+                        max={etat.xp_rang_suivant! - etat.rang_seuil}
+                        aria-hidden="true" />
             )}
-
             {etat.taux_reussite != null && (
               <p>{t.progression.tauxReussite(etat.taux_reussite, etat.parties)}</p>
             )}
-
             {etat.serie_jours > 0 && (
               <p>
                 <time dateTime={`P${etat.serie_jours}D`}>
                   {t.progression.serie(etat.serie_jours)}
                 </time>
-                {etat.serie_record > etat.serie_jours &&
-                  t.progression.record(etat.serie_record)}
+                {etat.serie_record > etat.serie_jours && t.progression.record(etat.serie_record)}
               </p>
             )}
           </>
@@ -132,17 +103,15 @@ export default function Progression() {
       {defi && (
         <section aria-labelledby="titre-defi">
           <h2 id="titre-defi">{t.defi.titre}</h2>
-          <h3>{defi.categorie}</h3>
+          <h3>{defi.libelle}</h3>
           {defi.fait ? (
             <p>{t.defi.dejaFait}</p>
           ) : (
             <>
               <p>{t.defi.presentation(defi.recompense_xp)}</p>
               <p>
-                <Link
-                  href={`/partie?categorie=${encodeURIComponent(defi.categorie)}&niveau=${defi.niveau}&mode=defi_du_jour`}
-                >
-                  {t.defi.jouer(defi.categorie)}
+                <Link href={`/${langue}/partie?categorie=${defi.categorie_id}&niveau=${defi.niveau}&mode=defi_du_jour`}>
+                  {t.defi.jouer(defi.libelle)}
                 </Link>
               </p>
             </>
@@ -153,10 +122,7 @@ export default function Progression() {
       {etat && etat.badges.length > 0 && (
         <section aria-labelledby="titre-badges">
           <h2 id="titre-badges">{t.badges.titre}</h2>
-
-          {/* Seuls les badges OBTENUS sont listés ici. Une grille de huit
-              médaillons dont six grisés affiche surtout ce qu'on n'a pas.
-              Le détail et les conditions sont sur le profil. */}
+          {/* Seuls les badges OBTENUS ici : l'accueil récompense, le profil informe. */}
           {obtenus.length === 0 ? (
             <p>{t.badges.aucun}</p>
           ) : (
@@ -164,18 +130,14 @@ export default function Progression() {
               <p>{t.badges.compteur(obtenus.length, etat.badges.length)}</p>
               <ul>
                 {obtenus.map((b) => (
-                  <li key={b.id}>
-                    <strong>{b.libelle}</strong> — {b.condition}.
-                  </li>
+                  <li key={b.id}><strong>{b.libelle}</strong> — {b.condition}.</li>
                 ))}
               </ul>
             </>
           )}
-
           {restants > 0 && <p>{t.badges.resteADebloquer(restants)}</p>}
-
           <p>
-            <Link href="/profil">{t.badges.voirTous(etat.badges.length)}</Link>
+            <Link href={`/${langue}/profil`}>{t.badges.voirTous(etat.badges.length)}</Link>
           </p>
         </section>
       )}
