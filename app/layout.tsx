@@ -1,43 +1,46 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { dictionnaire, LANGUE_PAR_DEFAUT } from "@/lib/i18n";
 import "./lecture.css";
 
+const t = dictionnaire();
+
 export const metadata: Metadata = {
-  title: {
-    default: "Repensons le Congo Quiz — apprendre la RDC en jouant",
-    template: "%s — Repensons le Congo Quiz",
-  },
-  description:
-    "Repensons le Congo Quiz est une application gratuite de 1 445 questions sourcées sur la République démocratique du Congo.",
+  title: { default: t.accueil.titrePage, template: `%s — ${t.marque.nom}` },
+  description: t.marque.descriptionMeta,
 };
 
-export default function RacineLayout({ children }: { children: React.ReactNode }) {
+export default function RacineLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="fr">
+    <html lang={LANGUE_PAR_DEFAUT}>
       <body>
-        {/* Liens d'évitement : premiers éléments focusables du document. */}
-        <nav aria-label="Accès rapide" className="evitement">
+        <nav aria-label={t.navigation.accesRapide} className="evitement">
           <ul>
-            <li><a href="#contenu">Aller au contenu</a></li>
+            <li><a href="#contenu">{t.navigation.allerAuContenu}</a></li>
           </ul>
         </nav>
 
-        <header aria-label="Repensons le Congo Quiz">
-          <p><Link href="/">Repensons le Congo Quiz</Link></p>
-          <nav aria-label="Navigation principale">
+        <header aria-label={t.marque.nom}>
+          <p><Link href="/">{t.marque.nom}</Link></p>
+          <nav aria-label={t.navigation.principale}>
             <ul>
-              <li><Link href="/profil">Profil</Link></li>
+              <li><Link href="/">{t.navigation.accueil}</Link></li>
+              <li><Link href="/profil">{t.navigation.profil}</Link></li>
             </ul>
           </nav>
         </header>
 
         <main id="contenu">{children}</main>
 
-        <footer aria-label="Informations sur le site">
-          <nav aria-label="Navigation secondaire">
+        <footer aria-label={t.navigation.infosSite}>
+          <nav aria-label={t.navigation.secondaire}>
             <ul>
-              <li><Link href="/a-propos">À propos du projet</Link></li>
-              <li><Link href="/accessibilite">Déclaration d’accessibilité</Link></li>
+              <li><Link href="/a-propos">{t.navigation.aPropos}</Link></li>
+              <li><Link href="/accessibilite">{t.navigation.accessibilite}</Link></li>
             </ul>
           </nav>
         </footer>

@@ -1,19 +1,15 @@
 import Link from "next/link";
 import { creerClientServeur } from "@/lib/supabase/serveur";
 import { slugifier } from "@/lib/slug";
+import { dictionnaire } from "@/lib/i18n";
+import Progression from "./progression";
 
-// Rendu serveur : la page arrive au robot déjà remplie.
 export const revalidate = 300;
 
-type Categorie = {
-  categorie: string;
-  nb_questions: number;
-  nb_facile: number;
-  nb_moyen: number;
-  nb_difficile: number;
-};
+type Categorie = { categorie: string; nb_questions: number };
 
 export default async function Accueil() {
+  const t = dictionnaire();
   const supabase = await creerClientServeur();
   const { data, error } = await supabase
     .from("categorie_publique")
@@ -23,10 +19,8 @@ export default async function Accueil() {
   if (error) {
     return (
       <>
-        <h1>Repensons le Congo Quiz</h1>
-        <p role="alert">
-          Les catégories n’ont pas pu être chargées. Réessaie dans un instant.
-        </p>
+        <h1>{t.marque.nom}</h1>
+        <p role="alert">{t.accueil.erreurCategories}</p>
       </>
     );
   }
@@ -36,22 +30,14 @@ export default async function Accueil() {
 
   return (
     <>
-      <h1 tabIndex={-1}>Repensons le Congo Quiz</h1>
-      <p>Un grand pays, mille histoires. Joue, apprends et célèbre le Congo.</p>
+      <h1 tabIndex={-1}>{t.marque.nom}</h1>
+      <p>{t.marque.slogan}</p>
+      <p>{t.marque.presentation(total, categories.length)}</p>
 
-      {/* Phrase d'orientation : elle sert à la fois au lecteur d'écran, au
-          moteur de recherche et au modèle de langage. */}
-      <p>
-        Repensons le Congo Quiz est une application gratuite de culture générale
-        sur la République démocratique du Congo. Elle réunit {total} questions
-        réparties en {categories.length} catégories, chacune accompagnée d’une
-        explication et d’un lien vers sa source.
-      </p>
+      <Progression />
 
-      {/* aria-labelledby fait de cette section une région : elle apparaît
-          alors dans le rotor du lecteur d'écran. */}
       <section id="categories" aria-labelledby="titre-categories">
-        <h2 id="titre-categories">Les catégories</h2>
+        <h2 id="titre-categories">{t.accueil.titreCategories}</h2>
         <ul className="cartes">
           {categories.map((c) => (
             <li key={c.categorie}>
@@ -60,7 +46,7 @@ export default async function Accueil() {
                   {c.categorie}
                 </Link>
               </h3>
-              <p>{c.nb_questions} questions.</p>
+              <p>{t.accueil.nbQuestions(c.nb_questions)}</p>
             </li>
           ))}
         </ul>

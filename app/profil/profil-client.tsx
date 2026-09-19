@@ -1,0 +1,187 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { creerClientNavigateur } from "@/lib/supabase/client";
+import { assurerSession } from "@/lib/session";
+import { slugifier } from "@/lib/slug";
+import { dictionnaire } from "@/lib/i18n";
+
+type Badge = {
+  id: string;
+  libelle: string;
+  condition: string;
+  objectif: number;
+  avancement: number;
+  obtenu: boolean;
+};
+
+type Maitrise = { categorie: string; etoiles: number };
+
+type Etat = {
+  xp: number;
+  rang: string;
+  rang_seuil: number;
+  rang_suivant: string | null;
+  xp_rang_suivant: number | null;
+  serie_jours: number;
+  serie_record: number;
+  anonyme: boolean;
+  parties: number;
+  taux_reussite: number | null;
+  badges: Badge[];
+  maitrise: Maitrise[];
+};
+
+export default function ProfilClient() {
+  const t = dictionnaire();
+  const [etat, setEtat] = useState<Etat | null>(null);
+  const [pret, setPret] = useState(false);
+
+  useEffect(() => {
+    let annule = false;
+    (async () => {
+      try {
+        await assurerSession();
+        const supabase = creerClientNavigateur();
+        const { data } = await supabase.rpc("progression");
+        if (!annule && data) setEtat(data as Etat);
+      } finally {
+        if (!annule) setPret(true);
+      }
+    })();
+    return () => {
+      annule = true;
+    };
+  }, []);
+
+  if (!pret) return <p>{t.profil.chargement}</p>;
+
+  if (!etat) {
+    return (
+      <>
+        <h1 tabIndex={-1}>{t.profil.titre}</h1>
+        <p>{t.profil.erreur}</p>
+      </>
+    );
+  }
+
+  const obtenus = etat.badges.filter((b) => b.obtenu);
+  const aVenir = etat.badges.filter((b) => !b.obtenu);
+  const enCours = etat.xp_rang_suivant != null;
+
+  return (
+    <>
+      <h1 tabIndex={-1}>{t.profil.titre}</h1>
+
+      <section aria-labelledby="titre-rang">
+        <h2 id="titre-rang">{t.profil.titreRang}</h2>
+        <p>
+          {t.profil.rangPhrase(etat.rang, etat.xp)}
+          {enCours &&
+            t.profil.resteAvantRang(
+              etat.xp_rang_suivant! - etat.xp,
+              etat.rang_suivant!
+            )}
+        </p>
+        {enCours && (
+          <progress
+            value={etat.xp - etat.rang_seuil}
+            max={etat.xp_rang_suivant! - etat.rang_seuil}
+            aria-hidden="true"
+          />
+        )}
+      </section>
+
+      <section aria-labelledby="titre-stats">
+        <h2 id="titre-stats">{t.profil.titreStats}</h2>
+        <dl>
+          <dt>{t.profil.partiesJouees}</dt>
+          <dd>{etat.parties}</dd>
+          <dt>{t.profil.tauxReussite}</dt>
+          <dd>
+            {etat.taux_reussite != null
+              ? `${etat.taux_reussite} %`
+              : t.commun.sansValeur}
+          </dd>
+          <dt>{t.profil.serieEnCours}</dt>
+          <dd>
+            <time dateTime={`P${etat.serie_jours}D`}>
+              {t.profil.jours(etat.serie_jours)}
+            </time>
+          </dd>
+          <dt>{t.profil.meilleureSerie}</dt>
+          <dd>
+            <time dateTime={`P${etat.serie_record}D`}>
+              {t.profil.jours(etat.serie_record)}
+            </time>
+          </dd>
+        </dl>
+      </section>
+
+      <section id="badges" aria-labelledby="titre-badges">
+        <h2 id="titre-badges">{t.badges.titre}</h2>
+        <p>{t.badges.compteur(obtenus.length, etat.badges.length)}</p>
+
+        <h3>{t.badges.obtenus}</h3>
+        {obtenus.length === 0 ? (
+          <p>{t.badges.aucun}</p>
+        ) : (
+          <ul>
+            {obtenus.map((b) => (
+              <li key={b.id}>
+                <strong>{b.libelle}</strong> — {b.condition}.
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <h3>{t.badges.aDebloquer}</h3>
+        <ul>
+          {aVenir.map((b) => (
+            // La classe ne fait que griser : l'état est déjà écrit dans le
+            // texte, la couleur ne porte jamais l'information seule.
+            <li key={b.id} className="badge-verrouille">
+              <strong>{b.libelle}</strong> — {b.condition}.{" "}
+              {t.badges.avancement(b.avancement, b.objectif)}.
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section aria-labelledby="titre-maitrise">
+        <h2 id="titre-maitrise">{t.profil.titreMaitrise}</h2>
+        {etat.maitrise.length === 0 ? (
+          <p>{t.profil.aucuneEtoile}</p>
+        ) : (
+          <table>
+            <caption>{t.profil.legendeMaitrise}</caption>
+            <thead>
+              <tr>
+                <th scope="col">{t.profil.colCategorie}</th>
+                <th scope="col">{t.profil.colEtoiles}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {etat.maitrise.map((m) => (
+                <tr key={m.categorie}>
+                  <th scope="row">
+                    <Link href={`/categorie/${slugifier(m.categorie)}`}>
+                      {m.categorie}
+                    </Link>
+                  </th>
+                  <td>{m.etoiles}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </section>
+
+      <section aria-labelledby="titre-compte">
+        <h2 id="titre-compte">{t.profil.titreCompte}</h2>
+        <p>{etat.anonyme ? t.profil.compteAnonyme : t.profil.compteSynchronise}</p>
+      </section>
+    </>
+  );
+}

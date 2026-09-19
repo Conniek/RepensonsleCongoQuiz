@@ -12,11 +12,7 @@ export function slugifier(libelle: string): string {
     .replace(/^-|-$/g, "");
 }
 
+/** Les niveaux sont une donnée du domaine, pas du texte : leurs libellés
+ *  visibles vivent dans le dictionnaire (lib/i18n). */
 export const NIVEAUX = ["facile", "moyen", "difficile"] as const;
 export type Niveau = (typeof NIVEAUX)[number];
-
-export const LIBELLE_NIVEAU: Record<Niveau, string> = {
-  facile: "Facile",
-  moyen: "Moyen",
-  difficile: "Difficile",
-};

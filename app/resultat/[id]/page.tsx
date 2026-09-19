@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { creerClientServeur } from "@/lib/supabase/serveur";
-import { slugifier, LIBELLE_NIVEAU, type Niveau } from "@/lib/slug";
+import { slugifier, type Niveau } from "@/lib/slug";
+import { dictionnaire } from "@/lib/i18n";
 
-export const metadata = { title: "Résultat de la partie" };
+const t = dictionnaire();
+
+export const metadata = { title: t.resultat.titrePage };
 
 export default async function PageResultat({
   params,
@@ -24,77 +27,94 @@ export default async function PageResultat({
 
   const { data: reponses } = await supabase
     .from("reponse")
-    .select("position, correcte, points, question_id")
+    .select("position, correcte, points")
     .eq("partie_id", id)
     .order("position");
 
+  const { data: badges } = await supabase
+    .from("badge")
+    .select("id, libelle, condition");
+
   const gagnee = partie.points >= 900 && partie.bonnes >= 5;
   const niveau = partie.niveau as Niveau;
+  const gagnes = (partie.badges_gagnes ?? []) as string[];
 
   return (
     <>
-      <h1 tabIndex={-1}>{gagnee ? "Partie remportée" : "Partie terminée"}</h1>
+      <h1 tabIndex={-1}>
+        {gagnee ? t.resultat.remportee : t.resultat.terminee}
+      </h1>
 
       <section aria-labelledby="titre-score">
-        <h2 id="titre-score">Ton score</h2>
+        <h2 id="titre-score">{t.resultat.titreScore}</h2>
         <dl>
-          <dt>Points</dt>
-          <dd>{partie.points} points</dd>
-          <dt>Bonnes réponses</dt>
+          <dt>{t.resultat.points}</dt>
+          <dd>{t.resultat.pointsValeur(partie.points)}</dd>
+          <dt>{t.resultat.bonnesReponses}</dt>
+          <dd>{t.resultat.bonnesValeur(partie.bonnes, partie.deck.length)}</dd>
+          <dt>{t.resultat.experience}</dt>
+          <dd>{t.resultat.experienceValeur(partie.xp_gagne)}</dd>
+          <dt>{t.resultat.conditionVictoire}</dt>
           <dd>
-            {partie.bonnes} sur {partie.deck.length}
-          </dd>
-          <dt>Condition de victoire</dt>
-          <dd>
-            900 points et 5 bonnes réponses sur 7.{" "}
-            {gagnee ? "Atteinte." : "Non atteinte cette fois."}
+            {t.resultat.conditionTexte}{" "}
+            {gagnee
+              ? t.resultat.conditionAtteinte
+              : t.resultat.conditionNonAtteinte}
           </dd>
         </dl>
 
-        {/* Honnêteté sur le repli : si le pool était insuffisant, on le dit
-            plutôt que de laisser croire que le niveau était complet. */}
-        {partie.deck_complete && (
-          <p className="note">
-            Cette catégorie manque de questions à ce niveau. La partie a été
-            complétée avec des questions de difficulté voisine.
-          </p>
-        )}
-
-        {!partie.chrono_actif && (
-          <p className="note">
-            Chronomètre désactivé : la partie est valide, sans bonus de rapidité.
-          </p>
-        )}
+        {partie.deck_complete && <p className="note">{t.resultat.deckComplete}</p>}
+        {!partie.chrono_actif && <p className="note">{t.resultat.sansChrono}</p>}
       </section>
 
+      {gagnes.length > 0 && (
+        <section aria-labelledby="titre-badges">
+          <h2 id="titre-badges">{t.badges.nouveaux(gagnes.length)}</h2>
+          <ul>
+            {gagnes.map((idBadge) => {
+              const b = badges?.find((x) => x.id === idBadge);
+              return (
+                <li key={idBadge}>
+                  <strong>{b?.libelle ?? idBadge}</strong>
+                  {b?.condition ? ` — ${b.condition}.` : ""}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
+
       <section aria-labelledby="titre-detail">
-        <h2 id="titre-detail">Le détail de tes réponses</h2>
+        <h2 id="titre-detail">{t.resultat.titreDetail}</h2>
         <ol>
           {(reponses ?? []).map((r) => (
             <li key={r.position}>
-              Question {r.position + 1} :{" "}
-              {r.correcte ? "bonne réponse" : "mauvaise réponse"}, {r.points}{" "}
-              points.
+              {t.resultat.ligneReponse(r.position + 1, r.correcte, r.points)}
             </li>
           ))}
         </ol>
       </section>
 
       <section aria-labelledby="titre-suite">
-        <h2 id="titre-suite">Et maintenant</h2>
+        <h2 id="titre-suite">{t.resultat.titreSuite}</h2>
         <ul>
           <li>
-            <Link href={`/partie?categorie=${encodeURIComponent(partie.categorie)}&niveau=${niveau}`}>
-              Rejouer le niveau {LIBELLE_NIVEAU[niveau].toLowerCase()}
+            <Link
+              href={`/partie?categorie=${encodeURIComponent(partie.categorie)}&niveau=${niveau}`}
+            >
+              {t.resultat.rejouer(t.niveaux[niveau])}
             </Link>
           </li>
           <li>
             <Link href={`/categorie/${slugifier(partie.categorie)}`}>
-              Revenir à {partie.categorie}
+              {t.partie.retourCategorie(partie.categorie)}
             </Link>
           </li>
           <li>
-            <Link href="/">Revenir à l’accueil</Link>
+            <Link href="/profil">{t.resultat.voirProgression}</Link>
+          </li>
+          <li>
+            <Link href="/">{t.commun.retourAccueil}</Link>
           </li>
         </ul>
       </section>

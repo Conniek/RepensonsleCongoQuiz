@@ -2,10 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { creerClientServeur } from "@/lib/supabase/serveur";
 import { slugifier, type Niveau } from "@/lib/slug";
+import { dictionnaire } from "@/lib/i18n";
 import Niveaux from "./niveaux";
 
-// Rendu serveur : la page arrive au robot déjà remplie. L'état de
-// déblocage, qui dépend de la session, est chargé côté client ensuite.
 export const revalidate = 300;
 
 type Categorie = {
@@ -32,9 +31,10 @@ export async function generateMetadata({
   const { slug } = await params;
   const c = await trouverCategorie(slug);
   if (!c) return {};
+  const t = dictionnaire();
   return {
     title: c.categorie,
-    description: `${c.nb_questions} questions sur ${c.categorie} en République démocratique du Congo, réparties en trois niveaux de difficulté.`,
+    description: t.categorie.descriptionMeta(c.nb_questions, c.categorie),
   };
 }
 
@@ -44,6 +44,7 @@ export default async function PageCategorie({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const t = dictionnaire();
   const categorie = await trouverCategorie(slug);
   if (!categorie) notFound();
 
@@ -55,31 +56,24 @@ export default async function PageCategorie({
 
   return (
     <>
-      <nav aria-label="Fil d’Ariane">
+      <nav aria-label={t.navigation.filAriane}>
         <ol className="ariane">
-          <li>
-            <Link href="/">Accueil</Link>
-          </li>
+          <li><Link href="/">{t.navigation.accueil}</Link></li>
           <li aria-current="page">{categorie.categorie}</li>
         </ol>
       </nav>
 
       <h1 tabIndex={-1}>{categorie.categorie}</h1>
-      <p>{categorie.nb_questions} questions réparties en trois niveaux.</p>
+      <p>{t.categorie.intro(categorie.nb_questions)}</p>
 
       <section aria-labelledby="titre-niveaux">
-        <h2 id="titre-niveaux">Choisis ton niveau</h2>
+        <h2 id="titre-niveaux">{t.categorie.titreNiveaux}</h2>
         <Niveaux categorie={categorie.categorie} dispo={dispo} />
       </section>
 
       <section aria-labelledby="titre-regles">
-        <h2 id="titre-regles">Comment gagner une étoile</h2>
-        <p>
-          Une partie compte sept questions. Pour la remporter il faut atteindre
-          900 points et au moins cinq bonnes réponses sur sept. Chaque victoire
-          rapporte une étoile, deux par niveau, et deux étoiles débloquent le
-          niveau suivant.
-        </p>
+        <h2 id="titre-regles">{t.categorie.titreRegles}</h2>
+        <p>{t.categorie.regles}</p>
       </section>
     </>
   );

@@ -4,7 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { creerClientNavigateur } from "@/lib/supabase/client";
 import { assurerSession } from "@/lib/session";
-import type { Niveau } from "@/lib/slug";
+import { slugifier, type Niveau } from "@/lib/slug";
+import { dictionnaire } from "@/lib/i18n";
 
 const DUREE_MS = 15_000;
 
@@ -41,10 +42,13 @@ function melanger<T>(t: T[]): T[] {
 export default function Jeu({
   categorie,
   niveau,
+  mode = "solo",
 }: {
   categorie: string;
   niveau: Niveau;
+  mode?: "solo" | "defi_du_jour";
 }) {
+  const t = dictionnaire();
   const router = useRouter();
   const supabase = creerClientNavigateur();
 
@@ -93,7 +97,7 @@ export default function Jeu({
           .from("partie")
           .insert({
             utilisateur_id: session.user.id,
-            mode: "solo",
+            mode,
             categorie,
             niveau,
             deck: ids,
@@ -134,7 +138,7 @@ export default function Jeu({
       annule = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [categorie, niveau]);
+  }, [categorie, niveau, mode]);
 
   const question = questions[position];
 
@@ -173,10 +177,10 @@ export default function Jeu({
       const s = Math.ceil(reste / 1000);
       if (s <= 5 && seuilRef.current > 5) {
         seuilRef.current = 5;
-        setAlerteTemps("5 secondes");
+        setAlerteTemps(t.partie.alerte5);
       } else if (s <= 10 && seuilRef.current > 10) {
         seuilRef.current = 10;
-        setAlerteTemps("10 secondes");
+        setAlerteTemps(t.partie.alerte10);
       }
 
       if (reste === 0) {
@@ -215,49 +219,59 @@ export default function Jeu({
     }
   }
 
-  if (chargement) return <p>Préparation de la partie…</p>;
-  if (erreur)
+  if (chargement) return <p>{t.partie.preparation}</p>;
+  if (erreur) {
+    const verrouille = /verrouill/i.test(erreur);
     return (
       <>
-        <h1>Partie</h1>
-        <p role="alert">La partie n’a pas pu démarrer : {erreur}</p>
+        <h1 tabIndex={-1}>{t.partie.titrePage}</h1>
+        <p role="alert">
+          {verrouille
+            ? t.partie.niveauVerrouille
+            : t.partie.erreurDemarrage(erreur)}
+        </p>
+        <p>
+          <a href={`/categorie/${slugifier(categorie)}`}>
+            {t.partie.retourCategorie(categorie)}
+          </a>
+        </p>
       </>
     );
+  }
   if (!question) return null;
 
   return (
     <>
       <h1 tabIndex={-1} ref={titreRef}>
-        Question {position + 1} sur {questions.length}
+        {t.partie.question(position + 1, questions.length)}
       </h1>
 
       <p>
-        <label htmlFor="avancement">Avancement dans la partie</label>{" "}
+        <label htmlFor="avancement">{t.partie.avancement}</label>{" "}
         <progress id="avancement" value={position + 1} max={questions.length}>
           {position + 1} sur {questions.length}
         </progress>
       </p>
 
       <section aria-labelledby="titre-chrono">
-        <h2 id="titre-chrono">Temps restant</h2>
+        <h2 id="titre-chrono">{t.partie.titreChrono}</h2>
         {chronoActif ? (
           <>
             <p aria-hidden="true" className="chrono">
-              {(restant / 1000).toFixed(1)} s
+              {t.partie.secondes((restant / 1000).toFixed(1))}
             </p>
             <p>
               <button type="button" onClick={() => setEnPause((v) => !v)}>
-                {enPause ? "Reprendre" : "Mettre en pause"}
+                {enPause ? t.partie.reprendre : t.partie.mettreEnPause}
               </button>{" "}
               <button type="button" onClick={() => setChronoActif(false)}>
-                Désactiver le chronomètre
+                {t.partie.desactiverChrono}
               </button>
             </p>
           </>
         ) : (
           <p>
-            Chronomètre désactivé. La partie reste valide mais ne rapporte pas
-            de bonus de rapidité.
+            {t.partie.chronoDesactive}
           </p>
         )}
         {/* Région d'alerte distincte, présente dès le chargement. */}
@@ -267,11 +281,9 @@ export default function Jeu({
       </section>
 
       <article aria-labelledby="enonce">
-        <h2 className="visuellement-masque">Énoncé</h2>
+        <h2 className="visuellement-masque">{t.partie.enonce}</h2>
         <p className="meta">
-          {question.categorie}
-          {question.sous_categorie ? ` · ${question.sous_categorie}` : ""} ·
-          difficulté {question.difficulte} sur 5
+          {t.partie.meta(question.categorie, question.sous_categorie, question.difficulte)}
         </p>
 
         {question.image_id && (
@@ -299,7 +311,7 @@ export default function Jeu({
             const estBonne = retour?.bonne_reponse === indexOrigine;
             let suffixe = "";
             if (retour) {
-              if (estBonne) suffixe = " — bonne réponse";
+              if (estBonne) suffixe = t.partie.bonneReponseSuffixe;
             }
             return (
               <li key={indexOrigine}>
@@ -323,16 +335,16 @@ export default function Jeu({
       <div role="status" aria-live="polite">
         {retour && (
           <>
-            <h2>{retour.correcte ? "Bonne réponse" : "Mauvaise réponse"}</h2>
+            <h2>{retour.correcte ? t.partie.bonneReponse : t.partie.mauvaiseReponse}</h2>
             {retour.explication && <p>{retour.explication}</p>}
-            <p>{retour.points} points gagnés sur cette question.</p>
+            <p>{t.partie.pointsGagnes(retour.points)}</p>
             {retour.source_url && (
               <p>
-                Source :{" "}
+                {t.partie.source}{" "}
                 <a href={retour.source_url} rel="noopener" target="_blank">
-                  {retour.source_titre ?? "consulter la source"}
+                  {retour.source_titre ?? t.partie.consulterSource}
                 </a>{" "}
-                (nouvelle fenêtre)
+                {t.commun.nouvelleFenetre}
               </p>
             )}
           </>
@@ -343,8 +355,8 @@ export default function Jeu({
         <p>
           <button type="button" onClick={suivante}>
             {position + 1 < questions.length
-              ? "Question suivante"
-              : "Voir le résultat"}
+              ? t.partie.questionSuivante
+              : t.partie.voirResultat}
           </button>
         </p>
       )}

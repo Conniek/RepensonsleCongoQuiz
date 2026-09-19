@@ -127,3 +127,7 @@ progress { width: 100%; height: .5rem; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Badge non encore obtenu. La couleur ne fait que RENFORCER : l'état et
+   l'avancement sont déjà écrits dans le texte de la ligne. */
+.badge-verrouille { color: var(--discret); }
