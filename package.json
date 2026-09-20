@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run verifier:jetons && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "verifier:jetons": "node scripts/verifier-jetons.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { dictionnaire, estLangue, LANGUES, type Langue } from "@/lib/i18n";
-import "../lecture.css";
+import "../jetons.css";
+import "../habillage.css";
 
 /** Racine de l'application. Il n'y a pas de app/layout.tsx : quand toutes
  *  les routes vivent sous un segment de langue, c'est ce fichier qui porte

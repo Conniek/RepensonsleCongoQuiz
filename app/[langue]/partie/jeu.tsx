@@ -189,12 +189,14 @@ export default function Jeu({
         {t.partie.question(position + 1, questions.length)}
       </h1>
 
-      <p>
-        <label htmlFor="avancement">{t.partie.avancement}</label>{" "}
-        <progress id="avancement" value={position + 1} max={questions.length}>
-          {position + 1} / {questions.length}
-        </progress>
-      </p>
+      {/* Avancement en segments : sur sept questions, on voit d'un coup ce
+          qui est fait et ce qui reste, bien mieux qu'un pourcentage.
+          L'information textuelle reste portée par le titre de la page. */}
+      <ul className="segments" aria-hidden="true">
+        {questions.map((q, i) => (
+          <li key={q.id} className={i <= position ? "fait" : undefined} />
+        ))}
+      </ul>
 
       <section aria-labelledby="titre-chrono">
         <h2 id="titre-chrono">{t.partie.titreChrono}</h2>
@@ -202,6 +204,8 @@ export default function Jeu({
           <>
             {/* Masqué aux technologies d'assistance : dix mises à jour par
                 seconde satureraient le lecteur d'écran. */}
+            {/* Pastille compacte : le chronomètre ne prend plus une section
+                entière pour une information secondaire. */}
             <p aria-hidden="true" className="chrono">
               {t.partie.secondes((restant / 1000).toFixed(1))}
             </p>

@@ -61,6 +61,7 @@ export const fr = {
 
   progression: {
     titre: "Ta progression",
+    deReussite: "de réussite",
     chargement: "Chargement de ta progression…",
     jamaisJoue:
       "Tu n’as pas encore joué. Lance une première partie pour commencer à gagner des points d’expérience et des badges.",
@@ -481,6 +482,51 @@ export const fr = {
     statutArchivee: "Archivée",
     miseEnAvant: "Mise en avant sur l’accueil",
     aucuneCampagne: "Aucune campagne pour l’instant.",
+  },
+
+  offres: {
+    titre: "Trois façons d’apprendre",
+    intro:
+      "Le quiz reste gratuit. Les offres ajoutent du contenu, elles ne verrouillent rien.",
+    independantes:
+      "Plus et Parcours de langue sont indépendants : chacun s’achète seul.",
+
+    gratuitCategorie: "Culture générale",
+    gratuitEtiquette: "Gratuit",
+    gratuitTitre: "Quiz général RDC",
+    gratuitTexte: (questions: number, categories: number) =>
+      `Les ${questions} questions et les ${categories} catégories restent accessibles gratuitement : histoire, géographie, musique, personnages, institutions, langues, gastronomie, économie, nature et plus encore.`,
+    gratuitPoint1: "Facile · Moyen · Difficile",
+    gratuitPoint2: "Progression, expérience, badges et défi quotidien",
+    gratuitPoint3: "Questions illustrées et explications sourcées",
+    gratuitPublicite: "Financé par la publicité. Les offres payantes la retirent.",
+
+    plusCategorie: "Repensons le Congo Plus",
+    plusEtiquette: "Nouveau",
+    plusTitre: "Le Congo ne s’arrête pas au quiz.",
+    plusTexte:
+      "Débloque des quiz exclusifs sur les grandes figures, les histoires méconnues et les régions de la RDC.",
+    plusPoint1: "Des sujets qu’on connaît… beaucoup moins qu’on ne le croit.",
+    plusPoint2: "Sans aucune publicité.",
+    plusPrix: "1,99 € / mois",
+    plusPrixDetail: "ou 11,99 € par an",
+    plusAction: "Découvrir Plus",
+
+    langueCategorie: "Parcours de langue",
+    langueTitre: "Parle la langue de tes parents.",
+    langueTexte:
+      "Un parcours complet en cinq niveaux, des salutations à la conversation courante, avec l’audio enregistré par des locuteurs natifs.",
+    langueDisponible: "Lingala",
+    langueBientot: (langue: string) => `${langue} · bientôt`,
+    languePrix: "19,99 € à vie",
+    languePrixDetail: "ou 4,99 € par mois · achat unique, sans renouvellement",
+    langueAction: "Commencer le lingala",
+  },
+
+  regles: {
+    titre: "Comment se joue une partie",
+    texte:
+      "Sept questions, quinze secondes chacune. Il faut 900 points et cinq bonnes réponses pour gagner une étoile. Deux étoiles débloquent le niveau suivant.",
   },
 
 } as const;

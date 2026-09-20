@@ -50,6 +50,7 @@ export const en: Dictionnaire = {
 
   progression: {
     titre: "Your progress",
+    deReussite: "success",
     chargement: "Loading your progress…",
     jamaisJoue:
       "You haven’t played yet. Start a first round to begin earning experience and badges.",
@@ -448,6 +449,50 @@ export const en: Dictionnaire = {
     statutArchivee: "Archived",
     miseEnAvant: "Featured on the home page",
     aucuneCampagne: "No campaign yet.",
+  },
+
+  offres: {
+    titre: "Three ways to learn",
+    intro: "The quiz stays free. The paid offers add content, they lock nothing.",
+    independantes:
+      "Plus and the Language course are independent: each can be bought on its own.",
+
+    gratuitCategorie: "General knowledge",
+    gratuitEtiquette: "Free",
+    gratuitTitre: "General DRC quiz",
+    gratuitTexte: (questions: number, categories: number) =>
+      `All ${questions} questions and ${categories} categories stay free: history, geography, music, figures, institutions, languages, food, economy, nature and more.`,
+    gratuitPoint1: "Easy · Medium · Hard",
+    gratuitPoint2: "Progress, experience, badges and daily challenge",
+    gratuitPoint3: "Illustrated questions and sourced explanations",
+    gratuitPublicite: "Funded by advertising. The paid offers remove it.",
+
+    plusCategorie: "Repensons le Congo Plus",
+    plusEtiquette: "New",
+    plusTitre: "The Congo doesn’t stop at the quiz.",
+    plusTexte:
+      "Unlock exclusive quizzes on major figures, little-known histories and the regions of the DRC.",
+    plusPoint1: "Subjects we know… far less well than we think.",
+    plusPoint2: "No advertising at all.",
+    plusPrix: "€1.99 / month",
+    plusPrixDetail: "or €11.99 per year",
+    plusAction: "Discover Plus",
+
+    langueCategorie: "Language course",
+    langueTitre: "Speak your parents’ language.",
+    langueTexte:
+      "A full course in five levels, from greetings to everyday conversation, with audio recorded by native speakers.",
+    langueDisponible: "Lingala",
+    langueBientot: (langue: string) => `${langue} · coming soon`,
+    languePrix: "€19.99 for life",
+    languePrixDetail: "or €4.99 per month · one-off purchase, no renewal",
+    langueAction: "Start Lingala",
+  },
+
+  regles: {
+    titre: "How a round works",
+    texte:
+      "Seven questions, fifteen seconds each. You need 900 points and five correct answers to earn a star. Two stars unlock the next level.",
   },
 
 };

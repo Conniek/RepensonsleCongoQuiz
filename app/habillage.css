@@ -1,0 +1,527 @@
+/* =========================================================================
+   HABILLAGE — transposition de la maquette validée.
+   =========================================================================
+   AUCUNE valeur littérale : uniquement des var(--…) de jetons.css.
+   Vérifié par `npm run verifier:jetons`.
+
+   La structure de la phase 1 n'est pas modifiée : ce fichier ne fait que
+   l'habiller. Le critère de recette tient toujours — désactiver jetons.css
+   et habillage.css doit laisser l'application complète et utilisable.
+   ========================================================================= */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Motif kuba sur tout le fond de page, très faible opacité : une texture,
+   pas un ornement. */
+body {
+  margin: 0;
+  padding: 0 var(--espace-5) calc(var(--espace-7) * 2);
+  max-width: var(--largeur-lecture);
+  margin-inline: auto;
+  font-family: var(--police-texte);
+  font-size: var(--taille-corps);
+  line-height: var(--interligne-corps);
+  color: var(--encre);
+  background-color: var(--fond);
+  background-image: var(--motif-kuba);
+  background-attachment: fixed;
+  color-scheme: light dark;
+  -webkit-text-size-adjust: 100%;
+}
+/* currentColor du motif : on le teinte sans toucher à la couleur du texte. */
+body { --motif-teinte: var(--encre); }
+
+h1, h2, h3, h4 {
+  font-family: var(--police-titre);
+  line-height: var(--interligne-titre);
+  color: var(--encre);
+  margin: var(--espace-6) 0 var(--espace-3);
+}
+h1 {
+  font-size: var(--taille-affiche);
+  font-weight: var(--graisse-affiche);
+  letter-spacing: -0.01em;
+  margin: var(--espace-5) 0 var(--espace-2);
+}
+h2 { font-size: var(--taille-titre-1); font-weight: var(--graisse-affiche); }
+h3 { font-size: var(--taille-titre-3); font-weight: var(--graisse-titre); margin: 0 0 var(--espace-1); }
+h4 { font-size: var(--taille-corps);   font-weight: var(--graisse-forte);  margin: 0 0 var(--espace-1); }
+
+p { margin: 0 0 var(--espace-3); }
+a { color: var(--bleu); font-weight: var(--graisse-forte); }
+
+:focus-visible {
+  outline: var(--trait-focus) solid var(--focus);
+  outline-offset: 2px;
+  border-radius: var(--rayon-s);
+}
+
+/* --- Liens d'évitement ------------------------------------------------- */
+.evitement ul { list-style: none; margin: 0; padding: 0; }
+.evitement a { position: absolute; left: -9999px; }
+.evitement a:focus {
+  position: static; display: inline-block;
+  padding: var(--espace-3) var(--espace-4);
+  background: var(--bleu); color: var(--blanc-sur-couleur);
+  border-radius: var(--rayon-m); text-decoration: none;
+}
+
+/* --- Bandeau : crème, le titre noir porte l'identité --------------------- */
+header {
+  background: none;
+  padding: var(--espace-5) 0 0;
+  margin: 0;
+}
+header > p:first-of-type {
+  margin: 0;
+  font-size: var(--taille-etiquette);
+  font-weight: var(--graisse-titre);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--encre-discrete);
+}
+header > p:first-of-type a { color: inherit; text-decoration: none; font-weight: inherit; }
+
+/* --- Navigation principale : barre flottante en bas ---------------------- */
+/* L'ordre du document ne change pas — la navigation reste avant le contenu,
+   elle est seulement positionnée en bas de l'écran. */
+header nav[aria-label="Navigation principale"],
+header nav[aria-label="Main navigation"] {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: var(--espace-4);
+  z-index: 10;
+  width: min(calc(var(--largeur-lecture) - var(--espace-6)), calc(100% - var(--espace-6)));
+  background: var(--encre);
+  border-radius: var(--rayon-rond);
+  padding: var(--espace-2);
+  box-shadow: var(--ombre-flottante);
+}
+header nav[aria-label="Navigation principale"] ul,
+header nav[aria-label="Main navigation"] ul {
+  gap: 0;
+  justify-content: space-around;
+}
+header nav[aria-label="Navigation principale"] a,
+header nav[aria-label="Main navigation"] a {
+  flex: 1;
+  justify-content: center;
+  min-height: var(--cible-tactile);
+  border-radius: var(--rayon-rond);
+  color: var(--fond);
+  text-decoration: none;
+  font-size: var(--taille-etiquette);
+}
+header nav[aria-label="Navigation principale"] a[aria-current="page"],
+header nav[aria-label="Main navigation"] a[aria-current="page"] {
+  background: var(--surface);
+  color: var(--encre);
+}
+
+nav ul, .ariane {
+  list-style: none; margin: var(--espace-2) 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: var(--espace-4);
+}
+nav a { display: inline-flex; align-items: center; min-height: var(--cible-tactile); }
+.ariane { gap: var(--espace-2); font-size: var(--taille-secondaire); }
+.ariane li + li::before { content: "› "; color: var(--encre-discrete); }
+.ariane a { font-weight: var(--graisse-normale); }
+.selecteur-langue ul { gap: var(--espace-3); }
+.selecteur-langue a { font-size: var(--taille-secondaire); }
+
+footer {
+  margin-top: var(--espace-7);
+  padding-top: var(--espace-4);
+  border-top: 1px solid var(--bordure);
+  color: var(--encre-discrete);
+}
+footer a { font-weight: var(--graisse-normale); }
+
+main > section { margin-bottom: var(--espace-6); }
+
+/* --- Carte de progression : l'ancre visuelle de l'accueil ---------------- */
+.progression {
+  position: relative;
+  overflow: hidden;
+  background: var(--bleu);
+  color: var(--blanc-sur-couleur);
+  border-radius: var(--rayon-l);
+  padding: var(--espace-5);
+  display: flex;
+  gap: var(--espace-5);
+  align-items: center;
+}
+.progression::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: var(--motif-kuba);
+  color: var(--blanc-sur-couleur);
+  opacity: var(--motif-opacite);
+  pointer-events: none;
+}
+.progression > * { position: relative; }
+.progression h2 {
+  margin: 0;
+  font-size: var(--taille-etiquette);
+  font-weight: var(--graisse-titre);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sur-bleu-doux);
+}
+.progression p { color: var(--sur-bleu-texte); font-size: var(--taille-secondaire); }
+.progression strong { color: var(--blanc-sur-couleur); }
+.progression .rang {
+  font-size: var(--taille-titre-2);
+  font-weight: var(--graisse-affiche);
+  color: var(--blanc-sur-couleur);
+  margin: var(--espace-1) 0 var(--espace-3);
+}
+.progression progress { background: var(--voile-clair); }
+.progression progress::-webkit-progress-bar { background: var(--voile-clair); }
+
+/* Anneau de taux de réussite. La valeur vient d'une propriété personnalisée
+   posée sur l'élément ; le pourcentage est AUSSI écrit au centre. */
+.anneau {
+  flex: none;
+  width: var(--espace-7);
+  height: var(--espace-7);
+  padding: var(--espace-7);
+  width: 0; height: 0;
+  border-radius: var(--rayon-rond);
+  background: conic-gradient(var(--ocre) 0 calc(var(--taux, 0) * 1%), var(--voile-clair) calc(var(--taux, 0) * 1%) 100%);
+  display: grid;
+  place-items: center;
+}
+.anneau > span {
+  display: grid;
+  place-items: center;
+  width: calc(var(--espace-7) + var(--espace-5));
+  height: calc(var(--espace-7) + var(--espace-5));
+  border-radius: var(--rayon-rond);
+  background: var(--bleu-profond);
+  text-align: center;
+  line-height: var(--interligne-titre);
+}
+.anneau b {
+  display: block;
+  font-size: var(--taille-titre-2);
+  font-weight: var(--graisse-affiche);
+  color: var(--blanc-sur-couleur);
+}
+.anneau small {
+  font-size: var(--taille-etiquette);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sur-bleu-doux);
+}
+
+/* --- Rappel des règles ---------------------------------------------------- */
+.regles {
+  background: var(--surface-douce);
+  border-radius: var(--rayon-l);
+  padding: var(--espace-4);
+  font-size: var(--taille-secondaire);
+  color: var(--encre);
+}
+.regles p:last-child { margin-bottom: 0; }
+
+/* --- Badges en médaillons -------------------------------------------------- */
+.medaillons { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--espace-3); }
+.medaillons > li { flex: 1; text-align: center; font-size: var(--taille-etiquette); font-weight: var(--graisse-titre); }
+.medaillons .pastille {
+  width: calc(var(--espace-7) + var(--espace-5));
+  height: calc(var(--espace-7) + var(--espace-5));
+  margin: 0 auto var(--espace-2);
+  border-radius: var(--rayon-rond);
+  background: var(--ocre);
+  display: grid; place-items: center;
+  font-size: var(--taille-titre-2);
+  font-weight: var(--graisse-affiche);
+  color: var(--encre-sur-ocre);
+}
+.medaillons li:nth-child(2) .pastille { background: var(--vert); color: var(--blanc-sur-couleur); }
+.medaillons li:nth-child(3) .pastille { background: var(--bleu); color: var(--blanc-sur-couleur); }
+.medaillons li:nth-child(4) .pastille { background: var(--surface-douce); color: var(--encre-discrete); border: 2px dashed var(--bordure); }
+
+/* --- Cartes catégories ------------------------------------------------------ */
+.cartes { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--espace-3); }
+.cartes > li {
+  background: var(--pastel-bleu);
+  border: 0;
+  border-radius: var(--rayon-l);
+  padding: var(--espace-3) var(--espace-3) var(--espace-4);
+  box-shadow: var(--ombre-carte);
+}
+/* Les teintes tournent par position : aucune donnée supplémentaire à
+   fournir depuis la base. */
+.cartes > li:nth-child(4n + 2) { background: var(--pastel-terre); }
+.cartes > li:nth-child(4n + 3) { background: var(--pastel-vert); }
+.cartes > li:nth-child(4n + 4) { background: var(--pastel-ocre); }
+
+/* Aplat en tête de carte : l'emplacement de l'illustration à venir. */
+.cartes > li::before {
+  content: "";
+  display: block;
+  height: calc(var(--espace-7) + var(--espace-6));
+  border-radius: var(--rayon-m);
+  margin-bottom: var(--espace-3);
+  background-color: var(--bleu);
+  background-image: var(--motif-kuba);
+  color: var(--blanc-sur-couleur);
+}
+.cartes > li:nth-child(4n + 2)::before { background-color: var(--terre-cuite); }
+.cartes > li:nth-child(4n + 3)::before { background-color: var(--vert); }
+.cartes > li:nth-child(4n + 4)::before { background-color: var(--accent-histoire); }
+
+.cartes > li h3 { font-size: var(--taille-corps); font-weight: var(--graisse-affiche); }
+.cartes > li h3 a { text-decoration: none; color: var(--encre); }
+.cartes > li h3 a:hover { text-decoration: underline; }
+.cartes > li p {
+  font-size: var(--taille-etiquette);
+  font-weight: var(--graisse-titre);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--encre-discrete);
+  margin-bottom: var(--espace-2);
+}
+.cartes > li progress { background: var(--voile-sombre); height: var(--espace-2); }
+.cartes > li progress::-webkit-progress-bar { background: var(--voile-sombre); }
+
+@media (min-width: 34rem) { .cartes { grid-template-columns: repeat(2, 1fr); } }
+
+.meta, .note { font-size: var(--taille-secondaire); color: var(--encre-discrete); }
+.note { margin-bottom: var(--espace-3); }
+.badge-verrouille { color: var(--encre-discrete); }
+
+/* --- Barres de progression -------------------------------------------------- */
+progress {
+  display: block; width: 100%; height: var(--espace-2);
+  margin: var(--espace-2) 0 var(--espace-3);
+  border: 0; border-radius: var(--rayon-rond);
+  background: var(--surface-douce);
+  overflow: hidden; appearance: none;
+}
+progress::-webkit-progress-bar { background: var(--surface-douce); }
+progress::-webkit-progress-value { background: var(--ocre); }
+progress::-moz-progress-bar { background: var(--ocre); }
+
+/* --- Écran de question --------------------------------------------------------- */
+.segments { list-style: none; display: flex; gap: var(--espace-1); margin: var(--espace-3) 0; padding: 0; }
+.segments > li {
+  flex: 1;
+  height: var(--espace-2);
+  border-radius: var(--rayon-rond);
+  background: var(--surface-douce);
+}
+.segments > li.fait { background: var(--ocre); }
+
+.enonce {
+  font-family: var(--police-titre);
+  font-size: var(--taille-titre-1);
+  font-weight: var(--graisse-affiche);
+  line-height: var(--interligne-titre);
+  margin-bottom: var(--espace-4);
+}
+.chrono {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: var(--espace-7); min-height: var(--cible-tactile);
+  padding: 0 var(--espace-4);
+  border-radius: var(--rayon-rond);
+  background: var(--ocre);
+  color: var(--encre-sur-ocre);
+  font-size: var(--taille-corps);
+  font-weight: var(--graisse-affiche);
+  font-variant-numeric: tabular-nums;
+  margin: 0 0 var(--espace-3);
+}
+
+.reponses { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--espace-2); }
+.reponses button {
+  width: 100%; text-align: start;
+  min-height: calc(var(--cible-tactile) + var(--espace-2));
+  padding: var(--espace-3) var(--espace-4);
+  font: inherit; font-size: var(--taille-corps); font-weight: var(--graisse-forte);
+  color: var(--encre); background: var(--surface);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-m);
+  cursor: pointer;
+}
+/* L'état est écrit dans le libellé : la couleur ne fait que renforcer. */
+.reponses button.bonne { border-color: var(--vert); border-width: 2px; }
+.reponses button[aria-disabled="true"] { cursor: default; }
+
+figure { margin: 0 0 var(--espace-4); }
+img { max-width: 100%; height: auto; border-radius: var(--rayon-m); }
+
+/* --- Boutons ----------------------------------------------------------------------- */
+button {
+  min-height: var(--cible-tactile);
+  padding: 0 var(--espace-5);
+  font-family: var(--police-texte);
+  font-size: var(--taille-secondaire);
+  font-weight: var(--graisse-affiche);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fond);
+  background: var(--encre);
+  border: 1px solid var(--encre);
+  border-radius: var(--rayon-rond);
+  cursor: pointer;
+}
+.reponses button, form button {
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: var(--taille-corps);
+  border-radius: var(--rayon-m);
+}
+form button[type="submit"] {
+  background: var(--ocre);
+  color: var(--encre-sur-ocre);   /* jamais du blanc sur de l'ocre */
+  border-color: var(--ocre);
+}
+button[aria-disabled="true"] {
+  background: var(--surface);
+  color: var(--encre-discrete);
+  border-color: var(--bordure);
+  border-style: dashed;
+  cursor: default;
+}
+
+/* --- Offres ------------------------------------------------------------------------- */
+.offres { display: grid; gap: var(--espace-3); }
+.offre {
+  border-radius: var(--rayon-l);
+  padding: var(--espace-5);
+  background: var(--surface);
+  border: 1px solid var(--bordure);
+}
+.offre h3 {
+  font-size: var(--taille-titre-2);
+  font-weight: var(--graisse-affiche);
+  margin: var(--espace-2) 0 var(--espace-3);
+}
+.offre .categorie-offre {
+  font-size: var(--taille-etiquette);
+  font-weight: var(--graisse-affiche);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--encre-discrete);
+  margin: 0;
+}
+.offre .etiquette {
+  display: inline-block;
+  margin-inline-start: var(--espace-2);
+  padding: var(--espace-1) var(--espace-3);
+  border-radius: var(--rayon-rond);
+  background: var(--pastel-vert);
+  color: var(--vert);
+  font-size: var(--taille-etiquette);
+  letter-spacing: 0.06em;
+}
+.offre ul { list-style: none; margin: 0 0 var(--espace-4); padding: 0; display: grid; gap: var(--espace-2); }
+.offre .prix {
+  font-size: var(--taille-affiche);
+  font-weight: var(--graisse-affiche);
+  margin: 0;
+}
+.offre .prix-detail { font-size: var(--taille-secondaire); color: var(--encre-discrete); }
+
+/* Offres payantes : fonds sombres, bouton ocre. */
+.offre-plus, .offre-langue {
+  color: var(--blanc-sur-couleur);
+  border: 0;
+  position: relative;
+  overflow: hidden;
+}
+.offre-plus { background: var(--bleu-nuit); }
+.offre-langue { background: var(--accent-histoire); }
+.offre-plus::before, .offre-langue::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: var(--motif-kuba);
+  color: var(--blanc-sur-couleur);
+  opacity: var(--motif-opacite);
+  pointer-events: none;
+}
+.offre-plus > *, .offre-langue > * { position: relative; }
+.offre-plus h3, .offre-langue h3,
+.offre-plus .prix, .offre-langue .prix { color: var(--blanc-sur-couleur); }
+.offre-plus .categorie-offre, .offre-langue .categorie-offre { color: var(--sur-bleu-doux); }
+.offre-plus p, .offre-langue p,
+.offre-plus li, .offre-langue li,
+.offre-plus .prix-detail, .offre-langue .prix-detail { color: var(--sur-bleu-texte); }
+.offre-plus strong, .offre-langue strong { color: var(--blanc-sur-couleur); }
+.offre-plus .etiquette, .offre-langue .etiquette { background: var(--ocre); color: var(--encre-sur-ocre); }
+.offre-plus a.action, .offre-langue a.action {
+  display: flex; align-items: center; justify-content: center;
+  min-height: calc(var(--cible-tactile) + var(--espace-1));
+  margin-top: var(--espace-4);
+  background: var(--ocre);
+  color: var(--encre-sur-ocre);
+  border-radius: var(--rayon-m);
+  font-size: var(--taille-corps);
+  font-weight: var(--graisse-affiche);
+  text-decoration: none;
+}
+
+/* --- Listes de définitions et tableaux ------------------------------------------------- */
+dl {
+  display: grid; grid-template-columns: auto 1fr;
+  gap: var(--espace-1) var(--espace-4);
+  margin: 0 0 var(--espace-4); padding: var(--espace-4);
+  background: var(--surface-douce); border-radius: var(--rayon-l);
+}
+dt { font-weight: var(--graisse-forte); }
+dd { margin: 0; }
+
+table {
+  width: 100%; border-collapse: collapse;
+  margin-bottom: var(--espace-5);
+  font-size: var(--taille-secondaire);
+  background: var(--surface);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-l);
+  overflow: hidden;
+}
+caption { text-align: start; padding-bottom: var(--espace-2); font-weight: var(--graisse-forte); color: var(--encre-discrete); }
+th, td { text-align: start; padding: var(--espace-3) var(--espace-4); border-bottom: 1px solid var(--bordure); vertical-align: top; }
+thead th { background: var(--surface-douce); font-size: var(--taille-etiquette); text-transform: uppercase; letter-spacing: 0.06em; }
+tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+main { overflow-x: auto; }
+
+/* --- Formulaires ---------------------------------------------------------------------- */
+label { display: inline-block; font-weight: var(--graisse-forte); margin-bottom: var(--espace-1); }
+input, select, textarea {
+  width: 100%; max-width: var(--largeur-lecture);
+  min-height: var(--cible-tactile);
+  padding: var(--espace-2) var(--espace-3);
+  font: inherit; font-size: var(--taille-corps);
+  color: var(--encre); background: var(--surface);
+  border: 1px solid var(--bordure); border-radius: var(--rayon-m);
+}
+input[type="checkbox"] { width: auto; min-height: auto; }
+
+[role="alert"]:not(:empty) {
+  padding: var(--espace-3) var(--espace-4);
+  margin-bottom: var(--espace-4);
+  background: var(--surface);
+  border: 2px solid var(--rouge);
+  border-radius: var(--rayon-m);
+}
+[role="alert"]:not(:empty) p:last-child { margin-bottom: 0; }
+
+.visuellement-masque {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

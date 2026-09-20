@@ -3,14 +3,12 @@ import { notFound } from "next/navigation";
 import { creerClientServeur } from "@/lib/supabase/serveur";
 import { dictionnaire, estLangue, LANGUE_PAR_DEFAUT } from "@/lib/i18n";
 import Progression from "./progression";
+import Offres from "./offres";
 
 export const revalidate = 300;
 
 type Categorie = {
-  categorie_id: string;
-  libelle: string;
-  slug: string;
-  nb_questions: number;
+  categorie_id: string; libelle: string; slug: string; nb_questions: number;
 };
 
 export default async function Accueil({
@@ -39,8 +37,6 @@ export default async function Accueil({
   }
 
   const toutes = (data ?? []) as Categorie[];
-  // Une catégorie n'apparaît que si elle est réellement jouable dans cette
-  // langue. Mieux vaut une liste courte qu'une partie à moitié traduite.
   const jouables = toutes.filter((c) => c.nb_questions >= 7);
   const total = jouables.reduce((s, c) => s + c.nb_questions, 0);
 
@@ -55,6 +51,13 @@ export default async function Accueil({
       )}
 
       <Progression langue={langue} />
+
+      {/* Rappel des règles : pour le nouveau venu qui ne sait pas encore ce
+          qu'il va faire. */}
+      <section className="regles" aria-labelledby="titre-regles">
+        <h2 id="titre-regles" className="visuellement-masque">{t.regles.titre}</h2>
+        <p>{t.regles.texte}</p>
+      </section>
 
       <section id="categories" aria-labelledby="titre-categories">
         <h2 id="titre-categories">{t.accueil.titreCategories}</h2>
@@ -73,6 +76,8 @@ export default async function Accueil({
           </ul>
         )}
       </section>
+
+      <Offres langue={langue} questions={total} categories={jouables.length} />
     </>
   );
 }

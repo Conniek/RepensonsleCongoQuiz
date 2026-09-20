@@ -1,0 +1,155 @@
+/* =========================================================================
+   JETONS — source unique de vérité pour l'apparence.
+   =========================================================================
+   Repris du design system « Repensons le Congo ». C'est le SEUL fichier de
+   l'application autorisé à contenir des valeurs littérales : couleurs,
+   longueurs, ombres.
+
+   Partout ailleurs, uniquement des var(--…). Le contrôle
+   `npm run verifier:jetons` échoue si une valeur littérale apparaît dans un
+   autre fichier de style.
+
+   Changer l'identité visuelle = changer ce fichier, rien d'autre.
+   ========================================================================= */
+
+:root {
+  /* --- Couleurs, thème clair ------------------------------------------- */
+  --fond: #FAF7F0;              /* Crème chaud, jamais blanc pur : éblouit au soleil. */
+  --surface: #FFFFFF;
+  --surface-douce: #F2EDE3;
+  --bordure: #E0D8CA;
+
+  --encre: #1A1614;             /* 15:1 sur --fond */
+  --encre-discrete: #5E5852;    /* 6,2:1 sur --fond */
+
+  --bleu: #17497C;              /* blanc dessus : 8,9:1 */
+  --bleu-profond: #0F3357;
+  --ocre: #E3A72F;              /* ENCRE dessus (8:1), jamais du blanc (1,9:1) */
+  --terre-cuite: #B8552F;       /* blanc dessus : 5,6:1 */
+  --vert: #2F5D45;              /* blanc dessus : 7,7:1 */
+  --rouge: #A32B1E;             /* blanc dessus : 7,3:1 */
+
+  --blanc-sur-couleur: #FFFFFF;
+  --encre-sur-ocre: #1A1614;    /* Ne change pas en thème sombre : l'ocre reste clair. */
+  --focus: #17497C;
+
+  /* --- Typographie ------------------------------------------------------ */
+  /* Pile système : rien à télécharger, rien à héberger, rien à déclarer au
+     RGPD, premier affichage immédiat sur connexion faible. Le jour où une
+     police de marque est retenue, seules ces deux valeurs changent. */
+  --police-titre: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --police-texte: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --taille-affiche: 34px;
+  --taille-titre-1: 26px;
+  --taille-titre-2: 20px;
+  --taille-titre-3: 17px;
+  --taille-corps: 17px;
+  --taille-secondaire: 15px;
+  --taille-etiquette: 13px;
+  --taille-chrono: 28px;
+
+  --graisse-affiche: 800;
+  --graisse-titre: 700;
+  --graisse-forte: 600;
+  --graisse-normale: 400;
+
+  --interligne-titre: 1.2;
+  --interligne-corps: 1.6;
+
+  /* --- Espacements ------------------------------------------------------ */
+  --espace-1: 4px;
+  --espace-2: 8px;
+  --espace-3: 12px;
+  --espace-4: 16px;
+  --espace-5: 24px;
+  --espace-6: 32px;
+  --espace-7: 48px;
+
+  /* --- Rayons ----------------------------------------------------------- */
+  --rayon-s: 8px;
+  --rayon-m: 14px;
+  --rayon-l: 22px;
+  --rayon-rond: 999px;
+
+  /* --- Ombres ----------------------------------------------------------- */
+  --ombre-carte: 0 1px 2px rgba(26, 22, 20, 0.05);
+  --ombre-flottante: 0 6px 20px rgba(26, 22, 20, 0.14);
+
+  /* --- Tailles ---------------------------------------------------------- */
+  /* 48px, soit le double du minimum WCAG : l'application s'utilise debout,
+     en marchant, sur des écrans parfois petits. */
+  --cible-tactile: 48px;
+  --largeur-lecture: 44rem;
+  --trait-focus: 3px;
+
+  /* --- Fonds pastel des cartes catégories -------------------------------- */
+  /* Quatre teintes dérivées des couleurs d'accent, assez claires pour porter
+     l'encre à plus de 12:1. Elles tournent par position dans la grille. */
+  --pastel-bleu: #E4EDF6;
+  --pastel-terre: #F7E3DA;
+  --pastel-vert: #E3EDE6;
+  --pastel-ocre: #F6EBDA;
+  --accent-histoire: #7A4A1E;
+  --jauge-histoire: #B08422;
+
+  /* --- Voiles sur couleur ------------------------------------------------- */
+  --voile-clair: rgba(255, 255, 255, 0.16);
+  --voile-sombre: rgba(26, 22, 20, 0.10);
+  --sur-bleu-doux: #C8DBF0;
+  --sur-bleu-texte: #DCE8F5;
+  --bleu-nuit: #123055;
+
+  /* --- Points de rupture ------------------------------------------------ */
+  /* Une variable CSS ne fonctionne PAS dans une media query : ces valeurs
+     restent donc littérales dans habillage.css. Elles sont listées ici pour
+     rester trouvables, et c'est la seule exception à la règle du « aucune
+     valeur littérale hors de ce fichier ».
+       34rem  → deux colonnes de cartes
+       48rem  → mise en page large
+     Le contrôle npm run verifier:jetons ignore les lignes @media. */
+
+  /* --- Motif kuba -------------------------------------------------------- */
+  /* Texture de fond à faible opacité, jamais un ornement posé. */
+  --motif-kuba:
+    repeating-linear-gradient(45deg,  currentColor 0 2px, transparent 2px 18px),
+    repeating-linear-gradient(-45deg, currentColor 0 2px, transparent 2px 18px);
+  --motif-opacite: 0.10;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fond: #16130F;
+    --surface: #211C17;
+    --surface-douce: #2A241E;
+    --bordure: #3A322A;
+
+    --encre: #F3ECE3;
+    --encre-discrete: #B5AA9C;
+
+    --bleu: #4E8FD1;
+    --bleu-profond: #17497C;
+    --ocre: #E3A72F;
+    --terre-cuite: #D9744B;
+    --pastel-bleu: #1C2A3A;
+    --pastel-terre: #33221B;
+    --pastel-vert: #1E2B24;
+    --pastel-ocre: #2E2618;
+    --accent-histoire: #B08422;
+    --jauge-histoire: #E3A72F;
+    --voile-clair: rgba(255, 255, 255, 0.12);
+    --voile-sombre: rgba(255, 255, 255, 0.10);
+    --sur-bleu-doux: #9FBBD8;
+    --sur-bleu-texte: #C8DBF0;
+    --bleu-nuit: #0E2540;
+    --vert: #4E8F6C;
+    --rouge: #E0705E;
+
+    --blanc-sur-couleur: #16130F;
+    --focus: #8FC0F0;
+
+    --ombre-carte: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --ombre-flottante: 0 6px 20px rgba(0, 0, 0, 0.5);
+    --motif-opacite: 0.08;
+  }
+}
