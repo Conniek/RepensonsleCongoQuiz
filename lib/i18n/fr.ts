@@ -300,4 +300,187 @@ export const fr = {
       "Aucune catégorie n’est encore disponible dans cette langue. Reviens bientôt.",
   },
 
+  admin: {
+    titre: "Administration",
+    acces: "Espace éditorial",
+    tableauDeBord: "Tableau de bord",
+    questions: "Questions",
+    traductions: "Traductions",
+    recalibration: "Recalibration",
+
+    // Tableau de bord
+    questionsTotales: "Questions au total",
+    questionsValidees: "Questions validées",
+    aRecalibrer: "À recalibrer",
+    sansTexteAlternatif: "Images sans texte alternatif",
+    titreCompletude: "Avancement des traductions",
+    titreQuizSousSeuil: "Quiz spéciaux sous le seuil",
+    quizSousSeuil: (titre: string, nb: number) =>
+      `${titre} : ${nb} question${nb > 1 ? "s" : ""} rattachée${nb > 1 ? "s" : ""}.`,
+    aucunQuizSousSeuil: "Tous les quiz spéciaux ont assez de questions.",
+
+    // Liste
+    rechercher: "Rechercher dans les énoncés",
+    filtreCategorie: "Catégorie",
+    filtreDifficulte: "Difficulté",
+    filtreStatut: "Statut",
+    toutes: "Toutes",
+    tous: "Tous",
+    resultats: (n: number) => `${n} question${n > 1 ? "s" : ""}.`,
+    aucunResultat: "Aucune question ne correspond à ces filtres.",
+    colEnonce: "Énoncé",
+    colDifficulte: "Difficulté",
+    colTaux: "Taux de réussite",
+    colVues: "Présentations",
+    colStatut: "Statut",
+    editer: "Modifier",
+
+    // Édition
+    titreEdition: "Modifier la question",
+    partieInvariante: "Propriétés communes à toutes les langues",
+    partieTraduite: (langue: string) => `Texte en ${langue}`,
+    avertissementOrdre:
+      "L’ordre des propositions est commun à toutes les langues : la bonne réponse est identifiée par sa position. Traduis chaque proposition à sa place, n’en ajoute ni n’en retire aucune, et ne les réordonne pas.",
+    bonneReponsePosition: (n: number) =>
+      `Bonne réponse : proposition ${n}. Cette position ne se modifie pas depuis l’écran de traduction.`,
+    proposition: (n: number) => `Proposition ${n}`,
+    explication: "Explication",
+    sourceUrl: "Adresse de la source",
+    sourceTitre: "Titre de la source",
+    sousCategorie: "Sous-catégorie",
+    texteAlternatif: "Texte alternatif de l’image",
+    texteAlternatifAide:
+      "Décris ce qu’il faut voir pour pouvoir répondre. Jamais « illustration de la question ».",
+    statutBrouillon: "Brouillon",
+    statutValide: "Validé",
+    statutAReverifier: "À revérifier",
+    statutRetiree: "Retirée",
+    enregistrer: "Enregistrer",
+    enregistre: "Modifications enregistrées.",
+    erreurNombreReponses: (attendu: number, recu: number) =>
+      `Le nombre de propositions doit rester identique à la version de référence : ${attendu} attendues, ${recu} reçues.`,
+    erreurSourceObligatoire:
+      "Une question validée doit porter une source. Renseigne l’adresse ou repasse en brouillon.",
+
+    // Recalibration
+    titreRecalibration: "Questions à recalibrer",
+    introRecalibration:
+      "Questions dont le taux de réussite observé s’éloigne de la difficulté déclarée, sur un échantillon d’au moins 50 présentations.",
+    motifTropFacile: "Réussie trop souvent pour son niveau",
+    motifTropDifficile: "Ratée trop souvent pour son niveau",
+    suggestion: (n: number) => `Passer en difficulté ${n}`,
+    appliquer: "Appliquer",
+    applique: "Difficulté mise à jour. Les compteurs repartent de zéro.",
+    aucuneARecalibrer:
+      "Aucune question à recalibrer pour l’instant. L’écran se remplira à mesure que les parties s’accumulent.",
+    compteursRemisAZero:
+      "Changer la difficulté remet les compteurs à zéro : l’échantillon précédent portait sur l’ancien classement.",
+
+    accesRefuse: "Cet espace est réservé à l’équipe éditoriale.",
+  },
+
+  analyse: {
+    titre: "Analyse",
+    joueurs: "Joueurs",
+    total: "Profils au total",
+    avecCompte: "Avec un compte",
+    actifs7: "Actifs sur 7 jours",
+    actifs30: "Actifs sur 30 jours",
+
+    titreRetention: "Rétention par cohorte",
+    introRetention:
+      "Les cohortes sont fixées sur la première partie jouée, pas sur l’inscription : la conversion d’un compte anonyme ne déplace donc pas les courbes rétroactivement.",
+    colCohorte: "Semaine d’arrivée",
+    colJoueurs: "Joueurs",
+    colJ1: "Revenus à 1 jour",
+    colJ7: "Revenus à 7 jours",
+    colJ30: "Revenus à 30 jours",
+
+    titreCompletion: "Complétion des parties",
+    colSemaine: "Semaine",
+    colLancees: "Lancées",
+    colTerminees: "Terminées",
+    colAbandonnees: "Abandonnées",
+    colTauxCompletion: "Taux de complétion",
+    colGagnees: "Remportées",
+
+    titreAbandon: "Abandon par question",
+    introAbandon:
+      "Position atteinte avant l’abandon. Un pic sur une position précise signale un problème de rythme ou une question mal calibrée.",
+    colDerniereQuestion: "Dernière question atteinte",
+    colParties: "Parties",
+
+    titrePopularite: "Popularité des catégories",
+    colNiveau: "Niveau",
+    colPointsMoyens: "Points moyens",
+    colTauxVictoire: "Taux de victoire",
+
+    titreAngleMort: "Angle mort éditorial",
+    jamaisServies: (n: number) =>
+      `${n} question${n > 1 ? "s" : ""} validée${n > 1 ? "s" : ""} n’${n > 1 ? "ont" : "a"} jamais été servie${n > 1 ? "s" : ""}.`,
+    aucunAngleMort: "Toutes les questions validées ont déjà été servies au moins une fois.",
+    aucuneDonnee: "Pas encore assez de parties pour afficher cette analyse.",
+  },
+
+  inscrits: {
+    titre: "Inscrits",
+    reserveAdmin: "Cette section est réservée aux administrateurs.",
+    intro:
+      "La recherche est ciblée, pour traiter une demande précise. Il n’existe volontairement aucune liste complète des adresses.",
+    rechercher: "Rechercher par adresse ou pseudo",
+    rechercherAide: "Au moins trois caractères.",
+    lancer: "Rechercher",
+    aucunResultat: "Aucun inscrit ne correspond.",
+    colEmail: "Adresse",
+    colPseudo: "Pseudo",
+    colRole: "Rôle",
+    colParties: "Parties",
+    colInscrit: "Inscrit le",
+    roleJoueur: "Joueur",
+    roleEditeur: "Éditeur",
+    roleAdmin: "Administrateur",
+    changerRole: "Changer le rôle",
+    roleChange: "Rôle mis à jour.",
+    erreurAutoRetrait:
+      "Tu ne peux pas retirer tes propres droits d’administrateur : plus personne ne pourrait en attribuer.",
+    exporter: "Exporter ses données",
+    supprimer: "Supprimer ce compte",
+    supprimerConfirmation:
+      "Cette suppression est définitive et efface toute la progression de cette personne. Écris SUPPRIMER pour confirmer.",
+    supprime: "Compte supprimé.",
+  },
+
+  contenu: {
+    quizSpeciaux: "Quiz spéciaux",
+    introQuizSpeciaux:
+      "Un quiz spécial regroupe les questions portant un même tag. Le rattachement est explicite : il n’est jamais recalculé à partir du texte des questions.",
+    colTitre: "Titre",
+    colTag: "Tag",
+    colRattachees: "Questions rattachées",
+    colSeuil: "Seuil d’ouverture",
+    colActif: "Actif",
+    sousLeSeuil: "Sous le seuil : ce quiz reste visible et annonce sa condition d’ouverture.",
+    enregistrer: "Enregistrer",
+    enregistre: "Modifications enregistrées.",
+
+    campagnes: "Campagnes",
+    introCampagnes:
+      "Conteneur de contenu temporaire, daté et administrable. Aucune date d’événement n’est codée dans l’application.",
+    nouvelleCampagne: "Nouvelle campagne",
+    campagneTitre: "Titre",
+    campagneDescription: "Description",
+    campagneType: "Type",
+    typeQuiz: "Quiz thématique",
+    typeComparateur: "Comparateur civique",
+    campagneDebut: "Début",
+    campagneFin: "Fin",
+    campagneStatut: "Statut",
+    statutBrouillon: "Brouillon",
+    statutProgrammee: "Programmée",
+    statutActive: "Active",
+    statutArchivee: "Archivée",
+    miseEnAvant: "Mise en avant sur l’accueil",
+    aucuneCampagne: "Aucune campagne pour l’instant.",
+  },
+
 } as const;
