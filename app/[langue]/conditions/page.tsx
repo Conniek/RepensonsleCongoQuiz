@@ -31,7 +31,7 @@ export default async function PageConditions({
     <>
       <nav aria-label={t.navigation.filAriane}>
         <ol className="ariane">
-          <li><Link href={`/${langue}/home`}>{t.navigation.accueil}</Link></li>
+          <li><Link href={`/${langue}`}>{t.navigation.accueil}</Link></li>
           <li aria-current="page">{conditions.titre}</li>
         </ol>
       </nav>

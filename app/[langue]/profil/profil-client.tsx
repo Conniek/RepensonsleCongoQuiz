@@ -64,14 +64,14 @@ export default function ProfilClient({ langue }: { langue: Langue }) {
 
   async function seDeconnecter() {
     await creerClientNavigateur().auth.signOut();
-    window.location.href = `/${langue}/home`;
+    window.location.href = `/${langue}`;
   }
 
   async function supprimer() {
     const { error } = await creerClientNavigateur().rpc("supprimer_mon_compte");
     if (error) { setMessage(t.compte.erreurGenerique(error.message)); return; }
     await creerClientNavigateur().auth.signOut();
-    window.location.href = `/${langue}/home`;
+    window.location.href = `/${langue}`;
   }
 
   return (

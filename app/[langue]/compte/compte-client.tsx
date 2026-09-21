@@ -113,7 +113,7 @@ export default function CompteClient({ langue }: { langue: Langue }) {
 
   async function seDeconnecter() {
     await supabase.auth.signOut();
-    router.push(`/${langue}/home`);
+    router.push(`/${langue}`);
     router.refresh();
   }
 

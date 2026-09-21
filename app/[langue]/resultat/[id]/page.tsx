@@ -90,7 +90,7 @@ export default async function PageResultat({
             </li>
           )}
           <li><Link href={`/${langue}/profil`}>{t.resultat.voirProgression}</Link></li>
-          <li><Link href={`/${langue}/home`}>{t.commun.retourAccueil}</Link></li>
+          <li><Link href={`/${langue}`}>{t.commun.retourAccueil}</Link></li>
         </ul>
       </section>
     </>

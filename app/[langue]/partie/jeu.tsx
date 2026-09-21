@@ -177,7 +177,7 @@ export default function Jeu({
             : indispo ? t.disponibilite.categorieIndisponible
             : t.partie.erreurDemarrage(erreur)}
         </p>
-        <p><a href={`/${langue}/home`}>{t.commun.retourAccueil}</a></p>
+        <p><a href={`/${langue}`}>{t.commun.retourAccueil}</a></p>
       </>
     );
   }

@@ -1,178 +1,238 @@
 /* =========================================================================
-   Splash Screen — page d'introduction.
-   =========================================================================
-   Mise en page verticale, centrée, avec illustration, contenu et CTA.
+   Splash — écran d'introduction plein écran.
+   -------------------------------------------------------------------------
+   Le body de l'app a une largeur de lecture et des marges : la splash se
+   pose donc en calque fixe (inset: 0) pour occuper tout l'écran.
+   Palette figée en clair : la maquette est pensée sur fond clair.
    ========================================================================= */
 
-.splash-container {
-  /* Layout vertical, centré, au minimum 100vh */
+.splash {
+  --s-encre: #0B1A33;
+  --s-texte: #3F4654;
+  --s-bleu: #0D4A9E;
+  --s-bleu-vif: #1560C4;
+  --s-jaune: #F2C12E;
+  --s-rouge: #D6282B;
+
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow-y: auto;
+  color-scheme: light;
+  color: var(--s-encre);
+  font-family: var(--police-titre);
+
+  background:
+    /* voile clair en haut pour la lisibilité du texte */
+    linear-gradient(to bottom, rgba(250, 248, 243, 0.55) 0%, rgba(250, 248, 243, 0) 55%),
+    url("/images/rdc-background.png") center bottom / cover no-repeat,
+    #FAF8F3;
+}
+
+/* --- Sélecteur de langue ------------------------------------------------ */
+.splash-langue {
+  position: absolute;
+  top: max(var(--espace-4), env(safe-area-inset-top));
+  right: var(--espace-4);
+  z-index: 2;
+}
+
+.splash-langue summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px 10px 14px;
+  background: #fff;
+  border-radius: 999px;
+  box-shadow: 0 4px 16px rgba(11, 26, 51, 0.1);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--s-encre);
+  cursor: pointer;
+}
+.splash-langue summary::-webkit-details-marker { display: none; }
+
+.splash-langue svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.splash-langue-globe { width: 22px; height: 22px; }
+.splash-langue-chevron { width: 18px; height: 18px; margin-left: 8px; transition: transform 0.2s; }
+.splash-langue[open] .splash-langue-chevron { transform: rotate(180deg); }
+
+.splash-langue ul {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 6px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(11, 26, 51, 0.14);
+  position: absolute;
+  right: 0;
+  min-width: 100%;
+}
+.splash-langue a {
+  display: block;
+  padding: 8px 14px;
+  border-radius: 10px;
+  color: var(--s-encre);
+  text-decoration: none;
+  font-weight: 600;
+}
+.splash-langue a:hover { background: #F1F4FA; }
+.splash-langue a[aria-current="true"] { color: var(--s-bleu); }
+
+/* --- Colonne centrale --------------------------------------------------- */
+.splash-contenu {
+  max-width: 460px;
+  margin: 0 auto;
+  padding:
+    calc(var(--espace-7) + var(--espace-3)) var(--espace-5)
+    clamp(180px, 34vh, 360px); /* laisse respirer le paysage en bas */
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  min-height: 100vh;
-  padding: var(--espace-6);
-  gap: var(--espace-6);
-
-  /* Fond et typographie */
-  background-color: var(--fond);
-  color: var(--encre);
-  font-family: var(--police-texte);
-}
-
-/* --- Illustration -------------------------------------------------------- */
-.splash-visual {
-  flex-shrink: 0;
-  margin-top: var(--espace-6);
   text-align: center;
 }
 
-.splash-visual img {
-  width: 200px;
+.splash-logo {
+  width: min(62vw, 280px);
   height: auto;
   display: block;
-  margin: 0 auto;
+  margin-bottom: var(--espace-5);
 }
 
-/* --- Contenu textuel ----------------------------------------------------- */
-.splash-content {
-  flex: 1;
+.splash .splash-titre {
+  margin: 0;
+  font-size: clamp(26px, 7.4vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--s-encre);
+}
+
+.splash-sous-titre {
+  margin: 6px 0 0;
+  font-size: clamp(18px, 5vw, 22px);
+  font-weight: 700;
+  color: var(--s-bleu);
+}
+
+/* Trois tirets aux couleurs du drapeau */
+.splash-filet {
+  display: flex;
+  gap: 8px;
+  margin: 14px 0 var(--espace-4);
+}
+.splash-filet span {
+  width: 32px;
+  height: 4px;
+  border-radius: 2px;
+}
+.splash-filet span:nth-child(1) { background: var(--s-bleu-vif); }
+.splash-filet span:nth-child(2) { background: var(--s-jaune); }
+.splash-filet span:nth-child(3) { background: var(--s-rouge); }
+
+.splash-texte {
+  margin: 0 0 var(--espace-5);
+  font-family: var(--police-texte);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--s-texte);
+}
+
+/* --- Catégories --------------------------------------------------------- */
+.splash-categories {
+  list-style: none;
+  margin: 0 0 var(--espace-5);
+  padding: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.splash-cat {
   display: flex;
   flex-direction: column;
-  gap: var(--espace-4);
-  text-align: center;
-  max-width: 500px;
+  align-items: center;
+  gap: 8px;
 }
 
-.splash-title {
-  font-family: var(--police-titre);
-  font-size: var(--taille-titre-1);
-  font-weight: var(--graisse-titre);
-  line-height: var(--interligne-titre);
-  margin: 0;
-  color: var(--bleu);
+.splash-cat-picto {
+  width: 58px;
+  height: 54px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: var(--fond-cat);
+}
+.splash-cat-picto svg { width: 30px; height: 30px; fill: var(--teinte-cat); }
+
+.splash-cat-nom {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--s-encre);
 }
 
-.splash-subtitle {
-  font-family: var(--police-titre);
-  font-size: var(--taille-titre-2);
-  font-weight: var(--graisse-forte);
-  line-height: var(--interligne-titre);
-  margin: 0;
-  color: var(--encre);
-}
+.splash-cat--histoire   { --teinte-cat: #C62828; --fond-cat: #FCE4E4; }
+.splash-cat--geographie { --teinte-cat: #1E7A3C; --fond-cat: #E1F3E6; }
+.splash-cat--musique    { --teinte-cat: #EE8A12; --fond-cat: #FFF0DB; }
+.splash-cat--nature     { --teinte-cat: #1560C4; --fond-cat: #E3EEFD; }
+.splash-cat--economie   { --teinte-cat: #6A34B8; --fond-cat: #EEE6FB; }
 
-.splash-description {
-  font-family: var(--police-texte);
-  font-size: var(--taille-corps);
-  line-height: var(--interligne-corps);
-  margin: 0;
-  color: var(--encre-discrete);
-}
-
-/* --- Call-to-action ------------------------------------------------------ */
-.splash-footer {
-  width: 100%;
-  max-width: 500px;
-  margin-bottom: var(--espace-6);
-}
-
+/* --- Bouton ------------------------------------------------------------- */
 .splash-cta {
-  display: block;
-  width: 100%;
-  padding: var(--espace-4) var(--espace-5);
-
-  /* Bouton plein, bleu marque */
-  background-color: var(--bleu);
-  color: var(--blanc-sur-couleur);
-  border: none;
-  border-radius: var(--rayon-m);
-
-  /* Typographie */
-  font-family: var(--police-titre);
-  font-size: var(--taille-corps);
-  font-weight: var(--graisse-titre);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: min(100%, 320px);
+  padding: 17px 28px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--s-bleu-vif) 0%, var(--s-bleu) 100%);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
   text-decoration: none;
-  text-align: center;
-  line-height: 1;
+  box-shadow: 0 10px 24px rgba(13, 74, 158, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.splash-cta svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.2s ease;
+}
+.splash-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(13, 74, 158, 0.4); }
+.splash-cta:hover svg { transform: translateX(3px); }
 
-  /* Interaction */
-  cursor: pointer;
-  transition:
-    background-color 150ms ease-out,
-    transform 150ms ease-out;
-
-  /* Accessibilité : évite le survol en mode contraste forcé */
-  outline: 2px solid transparent;
-  outline-offset: 2px;
+.splash-cta:focus-visible,
+.splash-langue summary:focus-visible,
+.splash-langue a:focus-visible {
+  outline: 3px solid var(--s-jaune);
+  outline-offset: 3px;
 }
 
-.splash-cta:hover,
-.splash-cta:focus {
-  background-color: var(--bleu-profond);
-  transform: translateY(-2px);
+/* --- Petits écrans ------------------------------------------------------ */
+@media (max-width: 380px) {
+  .splash-contenu { padding-inline: var(--espace-4); }
+  .splash-cat-picto { width: 50px; height: 48px; border-radius: 14px; }
+  .splash-cat-picto svg { width: 26px; height: 26px; }
+  .splash-cat-nom { font-size: 12px; }
+  .splash-cta { font-size: 18px; }
 }
 
-.splash-cta:focus-visible {
-  outline: 2px solid var(--focus);
-}
-
-.splash-cta:active {
-  transform: translateY(0);
-}
-
-/* --- Mobile et petits écrans ---------------------------------------------- */
-@media (max-width: 480px) {
-  .splash-container {
-    padding: var(--espace-4);
-    gap: var(--espace-4);
-  }
-
-  .splash-visual {
-    margin-top: var(--espace-4);
-  }
-
-  .splash-visual img {
-    width: 160px;
-  }
-
-  .splash-title {
-    font-size: var(--taille-titre-2);
-  }
-
-  .splash-subtitle {
-    font-size: var(--taille-titre-3);
-  }
-
-  .splash-description {
-    font-size: var(--taille-secondaire);
-  }
-
-  .splash-cta {
-    padding: var(--espace-3) var(--espace-4);
-    font-size: var(--taille-secondaire);
-  }
-}
-
-/* --- Mode contraste élevé ------------------------------------------------- */
-@media (prefers-contrast: more) {
-  .splash-container {
-    border: 1px solid var(--encre);
-  }
-
-  .splash-cta {
-    border: 2px solid var(--encre);
-  }
-}
-
-/* --- Réduction de mouvement ----------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  .splash-cta {
-    transition: none;
-  }
-
-  .splash-cta:hover,
-  .splash-cta:focus {
-    transform: none;
-  }
+  .splash-cta, .splash-cta svg, .splash-langue-chevron { transition: none; }
+  .splash-cta:hover { transform: none; }
 }

@@ -23,8 +23,8 @@ export async function generateMetadata({
     title: { default: t.accueil.titrePage, template: `%s — ${t.marque.nom}` },
     description: t.marque.descriptionMeta,
     alternates: {
-      canonical: `/${langue}/home`,
-      languages: Object.fromEntries(LANGUES.map((l) => [l, `/${l}/home`])),
+      canonical: `/${langue}`,
+      languages: Object.fromEntries(LANGUES.map((l) => [l, `/${l}`])),
     },
   };
 }
