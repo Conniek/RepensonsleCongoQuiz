@@ -8,7 +8,7 @@ export const revalidate = 300;
 export async function generateMetadata({ params }: { params: Promise<{ langue: string }> }) {
   const { langue } = await params;
   if (!estLangue(langue)) return {};
-  return { title: dictionnaire(langue).quizHub.titre };
+  return { title: dictionnaire(langue).quizHub?.titre };
 }
 
 export default async function PageQuiz({ params }: { params: Promise<{ langue: string }> }) {

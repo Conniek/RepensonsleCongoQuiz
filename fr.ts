@@ -186,6 +186,10 @@ export const fr = {
     voirProgression: "Voir ta progression",
   },
 
+  quizHub: {
+    titre: "quiz",
+  },
+
   profil: {
     titre: "Ton profil",
     descriptionMeta:

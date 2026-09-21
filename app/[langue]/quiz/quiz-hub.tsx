@@ -58,11 +58,11 @@ export default function QuizHub({ langue, themes }: { langue: Langue; themes: Th
   return (
     <>
       <div className="hub-entete">
-        <h1 tabIndex={-1}>{t.quizHub.titre}</h1>
+        <h1 tabIndex={-1}>{t?.quizHub?.titre}</h1>
         <p className="pastille-etoiles">
           <Etoile taille={18} />
           <span aria-hidden="true">{etoiles}</span>
-          <span className="visuellement-masque">{t.quizHub.etoilesGagnees(etoiles)}</span>
+          <span className="visuellement-masque">{t?.quizHub?.etoilesGagnees(etoiles)}</span>
         </p>
       </div>
 
@@ -70,26 +70,26 @@ export default function QuizHub({ langue, themes }: { langue: Langue; themes: Th
           automatique — un contenu qui bouge seul est un piège pour la
           lecture et pour le clavier. */}
       <section aria-labelledby="titre-carrousel">
-        <h2 id="titre-carrousel" className="visuellement-masque">{t.quizHub.titreCarrousel}</h2>
+        <h2 id="titre-carrousel" className="visuellement-masque">{t?.quizHub?.titreCarrousel}</h2>
         <ul className="carrousel">
           {defi && !defi.fait && (
             <li className="diapo diapo-defi">
-              <p className="etiquette-diapo"><Sablier taille={16} /> {t.quizHub.duJour}</p>
+              <p className="etiquette-diapo"><Sablier taille={16} /> {t?.quizHub?.duJour}</p>
               <h3>{defi.libelle}</h3>
               <Link className="action"
                     href={`/${langue}/partie?categorie=${defi.categorie_id}&niveau=${defi.niveau}&mode=defi_du_jour`}>
-                <span aria-hidden="true">{t.quizHub.jouer}</span>
+                <span aria-hidden="true">{t?.quizHub?.jouer}</span>
                 <span className="visuellement-masque">{t.defi.jouer(defi.libelle)}</span>
               </Link>
             </li>
           )}
           {campagnes.map((c) => (
             <li key={c.id} className="diapo">
-              <p className="etiquette-diapo"><Sablier taille={16} /> {t.quizHub.saisonnier}</p>
+              <p className="etiquette-diapo"><Sablier taille={16} /> {t?.quizHub?.saisonnier}</p>
               <h3>{c.titre}</h3>
               {c.description && <p>{c.description}</p>}
               <Link className="action" href={`/${langue}/quiz#campagne-${c.id}`}>
-                {t.quizHub.voirDetails}
+                {t?.quizHub?.voirDetails}
               </Link>
             </li>
           ))}
@@ -100,25 +100,25 @@ export default function QuizHub({ langue, themes }: { langue: Langue; themes: Th
         <li>
           <Link href={`/${langue}/quiz/erreurs`}>
             <DocumentErreur taille={24} />
-            <span>{t.quizHub.erreurs}</span>
+            <span>{t?.quizHub?.erreurs}</span>
             <span className="compteur" aria-hidden="true">{erreurs}</span>
-            <span className="visuellement-masque">, {t.quizHub.erreursCompte(erreurs)}</span>
+            <span className="visuellement-masque">, {t?.quizHub?.erreursCompte(erreurs)}</span>
           </Link>
         </li>
         <li>
           <Link href={`/${langue}/quiz/historique`}>
             <Document taille={24} />
-            <span>{t.quizHub.historique}</span>
+            <span>{t?.quizHub?.historique}</span>
           </Link>
         </li>
       </ul>
 
       <section aria-labelledby="titre-pour-toi">
-        <h2 id="titre-pour-toi">{t.quizHub.pourToi}</h2>
+        <h2 id="titre-pour-toi">{t?.quizHub?.pourToi}</h2>
         {recos === null ? (
           <p>{t.commun.chargement}</p>
         ) : recos.length === 0 ? (
-          <p>{t.quizHub.pourToiVide}</p>
+          <p>{t?.quizHub?.pourToiVide}</p>
         ) : (
           <ul className="pour-toi">
             {recos.map((r) => (
@@ -131,7 +131,7 @@ export default function QuizHub({ langue, themes }: { langue: Langue; themes: Th
                 </h3>
                 <p className="a-gagner">
                   <Etoile taille={16} />
-                  {t.quizHub.etoilesAGagner(2 - r.etoiles_niveau)}
+                  {t?.quizHub?.etoilesAGagner(2 - r.etoiles_niveau)}
                 </p>
               </li>
             ))}
@@ -140,7 +140,7 @@ export default function QuizHub({ langue, themes }: { langue: Langue; themes: Th
       </section>
 
       <section aria-labelledby="titre-themes">
-        <h2 id="titre-themes">{t.quizHub.themes}</h2>
+        <h2 id="titre-themes">{t?.quizHub?.themes}</h2>
         <ul className="themes">
           {themes.map((th) => {
             const e = etoilesDe(th.categorie_id);
@@ -149,7 +149,7 @@ export default function QuizHub({ langue, themes }: { langue: Langue; themes: Th
                 <h3><Link href={`/${langue}/categorie/${th.slug}`}>{th.libelle}</Link></h3>
                 <p className="theme-progression">
                   <progress value={e} max={6} aria-hidden="true" />
-                  <span>{t.quizHub.etoilesTheme(e)}</span>
+                  <span>{t?.quizHub?.etoilesTheme(e)}</span>
                 </p>
               </li>
             );
@@ -158,10 +158,10 @@ export default function QuizHub({ langue, themes }: { langue: Langue; themes: Th
       </section>
 
       <section className="offre offre-plus" aria-labelledby="titre-upsell">
-        <h2 id="titre-upsell">{t.quizHub.upsellTitre}</h2>
-        <p>{t.quizHub.upsellTexte}</p>
+        <h2 id="titre-upsell">{t?.quizHub?.upsellTitre}</h2>
+        <p>{t?.quizHub?.upsellTexte}</p>
         <Link className="action" href={`/${langue}/offre`}>
-          {t.quizHub.upsellAction} <Chevron taille={18} />
+          {t?.quizHub?.upsellAction} <Chevron taille={18} />
         </Link>
       </section>
     </>
