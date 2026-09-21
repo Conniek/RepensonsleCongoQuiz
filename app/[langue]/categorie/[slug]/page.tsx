@@ -68,7 +68,7 @@ export default async function PageCategorie({
     <>
       <nav aria-label={t.navigation.filAriane}>
         <ol className="ariane">
-          <li><Link href={`/${langue}`}>{t.navigation.accueil}</Link></li>
+          <li><Link href={`/${langue}/home`}>{t.navigation.accueil}</Link></li>
           <li aria-current="page">{categorie.libelle}</li>
         </ol>
       </nav>

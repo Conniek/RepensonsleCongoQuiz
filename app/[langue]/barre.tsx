@@ -16,7 +16,7 @@ export default function Barre({ langue }: { langue: Langue }) {
   const chemin = usePathname() ?? "";
 
   const entrees = [
-    { href: `/${langue}`,             libelle: t.navigation.accueil,     Picto: Maison,    exact: true },
+    { href: `/${langue}/home`,             libelle: t.navigation.accueil,     Picto: Maison,    exact: true },
     { href: `/${langue}/quiz`,        libelle: t.navigation.quiz,        Picto: Livre,     exact: false },
     { href: `/${langue}/progression`, libelle: t.navigation.progression, Picto: Graphique, exact: false },
     { href: `/${langue}/profil`,      libelle: t.navigation.profil,      Picto: Personne,  exact: false },

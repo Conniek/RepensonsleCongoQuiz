@@ -1,0 +1,178 @@
+/* =========================================================================
+   Splash Screen — page d'introduction.
+   =========================================================================
+   Mise en page verticale, centrée, avec illustration, contenu et CTA.
+   ========================================================================= */
+
+.splash-container {
+  /* Layout vertical, centré, au minimum 100vh */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100vh;
+  padding: var(--espace-6);
+  gap: var(--espace-6);
+
+  /* Fond et typographie */
+  background-color: var(--fond);
+  color: var(--encre);
+  font-family: var(--police-texte);
+}
+
+/* --- Illustration -------------------------------------------------------- */
+.splash-visual {
+  flex-shrink: 0;
+  margin-top: var(--espace-6);
+  text-align: center;
+}
+
+.splash-visual img {
+  width: 200px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* --- Contenu textuel ----------------------------------------------------- */
+.splash-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espace-4);
+  text-align: center;
+  max-width: 500px;
+}
+
+.splash-title {
+  font-family: var(--police-titre);
+  font-size: var(--taille-titre-1);
+  font-weight: var(--graisse-titre);
+  line-height: var(--interligne-titre);
+  margin: 0;
+  color: var(--bleu);
+}
+
+.splash-subtitle {
+  font-family: var(--police-titre);
+  font-size: var(--taille-titre-2);
+  font-weight: var(--graisse-forte);
+  line-height: var(--interligne-titre);
+  margin: 0;
+  color: var(--encre);
+}
+
+.splash-description {
+  font-family: var(--police-texte);
+  font-size: var(--taille-corps);
+  line-height: var(--interligne-corps);
+  margin: 0;
+  color: var(--encre-discrete);
+}
+
+/* --- Call-to-action ------------------------------------------------------ */
+.splash-footer {
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: var(--espace-6);
+}
+
+.splash-cta {
+  display: block;
+  width: 100%;
+  padding: var(--espace-4) var(--espace-5);
+
+  /* Bouton plein, bleu marque */
+  background-color: var(--bleu);
+  color: var(--blanc-sur-couleur);
+  border: none;
+  border-radius: var(--rayon-m);
+
+  /* Typographie */
+  font-family: var(--police-titre);
+  font-size: var(--taille-corps);
+  font-weight: var(--graisse-titre);
+  text-decoration: none;
+  text-align: center;
+  line-height: 1;
+
+  /* Interaction */
+  cursor: pointer;
+  transition:
+    background-color 150ms ease-out,
+    transform 150ms ease-out;
+
+  /* Accessibilité : évite le survol en mode contraste forcé */
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.splash-cta:hover,
+.splash-cta:focus {
+  background-color: var(--bleu-profond);
+  transform: translateY(-2px);
+}
+
+.splash-cta:focus-visible {
+  outline: 2px solid var(--focus);
+}
+
+.splash-cta:active {
+  transform: translateY(0);
+}
+
+/* --- Mobile et petits écrans ---------------------------------------------- */
+@media (max-width: 480px) {
+  .splash-container {
+    padding: var(--espace-4);
+    gap: var(--espace-4);
+  }
+
+  .splash-visual {
+    margin-top: var(--espace-4);
+  }
+
+  .splash-visual img {
+    width: 160px;
+  }
+
+  .splash-title {
+    font-size: var(--taille-titre-2);
+  }
+
+  .splash-subtitle {
+    font-size: var(--taille-titre-3);
+  }
+
+  .splash-description {
+    font-size: var(--taille-secondaire);
+  }
+
+  .splash-cta {
+    padding: var(--espace-3) var(--espace-4);
+    font-size: var(--taille-secondaire);
+  }
+}
+
+/* --- Mode contraste élevé ------------------------------------------------- */
+@media (prefers-contrast: more) {
+  .splash-container {
+    border: 1px solid var(--encre);
+  }
+
+  .splash-cta {
+    border: 2px solid var(--encre);
+  }
+}
+
+/* --- Réduction de mouvement ----------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .splash-cta {
+    transition: none;
+  }
+
+  .splash-cta:hover,
+  .splash-cta:focus {
+    transform: none;
+  }
+}

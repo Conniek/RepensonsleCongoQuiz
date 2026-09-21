@@ -587,4 +587,41 @@ quizHub: {
       "Seven questions, fifteen seconds each. You need 900 points and five correct answers to earn a star. Two stars unlock the next level.",
   },
 
+  splash: {
+    titre: "Repensons le Congo Quiz",
+    sousTitre: "One great country, a thousand stories.",
+    paragraphe:
+      "Discover the Democratic Republic of the Congo through 1,445 sourced questions: history, geography, music, gastronomy, languages, nature, economy and more. Every answer includes an explanation and a source link.",
+    cta: "Start the quiz",
+  },
+
+  accueilUtilisateur: {
+    bonjour: (pseudo: string | null) => pseudo ? `Hey, ${pseudo}!` : "Hey!",
+    diamonds: (n: number) => `${n} points`,
+    pret: "Ready to play?",
+  },
+
+  erreurs: {
+    titre: "My mistakes",
+    intro: "Questions you answered incorrectly. Here's your chance to learn!",
+    aucune: "No mistakes yet. Keep playing!",
+    bonneReponse: "Correct answer:",
+    voirPlus: "Load more",
+  },
+
+  historique: {
+    titre: "History",
+    aucun: "No games played yet.",
+    legende: "History of games played",
+    colDate: "Date",
+    colCategorie: "Category",
+    colNiveau: "Level",
+    colScore: "Score",
+    colResultat: "Result",
+    score: (points: number, bonnes: number, total: number) =>
+      `${points} points · ${bonnes}/${total}`,
+    gagnee: "✓ Won",
+    perdue: "Lost",
+  },
+
 };

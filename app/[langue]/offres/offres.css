@@ -1,0 +1,217 @@
+.intro, .independantes {
+  font-size: var(--taille-corps);
+  color: var(--encre-discrete);
+  max-width: 60ch;
+  margin-bottom: var(--espace-6);
+  line-height: 1.6;
+}
+
+.cartes-offres {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--espace-6);
+  margin-top: var(--espace-6);
+}
+
+.carte-offre {
+  border: 2px solid var(--bordure);
+  border-radius: var(--rayon-m);
+  background: var(--surface-douce);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.carte-offre:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--ombre-flottante);
+}
+
+.carte-offre.en-avant {
+  border-color: var(--ocre);
+  background: linear-gradient(135deg, var(--fond) 0%, #fef5e8 100%);
+  transform: scale(1.02);
+}
+
+.carte-offre.en-avant:hover {
+  transform: scale(1.02) translateY(-4px);
+}
+
+.offre-entete {
+  position: relative;
+  padding: var(--espace-5);
+  border-bottom: 1px solid var(--bordure);
+  background: var(--fond);
+}
+
+.offre-entete .etiquette {
+  display: inline-block;
+  font-size: var(--taille-etiquette);
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--rayon-s);
+  margin-bottom: var(--espace-3);
+}
+
+.carte-offre.gratuit .etiquette {
+  background: rgba(47, 93, 69, 0.15);
+  color: var(--vert);
+}
+
+.carte-offre.plus .etiquette {
+  background: rgba(227, 167, 47, 0.15);
+  color: var(--ocre);
+}
+
+.carte-offre.langue .etiquette {
+  background: rgba(184, 85, 47, 0.15);
+  color: var(--terre-cuite);
+}
+
+.offre-entete h2 {
+  font-size: var(--taille-titre-2);
+  margin: var(--espace-3) 0 0 0;
+  line-height: 1.3;
+}
+
+.offre-contenu {
+  padding: var(--espace-5);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.offre-contenu .categorie {
+  font-size: var(--taille-etiquette);
+  color: var(--encre-discrete);
+  font-weight: 600;
+  margin: 0 0 var(--espace-5) 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.offre-contenu .description {
+  font-size: var(--taille-corps);
+  line-height: 1.6;
+  color: var(--encre);
+  margin-bottom: var(--espace-5);
+}
+
+.offre-contenu .disponible {
+  font-size: var(--taille-corps);
+  color: var(--encre);
+  margin-bottom: var(--espace-5);
+  font-style: italic;
+}
+
+.offre-contenu .points {
+  list-style: none;
+  padding: 0;
+  margin: var(--espace-5) 0;
+  flex-grow: 1;
+}
+
+.offre-contenu .points li {
+  font-size: var(--taille-corps);
+  padding: 8px 0 8px 24px;
+  position: relative;
+  color: var(--encre);
+  line-height: 1.5;
+}
+
+.offre-contenu .points li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--vert);
+  font-weight: bold;
+  font-size: var(--taille-titre-2);
+}
+
+.offre-contenu .note {
+  font-size: var(--taille-etiquette);
+  color: var(--encre-discrete);
+  margin-bottom: var(--espace-5);
+  padding: var(--espace-3);
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: var(--rayon-s);
+  font-style: italic;
+}
+
+.offre-contenu .prix {
+  margin: var(--espace-5) 0;
+  text-align: center;
+}
+
+.offre-contenu .prix strong {
+  display: block;
+  font-size: var(--taille-titre-1);
+  color: var(--encre);
+  margin-bottom: 4px;
+}
+
+.offre-contenu .prix small {
+  display: block;
+  font-size: var(--taille-corps);
+  color: var(--encre-discrete);
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 20px;
+  border-radius: var(--rayon-m);
+  font-size: var(--taille-corps);
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  align-self: center;
+  width: 100%;
+  text-align: center;
+  margin-top: auto;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primaire {
+  background: var(--bleu);
+  color: white;
+}
+
+.btn-primaire:hover:not(:disabled) {
+  background: #0f3455;
+  transform: translateY(-2px);
+}
+
+.btn-secondaire {
+  background: var(--ocre);
+  color: white;
+}
+
+.btn-secondaire:hover:not(:disabled) {
+  background: #d09620;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .cartes-offres {
+    grid-template-columns: 1fr;
+  }
+
+  .carte-offre.en-avant {
+    transform: none;
+  }
+
+  .carte-offre.en-avant:hover {
+    transform: translateY(-4px);
+  }
+
+  .offre-entete h2 {
+    font-size: var(--taille-corps);
+  }
+}

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { dictionnaire, estLangue, LANGUES } from "@/lib/i18n";
 import Barre from "./barre";
+import Footer from "./footer";
 import "../styles/jetons.css";
 import "../styles/habillage.css";
 
@@ -22,8 +23,8 @@ export async function generateMetadata({
     title: { default: t.accueil.titrePage, template: `%s — ${t.marque.nom}` },
     description: t.marque.descriptionMeta,
     alternates: {
-      canonical: `/${langue}`,
-      languages: Object.fromEntries(LANGUES.map((l) => [l, `/${l}`])),
+      canonical: `/${langue}/home`,
+      languages: Object.fromEntries(LANGUES.map((l) => [l, `/${l}/home`])),
     },
   };
 }
@@ -51,14 +52,6 @@ export default async function LangueLayout({
 
         <Barre langue={langue} />
 
-        <footer aria-label={t.navigation.infosSite}>
-          <nav aria-label={t.navigation.secondaire}>
-            <ul>
-              <li><Link href={`/${langue}/a-propos`}>{t.navigation.aPropos}</Link></li>
-              <li><Link href={`/${langue}/accessibilite`}>{t.navigation.accessibilite}</Link></li>
-            </ul>
-          </nav>
-        </footer>
       </body>
     </html>
   );

@@ -621,4 +621,130 @@ quizHub: {
       "Sept questions, quinze secondes chacune. Il faut 900 points et cinq bonnes réponses pour gagner une étoile. Deux étoiles débloquent le niveau suivant.",
   },
 
+  splash: {
+    titre: "Repensons le Congo Quiz",
+    sousTitre: "Un grand pays, mille histoires.",
+    paragraphe:
+      "Apprenez la République démocratique du Congo à travers 1 445 questions sourcées : histoire, géographie, musique, gastronomie, langues, nature, économie et bien plus. Chaque réponse inclut une explication et un lien vers sa source.",
+    cta: "Commencer le quiz",
+  },
+
+  accueilUtilisateur: {
+    bonjour: (pseudo: string | null) => pseudo ? `Salut, ${pseudo} !` : "Salut !",
+    diamonds: (n: number) => `${n} points`,
+    pret: "Prêt à jouer ?",
+  },
+
+  erreurs: {
+    titre: "Mes erreurs",
+    intro: "Les questions auxquelles vous avez répondu incorrectement. C'est l'occasion d'apprendre !",
+    aucune: "Pas encore d'erreur. Continue à jouer !",
+    bonneReponse: "Bonne réponse :",
+    voirPlus: "Charger plus",
+  },
+
+  historique: {
+    titre: "Historique",
+    aucun: "Aucune partie jouée pour le moment.",
+    legende: "Historique des parties jouées",
+    colDate: "Date",
+    colCategorie: "Catégorie",
+    colNiveau: "Niveau",
+    colScore: "Score",
+    colResultat: "Résultat",
+    score: (points: number, bonnes: number, total: number) =>
+      `${points} points · ${bonnes}/${total}`,
+    gagnee: "✓ Gagnée",
+    perdue: "Perdue",
+  },
+
+  conditions: {
+    titre: "Conditions d'utilisation",
+    intro: "Dernière mise à jour : septembre 2026",
+    sections: [
+      {
+        titre: "1. Acceptation des conditions",
+        contenu: "En utilisant Repensons le Congo Quiz, vous acceptez ces conditions d'utilisation. Si vous n'êtes pas d'accord, veuillez ne pas utiliser l'application.",
+      },
+      {
+        titre: "2. Licence d'utilisation",
+        contenu: "Nous vous accordons le droit d'utiliser cette application à titre personnel et non commercial. Vous ne pouvez pas reproduire, modifier ou distribuer l'application sans permission.",
+      },
+      {
+        titre: "3. Comptes utilisateur",
+        contenu: "Vous êtes responsable de la confidentialité de vos identifiants de compte. Vous acceptez de vous connecter immédiatement si vous découvrez une utilisation non autorisée de votre compte.",
+      },
+      {
+        titre: "4. Limitation de responsabilité",
+        contenu: "L'application est fournie « telle quelle ». Nous ne garantissons pas l'exactitude, l'exhaustivité ou l'utilité de son contenu.",
+      },
+      {
+        titre: "5. Modifications",
+        contenu: "Nous nous réservons le droit de modifier ces conditions à tout moment. Les modifications prennent effet immédiatement.",
+      },
+    ],
+  },
+
+  confidentialite: {
+    titre: "Politique de confidentialité",
+    intro: "Dernière mise à jour : septembre 2026",
+    sections: [
+      {
+        titre: "1. Données collectées",
+        contenu: "Nous collectons les données nécessaires au fonctionnement de l'application : pseudo, email, progression et résultats de quiz.",
+      },
+      {
+        titre: "2. Utilisation des données",
+        contenu: "Vos données sont utilisées pour sauvegarder votre progression, améliorer l'expérience utilisateur et générer des statistiques anonymes.",
+      },
+      {
+        titre: "3. Partage des données",
+        contenu: "Nous ne partageons pas vos données personnelles avec des tiers. Vos données restent confidentielles et sécurisées.",
+      },
+      {
+        titre: "4. Cookies",
+        contenu: "L'application peut utiliser des cookies et des technologies similaires pour améliorer votre expérience.",
+      },
+      {
+        titre: "5. Droits d'accès",
+        contenu: "Vous pouvez à tout moment accéder à vos données personnelles ou demander leur suppression.",
+      },
+      {
+        titre: "6. Modification de la politique",
+        contenu: "Cette politique peut être modifiée à tout moment. Nous vous informerons de tout changement significatif.",
+      },
+    ],
+  },
+
+  accessibilite: {
+    titre: "Déclaration d'accessibilité",
+    intro: "Repensons le Congo Quiz s'engage à être accessible à tous.",
+    sections: [
+      {
+        titre: "Accessibilité numérique",
+        contenu: "L'application est conçue en conformité avec les recommandations WCAG 2.1 niveau AA pour assurer une accessibilité maximale.",
+      },
+      {
+        titre: "Lecteurs d'écran",
+        contenu: "L'application est compatible avec les lecteurs d'écran courants (NVDA, JAWS, VoiceOver) pour les utilisateurs malvoyants.",
+      },
+      {
+        titre: "Navigation au clavier",
+        contenu: "Vous pouvez naviguer dans l'application entièrement au clavier. Toutes les fonctionnalités sont accessibles sans souris.",
+      },
+      {
+        titre: "Contraste et lisibilité",
+        contenu: "Les textes maintiennent un contraste suffisant pour une bonne lisibilité. Les polices sont conçues pour la clarté.",
+      },
+      {
+        titre: "Sous-titres et alternatives",
+        contenu: "Tout contenu visuel ou audio bénéficie d'alternatives textuelles ou de sous-titres.",
+      },
+      {
+        titre: "Signaler un problème",
+        contenu: "Si vous rencontrez un problème d'accessibilité, contactez-nous via le formulaire de feedback ou par email.",
+      },
+    ],
+  },
+
 } as const;

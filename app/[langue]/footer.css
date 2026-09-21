@@ -1,0 +1,113 @@
+.footer {
+  background: var(--surface-douce);
+  border-top: 1px solid var(--bordure);
+  margin-top: var(--espace-7);
+  padding: var(--espace-6) var(--espace-4);
+}
+
+.footer-contenu {
+  max-width: 1200px;
+  margin: 0 auto var(--espace-6);
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--espace-6);
+}
+
+.footer-section h3 {
+  font-size: var(--taille-titre-2);
+  margin: 0 0 var(--espace-3) 0;
+  color: var(--encre);
+}
+
+.footer-section p {
+  font-size: var(--taille-secondaire);
+  color: var(--encre-discrete);
+  margin: 0 0 var(--espace-4) 0;
+  line-height: 1.6;
+}
+
+.footer-contact {
+  font-size: var(--taille-corps);
+  margin-top: var(--espace-3);
+}
+
+.footer-contact a {
+  color: var(--bleu);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-contact a:hover {
+  color: var(--bleu-profond);
+  text-decoration: underline;
+}
+
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--espace-5);
+}
+
+.footer-links h4 {
+  font-size: var(--taille-corps);
+  font-weight: 700;
+  margin: 0 0 var(--espace-3) 0;
+  color: var(--encre);
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: var(--espace-2);
+}
+
+.footer-links a {
+  font-size: var(--taille-secondaire);
+  color: var(--encre-discrete);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  display: inline-block;
+}
+
+.footer-links a:hover {
+  color: var(--bleu);
+  text-decoration: underline;
+}
+
+.footer-bas {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: var(--espace-6);
+  border-top: 1px solid var(--bordure);
+  text-align: center;
+}
+
+.footer-bas p {
+  font-size: var(--taille-secondaire);
+  color: var(--encre-discrete);
+  margin: 0;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: var(--espace-5) var(--espace-3);
+  }
+
+  .footer-contenu {
+    grid-template-columns: 1fr;
+    gap: var(--espace-5);
+  }
+
+  .footer-links {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer-section h3 {
+    font-size: var(--taille-titre-3);
+  }
+}
