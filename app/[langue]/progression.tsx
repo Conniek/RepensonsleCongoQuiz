@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { creerClientNavigateur } from "@/lib/supabase/client";
-import { assurerSession } from "@/lib/session";
+import { assurerSession, SessionIndisponible } from "@/lib/session";
 import { dictionnaire, type Langue } from "@/lib/i18n";
+import { Flamme, PictoBadge, Verrou, Cadeau } from "./pictos";
 
 type Badge = {
   id: string; libelle: string; condition: string;
@@ -28,9 +29,13 @@ export default function Progression({ langue }: { langue: Langue }) {
   const [etat, setEtat] = useState<Etat | null>(null);
   const [defi, setDefi] = useState<Defi | null>(null);
   const [pret, setPret] = useState(false);
+  const [echec, setEchec] = useState<"delai" | "contexte" | "refus" | null>(null);
+  const [essai, setEssai] = useState(0);
 
   useEffect(() => {
     let annule = false;
+    setEchec(null);
+    setPret(false);
     (async () => {
       try {
         await assurerSession();
@@ -42,18 +47,39 @@ export default function Progression({ langue }: { langue: Langue }) {
         if (annule) return;
         if (p.data) setEtat(p.data as Etat);
         if (d.data) setDefi(d.data as Defi);
+      } catch (e) {
+        if (!annule) setEchec(e instanceof SessionIndisponible ? e.motif : "refus");
       } finally {
         if (!annule) setPret(true);
       }
     })();
     return () => { annule = true; };
-  }, [langue]);
+  }, [langue, essai]);
 
   if (!pret) {
     return (
       <section aria-labelledby="titre-progression">
-        <h2 id="titre-progression">{t.progression.titre}</h2>
+        <h2 id="titre-progression" className="visuellement-masque">{t.progression.titre}</h2>
         <p>{t.progression.chargement}</p>
+      </section>
+    );
+  }
+
+  // Jamais d'attente sans fin : un message, et de quoi réessayer.
+  if (echec) {
+    return (
+      <section aria-labelledby="titre-progression">
+        <h2 id="titre-progression">{t.progression.titre}</h2>
+        <p role="alert">
+          {echec === "contexte" ? t.commun.contexteNonSecurise : t.profil.erreur}
+        </p>
+        {echec !== "contexte" && (
+          <p>
+            <button type="button" onClick={() => setEssai((n) => n + 1)}>
+              {t.commun.reessayer}
+            </button>
+          </p>
+        )}
       </section>
     );
   }
@@ -61,9 +87,6 @@ export default function Progression({ langue }: { langue: Langue }) {
   const enCours = etat?.xp_rang_suivant != null;
   const restant = enCours ? etat!.xp_rang_suivant! - etat!.xp : 0;
   const obtenus = etat?.badges.filter((b) => b.obtenu) ?? [];
-  // Le prochain à débloquer, celui dont l'avancement est le plus proche de
-  // l'objectif : ça donne une cible là où une liste de verrouillés ne
-  // donnerait qu'un constat.
   const prochain = (etat?.badges ?? [])
     .filter((b) => !b.obtenu && b.avancement > 0)
     .sort((a, b) => b.avancement / b.objectif - a.avancement / a.objectif)[0];
@@ -75,26 +98,27 @@ export default function Progression({ langue }: { langue: Langue }) {
         className={etat && etat.parties > 0 ? "progression" : undefined}
         aria-labelledby="titre-progression"
       >
+        <h2 id="titre-progression" className="visuellement-masque">{t.progression.titre}</h2>
+
         {etat && etat.parties > 0 ? (
           <>
-            {/* Anneau de taux de réussite. La valeur est posée en propriété
-                personnalisée — une donnée, pas une décision d'apparence — et
-                le pourcentage reste ÉCRIT au centre. */}
+            {/* Anneau de réussite. La valeur est posée en propriété
+                personnalisée — une donnée, pas une décision d'apparence.
+                Le pourcentage visible est doublé, pour le lecteur d'écran,
+                de la phrase complète qui lui donne son sens. */}
             {etat.taux_reussite != null && (
-              <div
-                className="anneau"
-                style={{ "--taux": etat.taux_reussite } as React.CSSProperties}
-                aria-hidden="true"
-              >
-                <span>
+              <div className="anneau" style={{ "--taux": etat.taux_reussite } as React.CSSProperties}>
+                <span className="anneau-centre">
                   <b>{etat.taux_reussite}%</b>
-                  <small>{t.progression.deReussite}</small>
+                  <small aria-hidden="true">{t.progression.deReussite}</small>
+                  <span className="visuellement-masque">
+                    {t.progression.tauxReussite(etat.taux_reussite, etat.parties)}
+                  </span>
                 </span>
               </div>
             )}
 
-            <div>
-              <h2 id="titre-progression">{t.progression.titre}</h2>
+            <div className="progression-corps">
               <p className="rang">{etat.rang}</p>
 
               {enCours && (
@@ -103,80 +127,73 @@ export default function Progression({ langue }: { langue: Langue }) {
                           aria-hidden="true" />
               )}
 
-              {/* L'information reste portée par le TEXTE : l'anneau et la
-                  barre ne font que la redoubler visuellement. */}
-              <p>
-                {enCours
-                  ? t.progression.resteAvantRang(restant, etat.rang_suivant!, etat.xp, etat.xp_rang_suivant!)
-                  : t.progression.rangMaximal(etat.xp)}
-              </p>
-              {etat.taux_reussite != null && (
-                <p>{t.progression.tauxReussite(etat.taux_reussite, etat.parties)}</p>
+              {/* Visible : le chiffre. Lu : la phrase complète. */}
+              {enCours ? (
+                <p className="compteur">
+                  <strong>{etat.xp}</strong> / {etat.xp_rang_suivant}{" "}
+                  <span aria-hidden="true">{t.progression.avantRangSuivant}</span>
+                  <span className="visuellement-masque">
+                    {t.progression.resteAvantRang(restant, etat.rang_suivant!, etat.xp, etat.xp_rang_suivant!)}
+                  </span>
+                </p>
+              ) : (
+                <p className="compteur">{t.progression.rangMaximal(etat.xp)}</p>
               )}
-              {etat.serie_jours > 0 && (
-                <p>
+            </div>
+
+            {/* Série : le chiffre en grand, avec son picto. */}
+            {etat.serie_jours > 0 && (
+              <p className="serie">
+                <Flamme taille={22} />
+                <b>{etat.serie_jours}</b>
+                <small aria-hidden="true">{t.progression.joursAffilee(etat.serie_jours)}</small>
+                <span className="visuellement-masque">
                   <time dateTime={`P${etat.serie_jours}D`}>
                     {t.progression.serie(etat.serie_jours)}
                   </time>
                   {etat.serie_record > etat.serie_jours && t.progression.record(etat.serie_record)}
-                </p>
-              )}
-            </div>
+                </span>
+              </p>
+            )}
           </>
         ) : (
-          <>
-            <h2 id="titre-progression">{t.progression.titre}</h2>
-            <p>{t.progression.jamaisJoue}</p>
-          </>
+          <p>{t.progression.jamaisJoue}</p>
         )}
       </section>
 
-      {defi && (
-        <section aria-labelledby="titre-defi">
-          <h2 id="titre-defi">{t.defi.titre}</h2>
-          <h3>{defi.libelle}</h3>
-          {defi.fait ? (
-            <p>{t.defi.dejaFait}</p>
-          ) : (
-            <>
-              <p>{t.defi.presentation(defi.recompense_xp)}</p>
-              <p>
-                <Link href={`/${langue}/partie?categorie=${defi.categorie_id}&niveau=${defi.niveau}&mode=defi_du_jour`}>
-                  {t.defi.jouer(defi.libelle)}
-                </Link>
-              </p>
-            </>
-          )}
-        </section>
-      )}
-
       {etat && etat.badges.length > 0 && (
         <section aria-labelledby="titre-badges">
-          <h2 id="titre-badges">{t.badges.titre}</h2>
-          {/* Seuls les badges OBTENUS ici : l'accueil récompense, le profil informe. */}
+          <div className="titre-section">
+            <h2 id="titre-badges">{t.badges.titre}</h2>
+            <Link href={`/${langue}/progression#badges`}>
+              <span aria-hidden="true">{t.badges.voirTout}</span>
+              <span className="visuellement-masque">{t.badges.voirTous(etat.badges.length)}</span>
+            </Link>
+          </div>
+
           {obtenus.length === 0 ? (
             <p>{t.badges.aucun}</p>
           ) : (
             <ul className="medaillons">
               {obtenus.slice(0, 3).map((b) => (
                 <li key={b.id}>
-                  <span className="pastille" aria-hidden="true">
-                    {b.libelle.charAt(0)}
-                  </span>
-                  {b.libelle}
-                  {/* La condition n'encombre pas l'écran mais reste lue par
-                      un lecteur d'écran : du texte réellement présent, pas
-                      un title ni un alt, qui ne sont pas annoncés de façon
-                      fiable. */}
+                  <span className="pastille"><PictoBadge id={b.id} /></span>
+                  <span className="nom">{b.libelle}</span>
+                  {/* La condition n'encombre pas l'écran mais reste du texte
+                      réellement présent, donc lu. */}
                   <span className="visuellement-masque">, {t.badges.obtenuLe}. {b.condition}.</span>
                 </li>
               ))}
               {prochain && (
-                <li>
-                  <span className="pastille" aria-hidden="true">
+                <li className="a-venir">
+                  <span className="pastille"
+                        style={{ "--avancement": Math.round((100 * prochain.avancement) / prochain.objectif) } as React.CSSProperties}>
+                    <Verrou taille={22} />
+                  </span>
+                  <span className="nom">{prochain.libelle}</span>
+                  <span className="compteur-badge" aria-hidden="true">
                     {prochain.avancement}/{prochain.objectif}
                   </span>
-                  {prochain.libelle}
                   <span className="visuellement-masque">
                     , {t.badges.avancement(prochain.avancement, prochain.objectif)}. {prochain.condition}.
                   </span>
@@ -184,9 +201,34 @@ export default function Progression({ langue }: { langue: Langue }) {
               )}
             </ul>
           )}
-          <p>
-            <Link href={`/${langue}/profil`}>{t.badges.voirTous(etat.badges.length)}</Link>
-          </p>
+        </section>
+      )}
+
+      {defi && !defi.fait && (
+        <section className="defi" aria-labelledby="titre-defi">
+          <div className="defi-visuel" aria-hidden="true" />
+          <div className="defi-corps">
+            <p className="sur-titre">{t.defi.titre}</p>
+            <h2 id="titre-defi">{defi.libelle}</h2>
+            <p className="recompense">
+              <Cadeau taille={18} />
+              {t.defi.recompense(defi.recompense_xp)}
+            </p>
+            <Link
+              className="action"
+              href={`/${langue}/partie?categorie=${defi.categorie_id}&niveau=${defi.niveau}&mode=defi_du_jour`}
+            >
+              <span aria-hidden="true">{t.defi.jouerMaintenant}</span>
+              <span className="visuellement-masque">{t.defi.jouer(defi.libelle)}</span>
+            </Link>
+          </div>
+        </section>
+      )}
+
+      {defi && defi.fait && (
+        <section aria-labelledby="titre-defi-fait">
+          <h2 id="titre-defi-fait">{t.defi.titre}</h2>
+          <p>{t.defi.dejaFait}</p>
         </section>
       )}
     </>

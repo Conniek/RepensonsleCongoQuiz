@@ -2,280 +2,235 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { creerClientNavigateur } from "@/lib/supabase/client";
 import { assurerSession } from "@/lib/session";
-import { dictionnaire, type Langue } from "@/lib/i18n";
+import { dictionnaire, LANGUES, type Langue } from "@/lib/i18n";
+import { WHATSAPP_NUMERO, EMAIL_CONTACT } from "@/lib/contact";
+import {
+  Personne, Carte, Globe, Bulle, Enveloppe, Document, Bouclier, Accessibilite, Chevron,
+} from "../pictos";
+import Fenetre from "../fenetre";
 
-type Badge = {
-  id: string;
-  libelle: string;
-  condition: string;
-  objectif: number;
-  avancement: number;
-  obtenu: boolean;
-};
-
-type Maitrise = { categorie_id: string; libelle: string; slug: string; etoiles: number };
-
-type Etat = {
-  xp: number;
-  pseudo: string | null;
-  rang: string;
-  rang_seuil: number;
-  rang_suivant: string | null;
-  xp_rang_suivant: number | null;
-  serie_jours: number;
-  serie_record: number;
-  anonyme: boolean;
-  parties: number;
-  taux_reussite: number | null;
-  badges: Badge[];
-  maitrise: Maitrise[];
-};
+type Droit = { produit: string; fin_le: string | null; a_vie: boolean };
 
 export default function ProfilClient({ langue }: { langue: Langue }) {
   const t = dictionnaire(langue);
-  const [etat, setEtat] = useState<Etat | null>(null);
-  const [pret, setPret] = useState(false);
+  const router = useRouter();
+
+  const [anonyme, setAnonyme] = useState(true);
+  const [email, setEmail] = useState<string | null>(null);
+  const [pseudo, setPseudo] = useState<string | null>(null);
+  const [droits, setDroits] = useState<Droit[]>([]);
+  const [langueChoisie, setLangueChoisie] = useState<Langue>(langue);
+  const [message, setMessage] = useState("");
+  const [compteOuvert, setCompteOuvert] = useState(false);
   const [confirmation, setConfirmation] = useState(false);
   const [motCle, setMotCle] = useState("");
-  const [messageDonnees, setMessageDonnees] = useState<string | null>(null);
-
-  async function exporter() {
-    const supabase = creerClientNavigateur();
-    const { data } = await supabase.rpc("exporter_mes_donnees");
-    if (!data) return;
-    // Téléchargement côté navigateur : aucune donnée personnelle ne transite
-    // par un serveur tiers.
-    const lien = document.createElement("a");
-    lien.href = URL.createObjectURL(
-      new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
-    );
-    lien.download = "repensons-le-congo-mes-donnees.json";
-    lien.click();
-    URL.revokeObjectURL(lien.href);
-  }
-
-  async function supprimer() {
-    const supabase = creerClientNavigateur();
-    const { error } = await supabase.rpc("supprimer_mon_compte");
-    if (error) {
-      setMessageDonnees(t.compte.erreurGenerique(error.message));
-      return;
-    }
-    await supabase.auth.signOut();
-    window.location.href = `/${langue}`;
-  }
+  const formatDate = new Intl.DateTimeFormat(langue, { dateStyle: "long" });
 
   useEffect(() => {
     let annule = false;
     (async () => {
       try {
-        await assurerSession();
-        const supabase = creerClientNavigateur();
-        const { data } = await supabase.rpc("progression", { p_langue: langue });
-        if (!annule && data) setEtat(data as Etat);
-      } finally {
-        if (!annule) setPret(true);
+        const session = await assurerSession();
+        const s = creerClientNavigateur();
+        const [p, d] = await Promise.all([
+          s.rpc("progression", { p_langue: langue }),
+          s.rpc("mes_droits"),
+        ]);
+        if (annule) return;
+        setAnonyme(session?.user?.is_anonymous ?? true);
+        setEmail(session?.user?.email ?? null);
+        setPseudo(p.data?.pseudo ?? null);
+        setDroits((d.data ?? []) as Droit[]);
+      } catch {
+        // Le profil reste utilisable : les liens d'information fonctionnent
+        // sans session.
       }
     })();
-    return () => {
-      annule = true;
-    };
+    return () => { annule = true; };
   }, [langue]);
 
-  if (!pret) return <p>{t.profil.chargement}</p>;
-
-  if (!etat) {
-    return (
-      <>
-        <h1 tabIndex={-1}>{t.profil.titre}</h1>
-        <p>{t.profil.erreur}</p>
-      </>
-    );
+  async function enregistrerLangue(e: React.FormEvent) {
+    e.preventDefault();
+    await creerClientNavigateur().rpc("definir_langue", { p_langue: langueChoisie });
+    // Cookie lu par le proxy pour rediriger vers cette langue à la prochaine
+    // visite de la racine du site.
+    document.cookie = `langue=${langueChoisie}; path=/; max-age=31536000; samesite=lax`;
+    setMessage(t.pageProfil.langueEnregistree);
+    if (langueChoisie !== langue) router.push(`/${langueChoisie}/profil`);
   }
 
-  const obtenus = etat.badges.filter((b) => b.obtenu);
-  const aVenir = etat.badges.filter((b) => !b.obtenu);
-  const enCours = etat.xp_rang_suivant != null;
+  async function seDeconnecter() {
+    await creerClientNavigateur().auth.signOut();
+    window.location.href = `/${langue}`;
+  }
+
+  async function supprimer() {
+    const { error } = await creerClientNavigateur().rpc("supprimer_mon_compte");
+    if (error) { setMessage(t.compte.erreurGenerique(error.message)); return; }
+    await creerClientNavigateur().auth.signOut();
+    window.location.href = `/${langue}`;
+  }
 
   return (
     <>
-      <h1 tabIndex={-1}>{etat.pseudo ?? t.profil.titre}</h1>
+      <h1 tabIndex={-1}>{t.pageProfil.titre}</h1>
 
-      <section aria-labelledby="titre-rang">
-        <h2 id="titre-rang">{t.profil.titreRang}</h2>
-        <p>
-          {t.profil.rangPhrase(etat.rang, etat.xp)}
-          {enCours &&
-            t.profil.resteAvantRang(
-              etat.xp_rang_suivant! - etat.xp,
-              etat.rang_suivant!
-            )}
-        </p>
-        {enCours && (
-          <progress
-            value={etat.xp - etat.rang_seuil}
-            max={etat.xp_rang_suivant! - etat.rang_seuil}
-            aria-hidden="true"
-          />
-        )}
-      </section>
+      <div role="status" aria-live="polite">{message && <p>{message}</p>}</div>
 
-      <section aria-labelledby="titre-stats">
-        <h2 id="titre-stats">{t.profil.titreStats}</h2>
-        <dl>
-          <dt>{t.profil.partiesJouees}</dt>
-          <dd>{etat.parties}</dd>
-          <dt>{t.profil.tauxReussite}</dt>
-          <dd>
-            {etat.taux_reussite != null
-              ? `${etat.taux_reussite} %`
-              : t.commun.sansValeur}
-          </dd>
-          <dt>{t.profil.serieEnCours}</dt>
-          <dd>
-            <time dateTime={`P${etat.serie_jours}D`}>
-              {t.profil.jours(etat.serie_jours)}
-            </time>
-          </dd>
-          <dt>{t.profil.meilleureSerie}</dt>
-          <dd>
-            <time dateTime={`P${etat.serie_record}D`}>
-              {t.profil.jours(etat.serie_record)}
-            </time>
-          </dd>
-        </dl>
-      </section>
-
-      <section id="badges" aria-labelledby="titre-badges">
-        <h2 id="titre-badges">{t.badges.titre}</h2>
-        <p>{t.badges.compteur(obtenus.length, etat.badges.length)}</p>
-
-        <h3>{t.badges.obtenus}</h3>
-        {obtenus.length === 0 ? (
-          <p>{t.badges.aucun}</p>
-        ) : (
-          <ul>
-            {obtenus.map((b) => (
-              <li key={b.id}>
-                <strong>{b.libelle}</strong> — {b.condition}.
-              </li>
-            ))}
-          </ul>
-        )}
-
-        <h3>{t.badges.aDebloquer}</h3>
-        <ul>
-          {aVenir.map((b) => (
-            // La classe ne fait que griser : l'état est déjà écrit dans le
-            // texte, la couleur ne porte jamais l'information seule.
-            <li key={b.id} className="badge-verrouille">
-              <strong>{b.libelle}</strong> — {b.condition}.{" "}
-              {t.badges.avancement(b.avancement, b.objectif)}.
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section aria-labelledby="titre-maitrise">
-        <h2 id="titre-maitrise">{t.profil.titreMaitrise}</h2>
-        {etat.maitrise.length === 0 ? (
-          <p>{t.profil.aucuneEtoile}</p>
-        ) : (
-          <table>
-            <caption>{t.profil.legendeMaitrise}</caption>
-            <thead>
-              <tr>
-                <th scope="col">{t.profil.colCategorie}</th>
-                <th scope="col">{t.profil.colEtoiles}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {etat.maitrise.map((m) => (
-                <tr key={m.categorie_id}>
-                  <th scope="row">
-                    <Link href={`/${langue}/categorie/${m.slug}`}>
-                      {m.libelle}
-                    </Link>
-                  </th>
-                  <td>{m.etoiles}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </section>
-
-      <section aria-labelledby="titre-compte">
-        <h2 id="titre-compte">{t.profil.titreCompte}</h2>
-        <p>{etat.anonyme ? t.profil.compteAnonyme : t.profil.compteSynchronise}</p>
-        <p>
-          <Link href={`/${langue}/compte`}>
-            {etat.anonyme ? t.profil.creerUnCompte : t.profil.gererMonCompte}
-          </Link>
-        </p>
-      </section>
-
-      {!etat.anonyme && (
-        <section aria-labelledby="titre-donnees">
-          <h2 id="titre-donnees">{t.compte.titreDonnees}</h2>
-
-          <div role="status" aria-live="polite">
-            {messageDonnees && <p>{messageDonnees}</p>}
-          </div>
-
-          <p>{t.compte.exporterAide}</p>
-          <p>
-            <button type="button" onClick={exporter}>
-              {t.compte.exporter}
-            </button>
-          </p>
-
-          <p>{t.compte.supprimerAide}</p>
-          {!confirmation ? (
-            <p>
-              <button type="button" onClick={() => setConfirmation(true)}>
-                {t.compte.supprimer}
-              </button>
-            </p>
-          ) : (
-            <>
-              <p>{t.compte.supprimerConfirmation}</p>
-              <p>
-                <label htmlFor="mot-cle">{t.compte.supprimerMotCle}</label>
-                <br />
-                <input
-                  id="mot-cle"
-                  type="text"
-                  value={motCle}
-                  onChange={(e) => setMotCle(e.target.value)}
-                />
-              </p>
-              <p>
-                <button
-                  type="button"
-                  aria-disabled={motCle !== t.compte.supprimerMotCle || undefined}
-                  onClick={() => {
-                    if (motCle === t.compte.supprimerMotCle) void supprimer();
-                  }}
-                >
-                  {t.compte.supprimerValider}
-                </button>{" "}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setConfirmation(false);
-                    setMotCle("");
-                  }}
-                >
-                  {t.compte.annuler}
-                </button>
-              </p>
-            </>
-          )}
+      {anonyme && (
+        <section className="sauvegarde" aria-labelledby="titre-sauvegarde-profil">
+          <h2 id="titre-sauvegarde-profil">{t.pageProfil.sauvegardeTitre}</h2>
+          <Link className="action" href={`/${langue}/compte`}>{t.pageProfil.sauvegardeAction}</Link>
         </section>
       )}
+
+      {/* Premier groupe : compte, abonnement, langue. */}
+      <ul className="groupe-reglages">
+        <li>
+          <button type="button" className="ligne-reglage" onClick={() => setCompteOuvert(true)}>
+            <Personne taille={22} />
+            <span className="ligne-libelle">{t.pageProfil.monCompte}</span>
+            <Chevron taille={18} />
+          </button>
+        </li>
+        <li>
+          <Link className="ligne-reglage" href={`/${langue}/offre`}>
+            <Carte taille={22} />
+            <span className="ligne-libelle">{t.pageProfil.abonnement}</span>
+            <span className="ligne-valeur">
+              {droits.length === 0
+                ? t.pageProfil.abonnementGratuit
+                : droits.map((d) => t.pageProfil.produit(d.produit)).join(", ")}
+            </span>
+            <Chevron taille={18} />
+          </Link>
+          {droits.length > 0 && (
+            <ul className="detail-droits">
+              {droits.map((d) => (
+                <li key={d.produit}>
+                  {t.pageProfil.produit(d.produit)} —{" "}
+                  {d.a_vie ? t.pageProfil.aVie : t.pageProfil.jusquAu(formatDate.format(new Date(d.fin_le!)))}
+                </li>
+              ))}
+            </ul>
+          )}
+        </li>
+        <li>
+          <form className="ligne-reglage ligne-formulaire" onSubmit={enregistrerLangue}>
+            <Globe taille={22} />
+            <label htmlFor="langue-defaut" className="ligne-libelle">{t.pageProfil.langueDefaut}</label>
+            <select id="langue-defaut" value={langueChoisie}
+                    onChange={(e) => setLangueChoisie(e.target.value as Langue)}>
+              {LANGUES.map((l) => (
+                <option key={l} value={l} lang={l}>{dictionnaire(l).langues[l]}</option>
+              ))}
+            </select>
+            <button type="submit">{t.pageProfil.enregistrer}</button>
+          </form>
+        </li>
+      </ul>
+
+      {/* Deuxième groupe : nous contacter. Chaque lien n'apparaît que si
+          sa coordonnée est renseignée dans lib/contact.ts. */}
+      {(WHATSAPP_NUMERO || EMAIL_CONTACT) && (
+        <ul className="groupe-reglages">
+          {WHATSAPP_NUMERO && (
+            <li>
+              <a className="ligne-reglage" href={`https://wa.me/${WHATSAPP_NUMERO}`}
+                 target="_blank" rel="noopener">
+                <Bulle taille={22} />
+                <span className="ligne-libelle">
+                  {t.pageProfil.whatsapp}
+                  <span className="visuellement-masque"> {t.pageProfil.nouvelleFenetre}</span>
+                </span>
+                <Chevron taille={18} />
+              </a>
+            </li>
+          )}
+          {EMAIL_CONTACT && (
+            <li>
+              <a className="ligne-reglage" href={`mailto:${EMAIL_CONTACT}`}>
+                <Enveloppe taille={22} />
+                <span className="ligne-libelle">{t.pageProfil.feedback}</span>
+                <Chevron taille={18} />
+              </a>
+            </li>
+          )}
+        </ul>
+      )}
+
+      {/* Troisième groupe : informations légales. */}
+      <ul className="groupe-reglages">
+        <li>
+          <Link className="ligne-reglage" href={`/${langue}/conditions`}>
+            <Document taille={22} />
+            <span className="ligne-libelle">{t.pageProfil.cgu}</span>
+            <Chevron taille={18} />
+          </Link>
+        </li>
+        <li>
+          <Link className="ligne-reglage" href={`/${langue}/confidentialite`}>
+            <Bouclier taille={22} />
+            <span className="ligne-libelle">{t.pageProfil.confidentialite}</span>
+            <Chevron taille={18} />
+          </Link>
+        </li>
+        <li>
+          <Link className="ligne-reglage" href={`/${langue}/accessibilite`}>
+            <Accessibilite taille={22} />
+            <span className="ligne-libelle">{t.pageProfil.accessibilite}</span>
+            <Chevron taille={18} />
+          </Link>
+        </li>
+      </ul>
+
+      <Fenetre
+        ouverte={compteOuvert}
+        surFermeture={() => { setCompteOuvert(false); setConfirmation(false); setMotCle(""); }}
+        titre={t.pageProfil.monCompte}
+        libelleFermer={t.pageProfil.fermer}
+      >
+        <dl>
+          <dt>{t.pageProfil.pseudo}</dt>
+          <dd>{pseudo ?? t.pageProfil.pasDePseudo}</dd>
+          <dt>{t.pageProfil.email}</dt>
+          <dd>{email ?? t.pageProfil.pasDeCompte}</dd>
+        </dl>
+
+        {anonyme ? (
+          <p><Link className="action" href={`/${langue}/compte`}>{t.pageProfil.creerCompte}</Link></p>
+        ) : (
+          <p><button type="button" onClick={seDeconnecter}>{t.pageProfil.deconnecter}</button></p>
+        )}
+
+        <p className="note">{t.compte.supprimerAide}</p>
+        {!confirmation ? (
+          <p>
+            <button type="button" onClick={() => setConfirmation(true)}>
+              {t.pageProfil.supprimerDonnees}
+            </button>
+          </p>
+        ) : (
+          <>
+            <p>{t.compte.supprimerConfirmation}</p>
+            <p>
+              <label htmlFor="mot-cle-profil">{t.compte.supprimerMotCle}</label><br />
+              <input id="mot-cle-profil" type="text" value={motCle}
+                     onChange={(e) => setMotCle(e.target.value)} />
+            </p>
+            <p>
+              <button type="button"
+                      aria-disabled={motCle !== t.compte.supprimerMotCle || undefined}
+                      onClick={() => { if (motCle === t.compte.supprimerMotCle) void supprimer(); }}>
+                {t.compte.supprimerValider}
+              </button>
+            </p>
+          </>
+        )}
+      </Fenetre>
     </>
   );
 }

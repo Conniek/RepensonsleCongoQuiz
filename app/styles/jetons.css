@@ -110,11 +110,16 @@
      Le contrôle npm run verifier:jetons ignore les lignes @media. */
 
   /* --- Motif kuba -------------------------------------------------------- */
-  /* Texture de fond à faible opacité, jamais un ornement posé. */
+  /* Texture de fond, jamais un ornement posé.
+     Deux variantes : une teinte sombre pour le fond de page, une claire pour
+     les surfaces colorées. La première version utilisait currentColor sans
+     opacité, ce qui produisait un quadrillage noir sur tout l'écran. */
+  --motif-sombre: rgba(26, 22, 20, 0.05);
+  --motif-clair: rgba(255, 255, 255, 0.10);
+
   --motif-kuba:
-    repeating-linear-gradient(45deg,  currentColor 0 2px, transparent 2px 18px),
-    repeating-linear-gradient(-45deg, currentColor 0 2px, transparent 2px 18px);
-  --motif-opacite: 0.10;
+    repeating-linear-gradient(45deg,  var(--motif-teinte, var(--motif-sombre)) 0 2px, transparent 2px 22px),
+    repeating-linear-gradient(-45deg, var(--motif-teinte, var(--motif-sombre)) 0 2px, transparent 2px 22px);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -150,6 +155,7 @@
 
     --ombre-carte: 0 1px 2px rgba(0, 0, 0, 0.4);
     --ombre-flottante: 0 6px 20px rgba(0, 0, 0, 0.5);
-    --motif-opacite: 0.08;
+    --motif-sombre: rgba(255, 255, 255, 0.045);
+    --motif-clair: rgba(255, 255, 255, 0.08);
   }
 }

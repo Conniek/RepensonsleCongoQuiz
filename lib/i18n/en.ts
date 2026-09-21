@@ -11,6 +11,7 @@ export const en: Dictionnaire = {
 
   marque: {
     nom: "Repensons le Congo Quiz",
+    pays: "Democratic Republic of the Congo",
     slogan: "One vast country, a thousand stories. Play, learn, celebrate the Congo.",
     presentation: (questions: number, categories: number) =>
       `Repensons le Congo Quiz is a free general-knowledge app about the Democratic Republic of the Congo. It gathers ${questions} questions across ${categories} categories, each with an explanation and a link to its source.`,
@@ -26,6 +27,8 @@ export const en: Dictionnaire = {
     filAriane: "Breadcrumb",
     accueil: "Home",
     profil: "Profile",
+    quiz: "Quiz",
+    langue: "Language",
     aPropos: "About the project",
     accessibilite: "Accessibility statement",
     infosSite: "Site information",
@@ -37,6 +40,9 @@ export const en: Dictionnaire = {
     retourAccueil: "Back to home",
     nouvelleFenetre: "(opens in a new window)",
     sansValeur: "—",
+    reessayer: "Try again",
+    contexteNonSecurise:
+      "Your progress can’t load on this address. Please use the app’s secure address (https).",
   },
 
   niveaux: { facile: "Easy", moyen: "Medium", difficile: "Hard" },
@@ -44,12 +50,21 @@ export const en: Dictionnaire = {
   accueil: {
     titrePage: "Repensons le Congo Quiz — learn about the DRC by playing",
     titreCategories: "Categories",
+    voirTout: "See all",
+    voirToutesCategories: (n: number) => `See all ${n} categories`,
+    titreToutesCategories: "All categories",
+    jouer: "Play",
+    etoilesSur: (obtenues: number, total: number) =>
+      `${obtenues} star${obtenues > 1 ? "s" : ""} out of ${total}`,
+    maitrise: (pourcentage: number) => `${pourcentage} % mastered`,
     nbQuestions: (n: number) => `${n} questions.`,
     erreurCategories: "Categories could not be loaded. Please try again shortly.",
   },
 
   progression: {
     titre: "Your progress",
+    avantRangSuivant: "points to the next rank",
+    joursAffilee: (n: number) => `day${n > 1 ? "s" : ""} in a row`,
     deReussite: "success",
     chargement: "Loading your progress…",
     jamaisJoue:
@@ -68,6 +83,8 @@ export const en: Dictionnaire = {
 
   defi: {
     titre: "Quiz of the day",
+    recompense: (xp: number) => `+ ${xp} experience points`,
+    jouerMaintenant: "Play now",
     dejaFait: "You have already taken today’s challenge. Come back tomorrow.",
     presentation: (xp: number) =>
       `Seven easy questions. Winning earns you ${xp} extra experience points.`,
@@ -76,6 +93,7 @@ export const en: Dictionnaire = {
 
   badges: {
     titre: "Your badges",
+    voirTout: "See all",
     compteur: (obtenus: number, total: number) =>
       `You have earned ${obtenus} ${plural(obtenus, "badge")} out of ${total}.`,
     aucun: "No badges yet. Win a round to earn your first one.",

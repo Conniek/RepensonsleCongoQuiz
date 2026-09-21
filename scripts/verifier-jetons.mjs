@@ -14,7 +14,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { join, relative } from "node:path";
 
 const RACINE = process.cwd();
-const FICHIER_JETONS = "app/jetons.css";
+const FICHIER_JETONS = "app/styles/jetons.css";
 
 // Ce qui est interdit ailleurs que dans le fichier de jetons.
 const INTERDITS = [

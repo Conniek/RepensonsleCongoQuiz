@@ -1,7 +1,0 @@
-Ajoute cette ligne dans la section "scripts" de package.json :
-
-  "verifier:jetons": "node scripts/verifier-jetons.mjs"
-
-Et, si tu veux que le contrôle bloque une construction défaillante :
-
-  "build": "npm run verifier:jetons && next build"

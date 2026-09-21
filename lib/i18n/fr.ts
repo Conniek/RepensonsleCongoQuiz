@@ -17,6 +17,7 @@ export const fr = {
 
   marque: {
     nom: "Repensons le Congo Quiz",
+    pays: "République démocratique du Congo",
     slogan: "Un grand pays, mille histoires. Joue, apprends et célèbre le Congo.",
     presentation: (questions: number, categories: number) =>
       `Repensons le Congo Quiz est une application gratuite de culture générale sur la République démocratique du Congo. Elle réunit ${questions} questions réparties en ${categories} catégories, chacune accompagnée d’une explication et d’un lien vers sa source.`,
@@ -32,6 +33,8 @@ export const fr = {
     filAriane: "Fil d’Ariane",
     accueil: "Accueil",
     profil: "Profil",
+    quiz: "Quiz",
+    langue: "Langue",
     aPropos: "À propos du projet",
     accessibilite: "Déclaration d’accessibilité",
     infosSite: "Informations sur le site",
@@ -43,6 +46,9 @@ export const fr = {
     retourAccueil: "Revenir à l’accueil",
     nouvelleFenetre: "(nouvelle fenêtre)",
     sansValeur: "—",
+    reessayer: "Réessayer",
+    contexteNonSecurise:
+      "Ta progression ne peut pas se charger sur cette adresse. Utilise l’adresse sécurisée de l’application (https).",
   },
 
   niveaux: {
@@ -53,7 +59,14 @@ export const fr = {
 
   accueil: {
     titrePage: "Repensons le Congo Quiz — apprendre la RDC en jouant",
-    titreCategories: "Les catégories",
+    titreCategories: "Catégories",
+    voirTout: "Voir tout",
+    voirToutesCategories: (n: number) => `Voir les ${n} catégories`,
+    titreToutesCategories: "Toutes les catégories",
+    jouer: "Jouer",
+    etoilesSur: (obtenues: number, total: number) =>
+      `${obtenues} étoile${obtenues > 1 ? "s" : ""} sur ${total}`,
+    maitrise: (pourcentage: number) => `${pourcentage} % de maîtrise`,
     nbQuestions: (n: number) => `${n} questions.`,
     erreurCategories:
       "Les catégories n’ont pas pu être chargées. Réessaie dans un instant.",
@@ -61,6 +74,8 @@ export const fr = {
 
   progression: {
     titre: "Ta progression",
+    avantRangSuivant: "points avant le rang suivant",
+    joursAffilee: (n: number) => `jour${n > 1 ? "s" : ""} d’affilée`,
     deReussite: "de réussite",
     chargement: "Chargement de ta progression…",
     jamaisJoue:
@@ -79,6 +94,8 @@ export const fr = {
 
   defi: {
     titre: "Le quiz du jour",
+    recompense: (xp: number) => `+ ${xp} points d’expérience`,
+    jouerMaintenant: "Jouer maintenant",
     dejaFait: "Tu as déjà relevé le défi du jour. Reviens demain pour le suivant.",
     presentation: (xp: number) =>
       `Sept questions de niveau facile. Tu gagneras ${xp} points d’expérience supplémentaires en le remportant.`,
@@ -87,6 +104,7 @@ export const fr = {
 
   badges: {
     titre: "Tes badges",
+    voirTout: "Voir tout",
     compteur: (obtenus: number, total: number) =>
       `Tu as obtenu ${obtenus} ${pluriel(obtenus, "badge")} sur ${total}.`,
     aucun: "Tu n’as pas encore de badge. Remporte une partie pour décrocher le premier.",

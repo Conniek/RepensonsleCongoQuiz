@@ -1,15 +1,12 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { creerClientServeur } from "@/lib/supabase/serveur";
 import { dictionnaire, estLangue, LANGUE_PAR_DEFAUT } from "@/lib/i18n";
+import Entete from "./entete";
 import Progression from "./progression";
+import CategoriesAccueil, { type Categorie } from "./categories-accueil";
 import Offres from "./offres";
 
 export const revalidate = 300;
-
-type Categorie = {
-  categorie_id: string; libelle: string; slug: string; nb_questions: number;
-};
 
 export default async function Accueil({
   params,
@@ -42,9 +39,14 @@ export default async function Accueil({
 
   return (
     <>
-      <h1 tabIndex={-1}>{t.marque.nom}</h1>
-      <p>{t.marque.slogan}</p>
-      <p>{t.marque.presentation(total, jouables.length)}</p>
+      <Entete langue={langue} />
+
+      {/* Phrase d'orientation : masquée à l'œil, mais bien présente pour les
+          moteurs et les lecteurs d'écran. Elle sera reprise visuellement sur
+          l'écran d'accueil de première visite. */}
+      <p className="visuellement-masque">
+        {t.marque.presentation(total, jouables.length)}
+      </p>
 
       {langue !== LANGUE_PAR_DEFAUT && jouables.length < toutes.length && (
         <p className="note">{t.disponibilite.banniereLangue}</p>
@@ -52,30 +54,11 @@ export default async function Accueil({
 
       <Progression langue={langue} />
 
-      {/* Rappel des règles : pour le nouveau venu qui ne sait pas encore ce
-          qu'il va faire. */}
-      <section className="regles" aria-labelledby="titre-regles">
-        <h2 id="titre-regles" className="visuellement-masque">{t.regles.titre}</h2>
-        <p>{t.regles.texte}</p>
-      </section>
-
-      <section id="categories" aria-labelledby="titre-categories">
-        <h2 id="titre-categories">{t.accueil.titreCategories}</h2>
-        {jouables.length === 0 ? (
-          <p>{t.disponibilite.aucuneCategorie}</p>
-        ) : (
-          <ul className="cartes">
-            {jouables.map((c) => (
-              <li key={c.categorie_id}>
-                <h3>
-                  <Link href={`/${langue}/categorie/${c.slug}`}>{c.libelle}</Link>
-                </h3>
-                <p>{t.accueil.nbQuestions(c.nb_questions)}</p>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+      {jouables.length === 0 ? (
+        <p>{t.disponibilite.aucuneCategorie}</p>
+      ) : (
+        <CategoriesAccueil langue={langue} categories={jouables} total={jouables.length} />
+      )}
 
       <Offres langue={langue} questions={total} categories={jouables.length} />
     </>

@@ -226,6 +226,13 @@ export default function Jeu({
         </p>
       </section>
 
+      {/* Rappel des règles : il a sa place ici, au moment où l'on joue,
+          plutôt que sur l'accueil où il encombrait. Il ne s'affiche qu'à la
+          première question. */}
+      {position === 0 && (
+        <p className="regles">{t.regles.texte}</p>
+      )}
+
       <article aria-labelledby="enonce">
         <h2 className="visuellement-masque">{t.partie.enonce}</h2>
         <p className="meta">

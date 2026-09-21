@@ -1,15 +1,15 @@
 import { notFound } from "next/navigation";
 import { dictionnaire, estLangue } from "@/lib/i18n";
-import ProfilClient from "./profil-client";
+import Erreurs from "./erreurs";
 
 export async function generateMetadata({ params }: { params: Promise<{ langue: string }> }) {
   const { langue } = await params;
   if (!estLangue(langue)) return {};
-  return { title: dictionnaire(langue).pageProfil.titre };
+  return { title: dictionnaire(langue).erreurs.titre };
 }
 
-export default async function PageProfil({ params }: { params: Promise<{ langue: string }> }) {
+export default async function PageErreurs({ params }: { params: Promise<{ langue: string }> }) {
   const { langue } = await params;
   if (!estLangue(langue)) notFound();
-  return <ProfilClient langue={langue} />;
+  return <Erreurs langue={langue} />;
 }

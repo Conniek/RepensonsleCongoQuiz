@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { dictionnaire, estLangue, LANGUES, type Langue } from "@/lib/i18n";
-import "../jetons.css";
-import "../habillage.css";
-
-/** Racine de l'application. Il n'y a pas de app/layout.tsx : quand toutes
- *  les routes vivent sous un segment de langue, c'est ce fichier qui porte
- *  <html> et <body>, et l'attribut lang devient enfin dynamique. */
+import { dictionnaire, estLangue, LANGUES } from "@/lib/i18n";
+import Barre from "./barre";
+import "../styles/jetons.css";
+import "../styles/habillage.css";
 
 export async function generateStaticParams() {
   return LANGUES.map((langue) => ({ langue }));
@@ -32,8 +29,7 @@ export async function generateMetadata({
 }
 
 export default async function LangueLayout({
-  children,
-  params,
+  children, params,
 }: {
   children: React.ReactNode;
   params: Promise<{ langue: string }>;
@@ -41,7 +37,6 @@ export default async function LangueLayout({
   const { langue } = await params;
   if (!estLangue(langue)) notFound();
   const t = dictionnaire(langue);
-  const autres = LANGUES.filter((l) => l !== langue);
 
   return (
     <html lang={langue}>
@@ -52,33 +47,9 @@ export default async function LangueLayout({
           </ul>
         </nav>
 
-        <header aria-label={t.marque.nom}>
-          <p><Link href={`/${langue}`}>{t.marque.nom}</Link></p>
-
-          <nav aria-label={t.navigation.principale}>
-            <ul>
-              <li><Link href={`/${langue}`}>{t.navigation.accueil}</Link></li>
-              <li><Link href={`/${langue}/profil`}>{t.navigation.profil}</Link></li>
-            </ul>
-          </nav>
-
-          {/* Le sélecteur renvoie vers l'accueil de l'autre langue, pas vers
-              la page équivalente : les slugs diffèrent par langue, et une
-              catégorie peut ne pas être traduite. */}
-          <nav aria-label={t.langues.choisir} className="selecteur-langue">
-            <ul>
-              {autres.map((l) => (
-                <li key={l}>
-                  <Link href={`/${l}`} hrefLang={l} lang={l}>
-                    {dictionnaire(l).langues[l]}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </header>
-
         <main id="contenu">{children}</main>
+
+        <Barre langue={langue} />
 
         <footer aria-label={t.navigation.infosSite}>
           <nav aria-label={t.navigation.secondaire}>
