@@ -80,6 +80,9 @@ quizHub: {
     produit: (p: string) => p,
     aVie: "À vie",
     jusquAu: (date: string) => `Jusqu'au ${date}`,
+    pays: "Pays",
+    paysNonRenseigne: "Non renseigné",
+    paysEnregistre: "Pays enregistré.",
     langueDefaut: "Langue par défaut",
     enregistrer: "Enregistrer",
     whatsapp: "Nous contacter sur WhatsApp",
@@ -128,10 +131,109 @@ quizHub: {
       nature: "Nature",
       economie: "Économie et plus",
     },
+
+    // Carrousel d'introduction.
+    region: "Carrousel de présentation",
+    passer: "Passer",
+    suivant: "Suivant",
+    precedent: "Précédent",
+    diapositive: "diapositive",
+    positionSlide: (n: number, total: number) => `${n} sur ${total}`,
+    allerSlide: (n: number) => `Aller à la diapositive ${n}`,
+    slides: [
+      {
+        titre: "Repensons le Congo Quiz",
+        sousTitre: "Un grand pays, mille histoires.",
+        texte:
+          "1 445 questions sourcées sur la République démocratique du Congo : histoire, géographie, culture, nature et bien plus.",
+        points: ["Histoire", "Géographie", "Culture", "Nature", "Musique"],
+      },
+      {
+        titre: "Apprendre en jouant",
+        sousTitre: "Chaque réponse expliquée et sourcée.",
+        texte:
+          "Après chaque question, l'explication complète et le lien vers la source. Un quiz et un cours à la fois.",
+        points: ["Sources vérifiées", "Explications", "Liens directs", "12 catégories"],
+      },
+      {
+        titre: "Progresser chaque jour",
+        sousTitre: "Étoiles, niveaux, classement.",
+        texte:
+          "Relève le défi du jour, gagne des étoiles et grimpe au classement. Cinq rangs, de Curieux du Congo à Mémoire du Congo.",
+        points: ["Six étoiles par thème", "Badges", "Séries quotidiennes", "Classement"],
+      },
+      {
+        titre: "Quiz spéciaux et langues",
+        sousTitre: "Des contenus qui vont plus loin.",
+        texte:
+          "Des quiz événementiels et le parcours complet d'apprentissage du lingala, enregistré par des locuteurs natifs.",
+        points: ["Quiz Élections", "Quiz Indépendance", "Parcours lingala", "Audio natif"],
+      },
+    ],
+  },
+
+  onboarding: {
+    titre: "Bienvenue",
+    etape: (n: number, total: number) => `Étape ${n} sur ${total}`,
+    retour: "Revenir à l'étape précédente",
+    plusTard: "Plus tard",
+    suivant: "Suivant",
+    terminer: "Créer mon compte",
+    enCours: "Enregistrement…",
+
+    pseudoTitre: "Choisis ton pseudo",
+    pseudoTexte: "C'est le nom qui apparaîtra au classement.",
+    pseudoLabel: "Pseudo",
+    pseudoAide: "Entre 2 et 24 caractères. Il sera visible des autres joueurs.",
+    pseudoLibre: "Ce pseudo est disponible.",
+    pseudoPris: "Ce pseudo est déjà pris.",
+    pseudoCourt: "Le pseudo doit faire entre 2 et 24 caractères.",
+
+    paysTitre: "Tu nous rejoins d'où ?",
+    paysTexte: "Pour te situer dans le classement de ton pays.",
+    paysLabel: "Pays",
+    paysVide: "Sélectionne un pays",
+    paysManquant: "Choisis un pays pour continuer.",
+    paysAutres: "Tous les pays",
+
+    motDePasseTitre: "On y est presque",
+    motDePasseTexte:
+      "Un mot de passe enregistre ta progression et te donne accès au classement.",
+    emailLabel: "Adresse e-mail",
+    emailAide: "C'est ton identifiant de connexion.",
+    emailInvalide: "Cette adresse e-mail ne semble pas valide.",
+    emailUtilise: "Cette adresse est déjà utilisée.",
+    motDePasseLabel: "Mot de passe",
+    motDePasseAide: "Huit caractères minimum.",
+    motDePasseCourt: "Le mot de passe doit faire au moins huit caractères.",
+    afficherMotDePasse: "Afficher le mot de passe",
+    masquerMotDePasse: "Masquer le mot de passe",
+    erreurGenerique: (message: string) => `L'enregistrement a échoué : ${message}`,
+  },
+
+  classement: {
+    titre: "Classement",
+    portee: "Portée du classement",
+    monde: "Monde",
+    pays: "Mon pays",
+    periode: "Période",
+    semaine: "Semaine",
+    mois: "Mois",
+    tout: "Tout",
+    colPosition: "Position",
+    colJoueur: "Joueur",
+    colPoints: "Expérience",
+    moi: "(moi)",
+    vide: "Personne n'est encore classé sur cette période.",
+    sansPays:
+      "Renseigne ton pays dans ton profil pour voir le classement national.",
+    maPosition: (n: number) => `Tu es ${n}ᵉ`,
+    chargement: "Chargement du classement…",
   },
 
   commun: {
     chargement: "Chargement…",
+    erreurReseau: "La connexion a échoué. Vérifie ton réseau puis réessaie.",
     voirTout: "Voir tout",
     retourAccueil: "Revenir à l’accueil",
     nouvelleFenetre: "(nouvelle fenêtre)",
@@ -616,8 +718,8 @@ quizHub: {
       "Débloque des quiz exclusifs sur les grandes figures, les histoires méconnues et les régions de la RDC.",
     plusPoint1: "Des sujets qu’on connaît… beaucoup moins qu’on ne le croit.",
     plusPoint2: "Sans aucune publicité.",
-    plusPrix: "1,99 € / mois",
-    plusPrixDetail: "ou 11,99 € par an",
+    plusPrix: "15,99 € à vie",
+    plusPrixDetail: "ou 0,99 € par quiz spécial, à l’unité",
     plusAction: "Découvrir Plus",
 
     langueCategorie: "Parcours de langue",

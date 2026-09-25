@@ -1,0 +1,156 @@
+/* =========================================================================
+   Inscription en trois étapes. Même calque plein écran que la splash : la
+   barre de navigation n'a rien à faire ici, on ne navigue pas, on s'inscrit.
+   ========================================================================= */
+
+.onb {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow-y: auto;
+  background: var(--fond);
+  padding: var(--espace-4) var(--espace-4) var(--espace-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espace-4);
+}
+
+.onb-barre {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espace-3);
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.onb-retour {
+  background: none;
+  border: none;
+  font-size: var(--taille-titre-2);
+  color: var(--encre);
+  cursor: pointer;
+  padding: var(--espace-2);
+  line-height: 1;
+}
+
+.onb-etape {
+  margin: 0;
+  font-size: var(--taille-secondaire);
+  color: var(--encre-discrete);
+}
+
+.onb-plus-tard {
+  font-size: var(--taille-secondaire);
+  color: var(--encre-discrete);
+}
+
+.onb-jauge {
+  width: 100%;
+  height: 6px;
+  border: none;
+  border-radius: 999px;
+  background: var(--surface-douce);
+  accent-color: var(--bleu);
+}
+.onb-jauge::-webkit-progress-bar { background: var(--surface-douce); border-radius: 999px; }
+.onb-jauge::-webkit-progress-value { background: var(--bleu); border-radius: 999px; }
+
+.onb-etape-contenu {
+  max-width: 460px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espace-2);
+}
+
+.onb-etape-contenu h1 {
+  margin: var(--espace-4) 0 0;
+  font-size: var(--taille-titre-1);
+}
+
+.onb-intro {
+  margin: 0 0 var(--espace-4);
+  color: var(--encre-discrete);
+}
+
+.onb-etape-contenu label {
+  font-weight: 600;
+  margin-top: var(--espace-3);
+}
+
+.onb-etape-contenu input,
+.onb-etape-contenu select {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: var(--taille-corps);
+  color: var(--encre);
+  background: var(--surface);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-m);
+}
+
+.onb-etape-contenu input:focus-visible,
+.onb-etape-contenu select:focus-visible,
+.onb-action:focus-visible,
+.onb-bascule:focus-visible,
+.onb-retour:focus-visible {
+  outline: 3px solid var(--ocre);
+  outline-offset: 2px;
+}
+
+.onb-aide {
+  margin: 0;
+  font-size: var(--taille-etiquette);
+  color: var(--encre-discrete);
+}
+
+/* Réservé en permanence : un message qui apparaît ne doit pas décaler
+   le bouton sous le doigt de la personne. */
+.onb-etat {
+  min-height: 1.4em;
+  margin: var(--espace-2) 0 0;
+  font-size: var(--taille-secondaire);
+  color: var(--vert);
+}
+
+.onb-erreur {
+  margin: var(--espace-2) 0 0;
+  color: var(--rouge);
+  font-size: var(--taille-secondaire);
+  font-weight: 600;
+}
+
+.onb-champ-mot-de-passe {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espace-2);
+}
+
+.onb-bascule {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 4px 0;
+  font-size: var(--taille-etiquette);
+  color: var(--bleu);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.onb-action {
+  margin-top: var(--espace-5);
+  padding: 16px 24px;
+  border: none;
+  border-radius: 999px;
+  background: var(--bleu);
+  color: #fff;
+  font-size: var(--taille-titre-3);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.onb-action[disabled] {
+  opacity: 0.6;
+  cursor: progress;
+}

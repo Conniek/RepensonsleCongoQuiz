@@ -16,7 +16,7 @@ export default function Barre({ langue }: { langue: Langue }) {
   const chemin = usePathname() ?? "";
 
   // Pas de barre sur l'écran d'introduction : elle apparaît dès l'accueil.
-  if (chemin === `/${langue}/splash`) return null;
+  if (chemin === `/${langue}/splash` || chemin.startsWith(`/${langue}/onboarding`)) return null;
 
   const entrees = [
     { href: `/${langue}`,             libelle: t.navigation.accueil,     Picto: Maison,    exact: true },

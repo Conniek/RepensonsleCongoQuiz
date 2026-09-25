@@ -7,6 +7,7 @@ import { creerClientNavigateur } from "@/lib/supabase/client";
 import { assurerSession } from "@/lib/session";
 import { dictionnaire, LANGUES, type Langue } from "@/lib/i18n";
 import { WHATSAPP_NUMERO, EMAIL_CONTACT } from "@/lib/contact";
+import { paysTries } from "@/lib/pays";
 import {
   Personne, Carte, Globe, Bulle, Enveloppe, Document, Bouclier, Accessibilite, Chevron,
 } from "../pictos";
@@ -23,6 +24,8 @@ export default function ProfilClient({ langue }: { langue: Langue }) {
   const [pseudo, setPseudo] = useState<string | null>(null);
   const [droits, setDroits] = useState<Droit[]>([]);
   const [langueChoisie, setLangueChoisie] = useState<Langue>(langue);
+  const [pays, setPays] = useState("");
+  const listePays = paysTries(langue);
   const [message, setMessage] = useState("");
   const [compteOuvert, setCompteOuvert] = useState(false);
   const [confirmation, setConfirmation] = useState(false);
@@ -35,15 +38,17 @@ export default function ProfilClient({ langue }: { langue: Langue }) {
       try {
         const session = await assurerSession();
         const s = creerClientNavigateur();
-        const [p, d] = await Promise.all([
+        const [p, d, prof] = await Promise.all([
           s.rpc("progression", { p_langue: langue }),
           s.rpc("mes_droits"),
+          s.from("profil").select("pays").eq("id", session!.user.id).maybeSingle(),
         ]);
         if (annule) return;
         setAnonyme(session?.user?.is_anonymous ?? true);
         setEmail(session?.user?.email ?? null);
         setPseudo(p.data?.pseudo ?? null);
         setDroits((d.data ?? []) as Droit[]);
+        setPays(prof.data?.pays ?? "");
       } catch {
         // Le profil reste utilisable : les liens d'information fonctionnent
         // sans session.
@@ -51,6 +56,12 @@ export default function ProfilClient({ langue }: { langue: Langue }) {
     })();
     return () => { annule = true; };
   }, [langue]);
+
+  async function enregistrerPays(e: React.FormEvent) {
+    e.preventDefault();
+    await creerClientNavigateur().rpc("definir_pays", { p_pays: pays || null });
+    setMessage(t.pageProfil.paysEnregistre);
+  }
 
   async function enregistrerLangue(e: React.FormEvent) {
     e.preventDefault();
@@ -97,7 +108,7 @@ export default function ProfilClient({ langue }: { langue: Langue }) {
           </button>
         </li>
         <li>
-          <Link className="ligne-reglage" href={`/${langue}/offre`}>
+          <Link className="ligne-reglage" href={`/${langue}/offres`}>
             <Carte taille={22} />
             <span className="ligne-libelle">{t.pageProfil.abonnement}</span>
             <span className="ligne-valeur">
@@ -117,6 +128,23 @@ export default function ProfilClient({ langue }: { langue: Langue }) {
               ))}
             </ul>
           )}
+        </li>
+        <li>
+          <form className="ligne-reglage ligne-formulaire" onSubmit={enregistrerPays}>
+            <Globe taille={22} />
+            <label htmlFor="pays-profil" className="ligne-libelle">{t.pageProfil.pays}</label>
+            <select id="pays-profil" value={pays}
+                    onChange={(e) => setPays(e.target.value)}>
+              <option value="">{t.pageProfil.paysNonRenseigne}</option>
+              {listePays.prioritaires.map((c) => (
+                <option key={`tete-${c.code}`} value={c.code}>{c.nom}</option>
+              ))}
+              {listePays.autres.map((c) => (
+                <option key={c.code} value={c.code}>{c.nom}</option>
+              ))}
+            </select>
+            <button type="submit">{t.pageProfil.enregistrer}</button>
+          </form>
         </li>
         <li>
           <form className="ligne-reglage ligne-formulaire" onSubmit={enregistrerLangue}>
