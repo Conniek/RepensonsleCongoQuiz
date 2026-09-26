@@ -7,6 +7,7 @@ import { assurerSession } from "@/lib/session";
 import { dictionnaire, type Langue } from "@/lib/i18n";
 import { Personne, Flamme, Livre, Etoile, Coupe, PictoBadge, Verrou } from "../pictos";
 import Fenetre from "../fenetre";
+import Classement from "./classement";
 
 type Badge = {
   id: string; libelle: string; condition: string;
@@ -87,6 +88,21 @@ export default function PageProgressionClient({ langue }: { langue: Langue }) {
           )}
         </div>
       </section>
+
+      {/* Le classement passe avant les thématiques : c'est la première
+          chose qu'on vient regarder, et il donne une raison de rejouer. */}
+      <Classement langue={langue} />
+
+      {/* Erreurs et historique quittent la page Quiz pour vivre ici, avec le
+          reste de ce qui regarde en arrière. */}
+      <ul className="raccourcis">
+        <li>
+          <Link href={`/${langue}/quiz/erreurs`}>{t.quizHub.erreurs}</Link>
+        </li>
+        <li>
+          <Link href={`/${langue}/quiz/historique`}>{t.quizHub.historique}</Link>
+        </li>
+      </ul>
 
       <section aria-labelledby="titre-thematiques">
         <h2 id="titre-thematiques">{t.pageProgression.thematiques}</h2>

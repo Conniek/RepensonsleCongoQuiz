@@ -41,6 +41,15 @@ quizHub: {
     etoilesAGagner: (n: number) => `${n} ${pluriel(n, "étoile")} à gagner`,
     themes: "Thèmes",
     etoilesTheme: (n: number) => `${n} sur 6`,
+    verrouille: "Verrouillé",
+    inclusDans: (offre: string) => `Inclus dans l'offre ${offre}`,
+    offrePlus: "Plus",
+    offreLangue: "Parcours de langue",
+    debloquer: "Débloquer",
+    debloquerTheme: (theme: string) => `Débloquer ${theme}`,
+    langues: "Langues",
+    languesTexte:
+      "Apprends le lingala niveau par niveau, avec l'audio enregistré par des locuteurs natifs.",
     upsellTitre: "Aller plus loin",
     upsellTexte: "Débloquez plus de contenus thématiques.",
     upsellAction: "Voir les offres",
@@ -115,6 +124,29 @@ quizHub: {
     aPropos: "À propos du projet",
     accessibilite: "Déclaration d’accessibilité",
     infosSite: "Informations sur le site",
+  },
+
+  erreurs: {
+    titre: "Mes erreurs",
+    intro:
+      "Les questions que tu as manquées, avec la bonne réponse et sa source. Elles reviendront dans tes prochaines parties.",
+    aucune: "Aucune erreur à revoir pour le moment. Continue comme ça.",
+    bonneReponse: "Bonne réponse :",
+  },
+
+  historique: {
+    titre: "Historique",
+    legende: "Tes parties terminées, de la plus récente à la plus ancienne.",
+    aucun: "Aucune partie terminée pour le moment.",
+    colDate: "Date",
+    colCategorie: "Thème",
+    colNiveau: "Niveau",
+    colScore: "Score",
+    colResultat: "Résultat",
+    score: (points: number, bonnes: number, total: number) =>
+      `${points} points · ${bonnes} ${pluriel(bonnes, "bonne")} sur ${total}`,
+    gagnee: "Gagnée",
+    perdue: "Perdue",
   },
 
   splash: {
@@ -251,6 +283,10 @@ quizHub: {
 
   accueil: {
     titrePage: "Repensons le Congo Quiz — apprendre la RDC en jouant",
+    salutPremier: (pseudo: string) => `Salut ${pseudo}, prêt à démarrer ton premier quiz ?`,
+    salutRetour: (pseudo: string) => `Salut ${pseudo}, on reprend où tu t'es arrêté ?`,
+    salutAnonymePremier: "Prêt à démarrer ton premier quiz ?",
+    salutAnonymeRetour: "Prêt à reprendre ?",
     titreCategories: "Catégories",
     voirTout: "Voir tout",
     voirToutesCategories: (n: number) => `Voir les ${n} catégories`,
@@ -337,6 +373,8 @@ quizHub: {
   },
 
   partie: {
+    scoreCourant: (n: number) => `${n} points`,
+    scoreCourantDetail: (n: number) => `Score en cours : ${n} points`,
     titrePage: "Partie en cours",
     preparation: "Préparation de la partie…",
     parametreManquant: "Catégorie ou niveau manquant.",
@@ -389,6 +427,16 @@ quizHub: {
       "Cette catégorie manque de questions à ce niveau. La partie a été complétée avec des questions de difficulté voisine.",
     sansChrono:
       "Chronomètre désactivé : la partie est valide, sans bonus de rapidité.",
+    titreEtoile: "Ton étoile",
+    etoileGagnee: "Étoile gagnée !",
+    pasDEtoile: "Pas d'étoile cette fois. Il en faut 900 points et 5 bonnes réponses.",
+    etoilesNiveau: (n: number) => `${n} étoile${n > 1 ? "s" : ""} sur 2 à ce niveau`,
+    niveauSuivantOuvert: "Deux étoiles : le niveau suivant est ouvert.",
+    titreXp: "Comment se calcule ton expérience",
+    xpBase: "Points convertis",
+    xpVictoire: "Bonus de victoire",
+    xpDefi: "Bonus du défi du jour",
+    xpTotal: "Total",
     titreDetail: "Le détail de tes réponses",
     ligneReponse: (position: number, correcte: boolean, points: number) =>
       `Question ${position} : ${correcte ? "bonne réponse" : "mauvaise réponse"}, ${points} points.`,
@@ -731,6 +779,9 @@ quizHub: {
     languePrix: "19,99 € à vie",
     languePrixDetail: "ou 4,99 € par mois · achat unique, sans renouvellement",
     langueAction: "Commencer le lingala",
+    bientotDisponible: "Bientôt disponible",
+    paiementBientot: "Le paiement arrive bientôt. Rien n'est prélevé aujourd'hui.",
+    offreMiseEnAvant: "L'offre qui débloque le thème demandé",
   },
 
   regles: {

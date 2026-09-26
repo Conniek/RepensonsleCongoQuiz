@@ -20,7 +20,7 @@ export default async function PageQuiz({ params }: { params: Promise<{ langue: s
   const supabase = await creerClientServeur();
   const { data } = await supabase
     .from("categorie_publique")
-    .select("categorie_id, libelle, slug, nb_questions")
+    .select("categorie_id, libelle, slug, nb_questions, produit_requis")
     .eq("langue", langue)
     .order("libelle");
 

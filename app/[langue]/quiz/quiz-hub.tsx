@@ -5,9 +5,13 @@ import Link from "next/link";
 import { creerClientNavigateur } from "@/lib/supabase/client";
 import { assurerSession } from "@/lib/session";
 import { dictionnaire, type Langue } from "@/lib/i18n";
-import { Etoile, Sablier, DocumentErreur, Document, Chevron } from "../pictos";
+import { Etoile, Sablier, Verrou } from "../pictos";
 
-export type Theme = { categorie_id: string; libelle: string; slug: string; nb_questions: number };
+export type Theme = {
+  categorie_id: string; libelle: string; slug: string; nb_questions: number;
+  /** NULL = accessible à tous. Sinon, le produit à posséder. */
+  produit_requis: string | null;
+};
 
 type Campagne = { id: string; titre: string; description: string | null };
 type Defi = { categorie_id: string; libelle: string; niveau: string; recompense_xp: number; fait: boolean };
@@ -22,9 +26,9 @@ export default function QuizHub({ langue, themes }: { langue: Langue; themes: Th
   const [etoiles, setEtoiles] = useState(0);
   const [campagnes, setCampagnes] = useState<Campagne[]>([]);
   const [defi, setDefi] = useState<Defi | null>(null);
-  const [erreurs, setErreurs] = useState(0);
   const [recos, setRecos] = useState<Reco[] | null>(null);
   const [maitrise, setMaitrise] = useState<Maitrise[]>([]);
+  const [droits, setDroits] = useState<string[]>([]);
 
   useEffect(() => {
     let annule = false;
@@ -32,20 +36,20 @@ export default function QuizHub({ langue, themes }: { langue: Langue; themes: Th
       try {
         await assurerSession();
         const s = creerClientNavigateur();
-        const [p, d, c, e, r] = await Promise.all([
+        const [p, d, c, r, dr] = await Promise.all([
           s.rpc("progression", { p_langue: langue }),
           s.rpc("defi_du_jour", { p_langue: langue }),
           s.from("campagne").select("id, titre, description").eq("mise_en_avant", true),
-          s.rpc("compter_erreurs", { p_langue: langue }),
           s.rpc("recommandations", { p_langue: langue }),
+          s.rpc("mes_droits"),
         ]);
         if (annule) return;
         setEtoiles(p.data?.etoiles_total ?? 0);
         setMaitrise((p.data?.maitrise ?? []) as Maitrise[]);
         if (d.data) setDefi(d.data as Defi);
         setCampagnes((c.data ?? []) as Campagne[]);
-        setErreurs((e.data as number) ?? 0);
         setRecos((r.data ?? []) as Reco[]);
+        setDroits(((dr.data ?? []) as { produit: string }[]).map((x) => x.produit));
       } catch {
         if (!annule) setRecos([]);
       }
@@ -54,6 +58,56 @@ export default function QuizHub({ langue, themes }: { langue: Langue; themes: Th
   }, [langue]);
 
   const etoilesDe = (id: string) => maitrise.find((m) => m.categorie_id === id)?.etoiles ?? 0;
+
+  /* Reflet CLIENT de la règle serveur : sert à griser, jamais à autoriser.
+     composer_deck refait le contrôle, c'est lui qui protège le contenu. */
+  const accessible = (produit: string | null) =>
+    produit === null ||
+    droits.includes(produit) ||
+    (produit.startsWith("langue_") && droits.includes("pack_langues"));
+
+  const themesLibres = themes.filter((th) => th.produit_requis !== "langue_lingala");
+  const themesLangues = themes.filter((th) => th.produit_requis === "langue_lingala");
+
+  const nomOffre = (produit: string) =>
+    produit === "plus" ? t.quizHub.offrePlus : t.quizHub.offreLangue;
+
+  /* Une carte de thème : jouable, ou verrouillée mais TOUJOURS présente et
+     annoncée. Retirer un thème verrouillé le rendrait invisible aux lecteurs
+     d'écran, et supprimerait du même coup l'envie de le débloquer. */
+  function CarteTheme({ th }: { th: Theme }) {
+    const e = etoilesDe(th.categorie_id);
+    const ouvert = accessible(th.produit_requis);
+
+    if (ouvert) {
+      return (
+        <li>
+          <h3><Link href={`/${langue}/categorie/${th.slug}`}>{th.libelle}</Link></h3>
+          <p className="theme-progression">
+            <progress value={e} max={6} aria-hidden="true" />
+            <span>{t.quizHub.etoilesTheme(e)}</span>
+          </p>
+        </li>
+      );
+    }
+
+    return (
+      <li className="theme-verrouille">
+        <h3>
+          <Link href={`/${langue}/offres?produit=${th.produit_requis}`}>
+            {th.libelle}
+            <span className="visuellement-masque">
+              , {t.quizHub.verrouille}. {t.quizHub.debloquerTheme(th.libelle)}
+            </span>
+          </Link>
+        </h3>
+        <p className="theme-condition">
+          <Verrou taille={16} />
+          {t.quizHub.inclusDans(nomOffre(th.produit_requis!))}
+        </p>
+      </li>
+    );
+  }
 
   return (
     <>
@@ -96,22 +150,26 @@ export default function QuizHub({ langue, themes }: { langue: Langue; themes: Th
         </ul>
       </section>
 
-      <ul className="raccourcis">
-        <li>
-          <Link href={`/${langue}/quiz/erreurs`}>
-            <DocumentErreur taille={24} />
-            <span>{t?.quizHub?.erreurs}</span>
-            <span className="compteur" aria-hidden="true">{erreurs}</span>
-            <span className="visuellement-masque">, {t?.quizHub?.erreursCompte(erreurs)}</span>
-          </Link>
-        </li>
-        <li>
-          <Link href={`/${langue}/quiz/historique`}>
-            <Document taille={24} />
-            <span>{t?.quizHub?.historique}</span>
-          </Link>
-        </li>
-      </ul>
+      <section aria-labelledby="titre-themes">
+        <h2 id="titre-themes">{t.quizHub.themes}</h2>
+        <ul className="themes">
+          {themesLibres.map((th) => (
+            <CarteTheme key={th.categorie_id} th={th} />
+          ))}
+        </ul>
+      </section>
+
+      {themesLangues.length > 0 && (
+        <section aria-labelledby="titre-langues">
+          <h2 id="titre-langues">{t.quizHub.langues}</h2>
+          <p>{t.quizHub.languesTexte}</p>
+          <ul className="themes">
+            {themesLangues.map((th) => (
+              <CarteTheme key={th.categorie_id} th={th} />
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section aria-labelledby="titre-pour-toi">
         <h2 id="titre-pour-toi">{t?.quizHub?.pourToi}</h2>
@@ -139,31 +197,6 @@ export default function QuizHub({ langue, themes }: { langue: Langue; themes: Th
         )}
       </section>
 
-      <section aria-labelledby="titre-themes">
-        <h2 id="titre-themes">{t?.quizHub?.themes}</h2>
-        <ul className="themes">
-          {themes.map((th) => {
-            const e = etoilesDe(th.categorie_id);
-            return (
-              <li key={th.categorie_id}>
-                <h3><Link href={`/${langue}/categorie/${th.slug}`}>{th.libelle}</Link></h3>
-                <p className="theme-progression">
-                  <progress value={e} max={6} aria-hidden="true" />
-                  <span>{t?.quizHub?.etoilesTheme(e)}</span>
-                </p>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
-
-      <section className="offre offre-plus" aria-labelledby="titre-upsell">
-        <h2 id="titre-upsell">{t?.quizHub?.upsellTitre}</h2>
-        <p>{t?.quizHub?.upsellTexte}</p>
-        <Link className="action" href={`/${langue}/offre`}>
-          {t?.quizHub?.upsellAction} <Chevron taille={18} />
-        </Link>
-      </section>
     </>
   );
 }

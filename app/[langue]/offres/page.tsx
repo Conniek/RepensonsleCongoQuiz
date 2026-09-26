@@ -1,11 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { dictionnaire, estLangue, LANGUES } from "@/lib/i18n";
+import { dictionnaire, estLangue } from "@/lib/i18n";
 import "./offres.css";
-
-export async function generateStaticParams() {
-  return LANGUES.map((langue) => ({ langue }));
-}
 
 export async function generateMetadata({
   params,
@@ -19,13 +15,21 @@ export async function generateMetadata({
 
 export default async function PageOffres({
   params,
+  searchParams,
 }: {
   params: Promise<{ langue: string }>;
+  searchParams: Promise<{ produit?: string }>;
 }) {
   const { langue } = await params;
   if (!estLangue(langue)) notFound();
+  const { produit } = await searchParams;
   const t = dictionnaire(langue);
   const { offres } = t;
+
+  /* Un thème verrouillé renvoie ici avec son produit : on met en avant
+     l'offre correspondante plutôt que de laisser chercher dans la page. */
+  const viseePlus = produit === "plus";
+  const viseeLangue = produit === "langue_lingala" || produit === "pack_langues";
 
   return (
     <>
@@ -67,7 +71,8 @@ export default async function PageOffres({
         </article>
 
         {/* Plus */}
-        <article className="carte-offre plus en-avant">
+        <article className={`carte-offre plus${viseePlus ? " en-avant" : ""}`}>
+          {viseePlus && <p className="offre-visee">{offres.offreMiseEnAvant}</p>}
           <div className="offre-entete">
             <span className="etiquette">{offres.plusEtiquette}</span>
             <h2>{offres.plusTitre}</h2>
@@ -87,14 +92,16 @@ export default async function PageOffres({
               <small>{offres.plusPrixDetail}</small>
             </div>
 
-            <button className="btn btn-secondaire" disabled aria-label="Bientôt disponible">
+            <button className="btn btn-secondaire" disabled>
               {offres.plusAction}
             </button>
+            <p className="note">{offres.bientotDisponible} — {offres.paiementBientot}</p>
           </div>
         </article>
 
         {/* Langue */}
-        <article className="carte-offre langue">
+        <article className={`carte-offre langue${viseeLangue ? " en-avant" : ""}`}>
+          {viseeLangue && <p className="offre-visee">{offres.offreMiseEnAvant}</p>}
           <div className="offre-entete">
             <span className="etiquette">{offres.langueBientot("Lingala")}</span>
             <h2>{offres.langueTitre}</h2>
@@ -111,9 +118,10 @@ export default async function PageOffres({
               <small>{offres.languePrixDetail}</small>
             </div>
 
-            <button className="btn btn-secondaire" disabled aria-label="Bientôt disponible">
+            <button className="btn btn-secondaire" disabled>
               {offres.langueAction}
             </button>
+            <p className="note">{offres.bientotDisponible} — {offres.paiementBientot}</p>
           </div>
         </article>
       </div>

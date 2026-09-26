@@ -24,7 +24,15 @@ type Defi = {
   niveau: string; recompense_xp: number; fait: boolean;
 };
 
-export default function Progression({ langue }: { langue: Langue }) {
+export default function Progression({
+  langue,
+  avecSalutation = false,
+}: {
+  langue: Langue;
+  /** Sur l'accueil, la progression porte aussi le titre de page : une
+   *  salutation nommée. Ailleurs, le titre appartient à la page. */
+  avecSalutation?: boolean;
+}) {
   const t = dictionnaire(langue);
   const [etat, setEtat] = useState<Etat | null>(null);
   const [defi, setDefi] = useState<Defi | null>(null);
@@ -91,8 +99,22 @@ export default function Progression({ langue }: { langue: Langue }) {
     .filter((b) => !b.obtenu && b.avancement > 0)
     .sort((a, b) => b.avancement / b.objectif - a.avancement / a.objectif)[0];
 
+  const salutation = !etat
+    ? null
+    : etat.pseudo
+      ? etat.parties > 0
+        ? t.accueil.salutRetour(etat.pseudo)
+        : t.accueil.salutPremier(etat.pseudo)
+      : etat.parties > 0
+        ? t.accueil.salutAnonymeRetour
+        : t.accueil.salutAnonymePremier;
+
   return (
     <>
+      {avecSalutation && salutation && (
+        <h1 className="salutation" tabIndex={-1}>{salutation}</h1>
+      )}
+
       <section
         id="progression"
         className={etat && etat.parties > 0 ? "progression" : undefined}

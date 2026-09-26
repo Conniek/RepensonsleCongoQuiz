@@ -35,6 +35,15 @@ quizHub: {
     etoilesAGagner: (n: number) => `${n} ${pluriel(n, "étoile")} à gagner`,
     themes: "Thèmes",
     etoilesTheme: (n: number) => `${n} sur 6`,
+    verrouille: "Locked",
+    inclusDans: (offre: string) => `Included in ${offre}`,
+    offrePlus: "Plus",
+    offreLangue: "Language path",
+    debloquer: "Unlock",
+    debloquerTheme: (theme: string) => `Unlock ${theme}`,
+    langues: "Languages",
+    languesTexte:
+      "Learn Lingala level by level, with audio recorded by native speakers.",
     upsellTitre: "Aller plus loin",
     upsellTexte: "Débloquez plus de contenus thématiques.",
     upsellAction: "Voir les offres",
@@ -109,6 +118,29 @@ quizHub: {
     aPropos: "About the project",
     accessibilite: "Accessibility statement",
     infosSite: "Site information",
+  },
+
+  erreurs: {
+    titre: "My mistakes",
+    intro:
+      "The questions you missed, with the correct answer and its source. They will come back in your next games.",
+    aucune: "Nothing to review right now. Keep it up.",
+    bonneReponse: "Correct answer:",
+  },
+
+  historique: {
+    titre: "History",
+    legende: "Your finished games, most recent first.",
+    aucun: "No finished games yet.",
+    colDate: "Date",
+    colCategorie: "Topic",
+    colNiveau: "Level",
+    colScore: "Score",
+    colResultat: "Result",
+    score: (points: number, bonnes: number, total: number) =>
+      `${points} points · ${bonnes} correct out of ${total}`,
+    gagnee: "Won",
+    perdue: "Lost",
   },
 
   splash: {
@@ -240,6 +272,10 @@ quizHub: {
 
   accueil: {
     titrePage: "Repensons le Congo Quiz — learn about the DRC by playing",
+    salutPremier: (pseudo: string) => `Hi ${pseudo}, ready for your first quiz?`,
+    salutRetour: (pseudo: string) => `Hi ${pseudo}, shall we pick up where you left off?`,
+    salutAnonymePremier: "Ready for your first quiz?",
+    salutAnonymeRetour: "Ready to pick up again?",
     titreCategories: "Categories",
     voirTout: "See all",
     voirToutesCategories: (n: number) => `See all ${n} categories`,
@@ -320,6 +356,8 @@ quizHub: {
   },
 
   partie: {
+    scoreCourant: (n: number) => `${n} points`,
+    scoreCourantDetail: (n: number) => `Current score: ${n} points`,
     titrePage: "Round in progress",
     preparation: "Preparing the round…",
     parametreManquant: "Missing category or level.",
@@ -369,6 +407,16 @@ quizHub: {
     deckComplete:
       "This category has few questions at this level. The round was filled with questions of nearby difficulty.",
     sansChrono: "Timer off: the round counts, without a speed bonus.",
+    titreEtoile: "Your star",
+    etoileGagnee: "Star earned!",
+    pasDEtoile: "No star this time. You need 900 points and 5 correct answers.",
+    etoilesNiveau: (n: number) => `${n} star${n > 1 ? "s" : ""} out of 2 at this level`,
+    niveauSuivantOuvert: "Two stars: the next level is now open.",
+    titreXp: "How your experience is calculated",
+    xpBase: "Points converted",
+    xpVictoire: "Win bonus",
+    xpDefi: "Daily challenge bonus",
+    xpTotal: "Total",
     titreDetail: "Your answers in detail",
     ligneReponse: (position: number, correcte: boolean, points: number) =>
       `Question ${position}: ${correcte ? "correct" : "incorrect"}, ${points} points.`,
@@ -695,6 +743,9 @@ quizHub: {
     langueBientot: (langue: string) => `${langue} · coming soon`,
     languePrix: "€19.99 for life",
     languePrixDetail: "or €4.99 per month · one-off purchase, no renewal",
+    bientotDisponible: "Coming soon",
+    paiementBientot: "Payment is coming soon. Nothing is charged today.",
+    offreMiseEnAvant: "The offer that unlocks the theme you asked for",
     langueAction: "Start Lingala",
   },
 

@@ -8,6 +8,7 @@ import { dictionnaire, type Langue } from "@/lib/i18n";
 import { Etoile } from "./pictos";
 
 export type Categorie = {
+  produit_requis?: string | null;
   categorie_id: string; libelle: string; slug: string; nb_questions: number;
 };
 

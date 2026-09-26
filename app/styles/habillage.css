@@ -952,3 +952,113 @@ input[type="checkbox"] { width: auto; min-height: auto; }
   list-style: none; margin: 0; padding: 0 var(--espace-4) var(--espace-3) calc(var(--espace-7) + var(--espace-2));
   font-size: var(--taille-secondaire); color: var(--encre-discrete);
 }
+
+/* --- Salutation d'accueil (v2) -------------------------------------------------- */
+/* Remplace le logo en haut de l'accueil : c'est le titre de la page. */
+.salutation {
+  margin: var(--espace-5) 0 var(--espace-4);
+  font-size: var(--taille-titre-1);
+  line-height: 1.2;
+}
+
+/* --- Thème verrouillé (v2) ------------------------------------------------------ */
+/* Le thème reste une carte de plein droit : même taille, même place. Il est
+   assombri et porte un cadenas, mais il n'est ni masqué ni retiré du flux —
+   un contenu qu'on veut vendre doit d'abord être vu, et un contenu retiré
+   n'existe plus du tout pour un lecteur d'écran. */
+.themes > li.theme-verrouille {
+  background-color: var(--surface-douce);
+  background-image: none;
+  color: var(--encre);
+  border: 1px dashed var(--bordure);
+}
+.themes > li.theme-verrouille h3 a { color: var(--encre); }
+.theme-condition {
+  display: flex; align-items: center; gap: var(--espace-2);
+  margin: 0; font-size: var(--taille-etiquette);
+  font-weight: var(--graisse-forte); color: var(--encre-discrete);
+}
+
+/* --- Classement (v2) ------------------------------------------------------------ */
+.classement-filtres {
+  display: flex; flex-wrap: wrap; gap: var(--espace-3);
+  margin: 0 0 var(--espace-4);
+}
+.segment {
+  display: flex; gap: 2px; padding: 3px;
+  background: var(--surface-douce); border-radius: var(--rayon-rond);
+}
+.segment button {
+  border: none; background: none; cursor: pointer;
+  padding: 8px 14px; border-radius: var(--rayon-rond);
+  font-size: var(--taille-etiquette); font-weight: var(--graisse-forte);
+  color: var(--encre);
+}
+/* L'état courant ne repose pas que sur la couleur : le fond plein et le
+   contraste inversé restent lisibles en contraste forcé. */
+.segment button[aria-pressed="true"] {
+  background: var(--bleu); color: var(--blanc-sur-couleur);
+}
+
+table.classement { width: 100%; border-collapse: collapse; }
+table.classement th, table.classement td {
+  text-align: left; padding: var(--espace-3) var(--espace-2);
+  border-bottom: 1px solid var(--bordure);
+  font-size: var(--taille-secondaire);
+}
+table.classement th { font-size: var(--taille-etiquette); color: var(--encre-discrete); }
+table.classement td:last-child, table.classement th:last-child { text-align: right; }
+table.classement tr.moi { background: var(--surface-douce); font-weight: var(--graisse-forte); }
+.classement-pays { color: var(--encre-discrete); }
+.classement-moi {
+  margin: var(--espace-3) 0 0; padding: var(--espace-3);
+  background: var(--surface-douce); border-radius: var(--rayon-m);
+  font-weight: var(--graisse-forte);
+}
+
+/* --- Score courant pendant la partie (v3) --------------------------------------- */
+.score-courant {
+  margin: var(--espace-2) 0 0;
+  font-size: var(--taille-titre-3);
+  font-weight: var(--graisse-forte);
+}
+
+/* --- Écran de résultat (v3) ------------------------------------------------------ */
+.etoile-gagnee {
+  margin: 0 0 var(--espace-2);
+  font-size: var(--taille-titre-2);
+  font-weight: var(--graisse-forte);
+  color: var(--ocre);
+}
+
+table.detail-xp { width: 100%; border-collapse: collapse; max-width: 34rem; }
+table.detail-xp th, table.detail-xp td {
+  text-align: left; padding: var(--espace-2) 0;
+  font-size: var(--taille-secondaire); font-weight: var(--graisse-normale);
+}
+table.detail-xp td { text-align: right; font-variant-numeric: tabular-nums; }
+/* Le total se distingue par un trait et la graisse, pas par une couleur
+   seule : lisible en contraste forcé comme en impression. */
+table.detail-xp tfoot th, table.detail-xp tfoot td {
+  border-top: 2px solid var(--encre);
+  font-weight: var(--graisse-forte);
+}
+
+.recap-enonce { margin: 0; font-weight: var(--graisse-forte); }
+.recap-bilan { margin: 0 0 var(--espace-3); font-size: var(--taille-secondaire); }
+/* La barre latérale double l'information portée par le texte de la ligne :
+   juste ou faux reste lisible sans distinguer les couleurs. */
+.reponse-juste, .reponse-fausse {
+  padding-left: var(--espace-3);
+  border-left: 4px solid var(--bordure);
+}
+.reponse-juste { border-left-color: var(--vert); }
+.reponse-fausse { border-left-color: var(--rouge); }
+
+/* --- Offre mise en avant depuis un cadenas (v3) ---------------------------------- */
+.offre-visee {
+  margin: 0 0 var(--espace-2);
+  font-size: var(--taille-etiquette);
+  font-weight: var(--graisse-forte);
+  color: var(--bleu);
+}

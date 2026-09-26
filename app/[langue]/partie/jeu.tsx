@@ -114,6 +114,13 @@ export default function Jeu({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categorieId, niveau, langue, mode]);
 
+  /* Cumul des points. Chaque incrément vient de valider_reponse : le
+     navigateur n'applique aucune règle de score, il additionne ce que le
+     serveur a décidé. Recalculer ici (125 par bonne réponse, bonus de
+     rapidité) donnerait un chiffre qui dérive du vrai à la moindre
+     évolution de la règle. */
+  const [scoreCumule, setScoreCumule] = useState(0);
+
   const question = questions[position];
 
   const repondre = useCallback(async (choix: number | null) => {
@@ -124,7 +131,9 @@ export default function Jeu({
       p_choix: choix, p_duree_ms: chronoActif ? duree : null,
     });
     if (error) { setErreur(error.message); return; }
-    setRetour(data as Retour);
+    const recu = data as Retour;
+    setRetour(recu);
+    setScoreCumule((total) => total + recu.points);
   }, [partieId, position, retour, chronoActif, supabase]);
 
   useEffect(() => {
@@ -223,6 +232,15 @@ export default function Jeu({
         )}
         <p role="status" aria-live="polite" className="visuellement-masque">
           {alerteTemps}
+        </p>
+
+        {/* Le chiffre est visible, la phrase complète est lue : « 375 » seul
+            ne dit rien à un lecteur d'écran. */}
+        <p className="score-courant">
+          <span aria-hidden="true">{t.partie.scoreCourant(scoreCumule)}</span>
+          <span className="visuellement-masque">
+            {t.partie.scoreCourantDetail(scoreCumule)}
+          </span>
         </p>
       </section>
 
