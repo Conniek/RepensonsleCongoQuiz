@@ -1062,3 +1062,18 @@ table.detail-xp tfoot th, table.detail-xp tfoot td {
   font-weight: var(--graisse-forte);
   color: var(--bleu);
 }
+
+/* --- Verrou sur les pages de catégories (v4) ------------------------------------ */
+.cartes > li.carte-verrouillee {
+  background: var(--surface-douce);
+  border: 1px dashed var(--bordure);
+}
+.bloc-verrou,
+.bloc-progression {
+  padding: var(--espace-4);
+  border-radius: var(--rayon-m);
+  background: var(--surface-douce);
+}
+/* Le bloc de progression se distingue par un filet, pas par une teinte
+   seule : il reste repérable sans perception fine des couleurs. */
+.bloc-progression { border-left: 4px solid var(--vert); }

@@ -56,7 +56,7 @@ export default function CategoriesAccueil({
     <section id="categories" aria-labelledby="titre-categories">
       <div className="titre-section">
         <h2 id="titre-categories">{t.accueil.titreCategories}</h2>
-        <Link href={`/${langue}/categories`}>
+        <Link href={`/${langue}/categorie`}>
           <span aria-hidden="true">{t.accueil.voirTout}</span>
           <span className="visuellement-masque">{t.accueil.voirToutesCategories(total)}</span>
         </Link>

@@ -53,6 +53,14 @@ export default async function PageResultat({
   const xpBase = Math.floor(partie.points / 10);
   const xpVictoire = gagnee ? 40 : 0;
   const xpDefi = gagnee && partie.mode === "defi_du_jour" ? 50 : 0;
+
+  /* Deux étoiles ouvrent le niveau suivant : c'est le moment où la personne
+     est le plus disposée à enchaîner, donc celui où on le lui propose.
+     La règle d'ouverture reste serveur (niveau_debloque) ; ici on ne fait
+     que proposer le lien, qui échouerait de toute façon s'il était prématuré. */
+  const niveauSuivant =
+    niveau === "facile" ? "moyen" : niveau === "moyen" ? "difficile" : null;
+  const niveauOuvert = etoiles >= 2 && niveauSuivant !== null;
   const niveau = partie.niveau as Niveau;
   const gagnes = (partie.badges_gagnes ?? []) as string[];
   const libelle = categorie?.libelle ?? partie.categorie_id;
@@ -95,8 +103,23 @@ export default async function PageResultat({
           <p>{t.resultat.pasDEtoile}</p>
         )}
         <p>{t.resultat.etoilesNiveau(etoiles)}</p>
-        {etoiles >= 2 && <p className="note">{t.resultat.niveauSuivantOuvert}</p>}
+        {etoiles >= 2 && !niveauSuivant && (
+          <p className="note">{t.resultat.toutFait}</p>
+        )}
       </section>
+
+      {niveauOuvert && (
+        <section aria-labelledby="titre-niveau-ouvert" className="bloc-progression">
+          <h2 id="titre-niveau-ouvert">{t.resultat.niveauOuvertTitre}</h2>
+          <p>{t.resultat.niveauOuvertTexte(t.niveaux[niveauSuivant])}</p>
+          <p>
+            <Link className="action"
+                  href={`/${langue}/partie?categorie=${partie.categorie_id}&niveau=${niveauSuivant}`}>
+              {t.resultat.jouerNiveauSuivant(t.niveaux[niveauSuivant])}
+            </Link>
+          </p>
+        </section>
+      )}
 
       <section aria-labelledby="titre-xp">
         <h2 id="titre-xp">{t.resultat.titreXp}</h2>

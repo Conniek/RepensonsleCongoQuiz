@@ -120,10 +120,120 @@ quizHub: {
     accueil: "Accueil",
     profil: "Profil",
     quiz: "Quiz",
+    progression: "Progression",
     langue: "Langue",
     aPropos: "À propos du projet",
     accessibilite: "Déclaration d’accessibilité",
     infosSite: "Informations sur le site",
+  },
+
+  conditions: {
+    titre: "Conditions d'utilisation",
+    intro:
+      "Ces conditions encadrent l'usage de Repensons le Congo Quiz. Elles sont écrites pour être lues : si un point vous paraît obscur, écrivez-nous, nous le reformulerons.",
+    sections: [
+      {
+        titre: "Ce que propose l'application",
+        contenu:
+          "Repensons le Congo Quiz propose des quiz sur la République démocratique du Congo. Chaque réponse s'accompagne d'une explication et d'un lien vers sa source. Le service est fourni en l'état, sans garantie d'exactitude absolue : malgré notre travail de sourcing, une erreur reste possible et peut nous être signalée.",
+      },
+      {
+        titre: "Compte et progression",
+        contenu:
+          "Vous pouvez jouer sans compte : votre progression est alors rattachée à une session anonyme, liée au navigateur utilisé. Créer un compte avec une adresse e-mail et un mot de passe conserve cette progression et donne accès au classement. Vous êtes responsable de la confidentialité de votre mot de passe.",
+      },
+      {
+        titre: "Pseudo et classement",
+        contenu:
+          "Le pseudo choisi est public : il apparaît dans le classement auprès des autres joueurs, avec votre pays et votre expérience. Nous pouvons modifier ou supprimer un pseudo insultant, trompeur ou usurpant l'identité d'un tiers. Aucune autre donnée de votre compte n'est rendue publique.",
+      },
+      {
+        titre: "Contenus payants",
+        contenu:
+          "Certains quiz et parcours sont payants. Un achat unique donne un accès permanent au contenu concerné ; un abonnement reste actif tant qu'il n'est pas résilié. Les prix sont indiqués toutes taxes comprises avant paiement. Le droit de rétractation légal s'applique dans les conditions prévues par la réglementation européenne.",
+      },
+      {
+        titre: "Usage raisonnable",
+        contenu:
+          "L'application est destinée à un usage personnel. L'extraction massive des questions, la revente du contenu et l'automatisation des parties pour fausser le classement sont interdites. En cas d'abus, l'accès peut être suspendu.",
+      },
+    ],
+  },
+
+  confidentialite: {
+    titre: "Politique de confidentialité",
+    intro:
+      "Nous collectons le strict nécessaire au fonctionnement du jeu. Pas de revente de données, pas de traçage publicitaire.",
+    sections: [
+      {
+        titre: "Données que nous conservons",
+        contenu:
+          "Votre pseudo, votre pays, votre adresse e-mail si vous avez créé un compte, ainsi que votre progression : parties jouées, réponses, points, étoiles, expérience, série de jours et badges. C'est tout.",
+      },
+      {
+        titre: "Pourquoi nous les conservons",
+        contenu:
+          "Pour vous restituer votre progression d'une session à l'autre, calculer le classement, vous proposer des questions adaptées et vous permettre de revoir vos erreurs. Votre adresse e-mail sert à vous connecter et à réinitialiser votre mot de passe.",
+      },
+      {
+        titre: "Session anonyme",
+        contenu:
+          "Si vous jouez sans compte, une session anonyme est créée automatiquement pour rattacher votre progression. Elle ne contient ni nom, ni adresse. Une session anonyme restée inactive est supprimée, avec les parties qui lui sont rattachées.",
+      },
+      {
+        titre: "Ce que nous ne faisons pas",
+        contenu:
+          "Nous ne vendons ni ne louons vos données. Nous n'utilisons pas de traceur publicitaire. Nous ne croisons pas votre activité avec des données provenant d'autres services.",
+      },
+      {
+        titre: "Hébergement et sous-traitance",
+        contenu:
+          "Les données sont hébergées par Supabase, sur une infrastructure située dans l'Union européenne. Le paiement, lorsqu'il sera activé, sera confié à un prestataire spécialisé qui traitera seul les données bancaires : nous ne les voyons jamais.",
+      },
+      {
+        titre: "Vos droits",
+        contenu:
+          "Vous pouvez exporter l'intégralité de vos données et supprimer votre compte depuis la page Profil, sans passer par nous. La suppression efface le compte et les parties associées, sans délai ni conservation résiduelle. Pour toute question, écrivez-nous.",
+      },
+    ],
+  },
+
+  accessibilite: {
+    titre: "Déclaration d'accessibilité",
+    intro:
+      "L'accessibilité fait partie du cahier des charges de cette application, pas de ses finitions. Voici où nous en sommes, sans embellir.",
+    sections: [
+      {
+        titre: "Niveau visé",
+        contenu:
+          "Nous visons le niveau AA des règles WCAG 2.2. L'application est développée et testée avec cet objectif, mais elle n'a pas encore fait l'objet d'un audit externe : nous ne revendiquons donc aucune conformité certifiée.",
+      },
+      {
+        titre: "Navigation au clavier",
+        contenu:
+          "Toutes les fonctions s'utilisent au clavier, y compris le carrousel d'introduction, les réponses au quiz et le classement. Le focus reste visible en permanence et suit l'écran affiché. Un lien d'évitement permet d'aller directement au contenu.",
+      },
+      {
+        titre: "Temps et mouvement",
+        contenu:
+          "Le chronomètre des parties peut être désactivé à tout moment depuis l'écran de jeu, sans perdre la partie en cours. Aucun contenu ne défile ou ne change tout seul : le carrousel n'avance que sur action de votre part.",
+      },
+      {
+        titre: "Couleur et contraste",
+        contenu:
+          "Aucune information n'est portée par la seule couleur : une bonne réponse, un thème verrouillé ou une ligne de classement se distinguent aussi par le texte, un libellé ou une forme. Les contrastes visent le rapport minimum de 4,5 pour 1.",
+      },
+      {
+        titre: "Contenus verrouillés",
+        contenu:
+          "Un thème payant ou un niveau non débloqué reste affiché et annoncé aux lecteurs d'écran, avec la condition à remplir. Nous ne masquons jamais un contenu indisponible : savoir qu'il existe fait partie de l'information.",
+      },
+      {
+        titre: "Limites connues et signalement",
+        contenu:
+          "Les images illustrant certaines questions n'ont pas toutes une alternative textuelle satisfaisante, et le back-office n'a pas encore été audité. Si vous rencontrez un obstacle, écrivez-nous en décrivant la page et votre outil : nous corrigeons ces signalements en priorité.",
+      },
+    ],
   },
 
   erreurs: {
@@ -441,6 +551,11 @@ quizHub: {
     ligneReponse: (position: number, correcte: boolean, points: number) =>
       `Question ${position} : ${correcte ? "bonne réponse" : "mauvaise réponse"}, ${points} points.`,
     titreSuite: "Et maintenant",
+    niveauOuvertTitre: "Niveau suivant débloqué",
+    niveauOuvertTexte: (niveau: string) =>
+      `Deux étoiles décrochées : le niveau ${niveau.toLowerCase()} t'attend.`,
+    jouerNiveauSuivant: (niveau: string) => `Jouer le niveau ${niveau.toLowerCase()}`,
+    toutFait: "Tu as décroché les deux étoiles des trois niveaux de ce thème.",
     rejouer: (niveau: string) => `Rejouer le niveau ${niveau.toLowerCase()}`,
     voirProgression: "Voir ta progression",
   },

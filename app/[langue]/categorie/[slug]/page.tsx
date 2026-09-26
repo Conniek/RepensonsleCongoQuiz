@@ -3,8 +3,11 @@ import { notFound } from "next/navigation";
 import { creerClientServeur } from "@/lib/supabase/serveur";
 import { dictionnaire, estLangue, LANGUES } from "@/lib/i18n";
 import Niveaux from "./niveaux";
+import { Verrou } from "../../pictos";
 
-export const revalidate = 300;
+/* Les droits du visiteur décident de ce qui s'affiche : pas de cache
+   partagé entre abonnés et non-abonnés. */
+export const dynamic = "force-dynamic";
 
 type Categorie = {
   categorie_id: string; libelle: string; slug: string;
@@ -64,6 +67,16 @@ export default async function PageCategorie({
 
   const jouable = categorie.nb_questions >= 7;
 
+  /* Reflet des droits, pour expliquer plutôt que laisser buter : la partie
+     serait refusée par composer_deck, autant le dire avant. */
+  const { data: mesDroits } = await (await creerClientServeur()).rpc("mes_droits");
+  const droits = ((mesDroits ?? []) as { produit: string }[]).map((d) => d.produit);
+  const produit = categorie.produit_requis as string | null;
+  const ouvert =
+    produit == null ||
+    droits.includes(produit) ||
+    (produit.startsWith("langue_") && droits.includes("pack_langues"));
+
   return (
     <>
       <nav aria-label={t.navigation.filAriane}>
@@ -76,7 +89,22 @@ export default async function PageCategorie({
       <h1 tabIndex={-1}>{categorie.libelle}</h1>
       <p>{t.categorie.intro(categorie.nb_questions)}</p>
 
-      {!jouable ? (
+      {!ouvert ? (
+        <section aria-labelledby="titre-verrou" className="bloc-verrou">
+          <h2 id="titre-verrou">{t.quizHub.verrouille}</h2>
+          <p className="theme-condition">
+            <Verrou taille={16} />
+            {t.quizHub.inclusDans(
+              produit === "plus" ? t.quizHub.offrePlus : t.quizHub.offreLangue
+            )}
+          </p>
+          <p>
+            <Link className="action" href={`/${langue}/offres?produit=${produit}`}>
+              {t.quizHub.debloquerTheme(categorie.libelle)}
+            </Link>
+          </p>
+        </section>
+      ) : !jouable ? (
         <p role="status">{t.disponibilite.categorieIndisponible}</p>
       ) : (
         <section aria-labelledby="titre-niveaux">

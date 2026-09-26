@@ -114,10 +114,120 @@ quizHub: {
     accueil: "Home",
     profil: "Profile",
     quiz: "Quiz",
+    progression: "Progress",
     langue: "Language",
     aPropos: "About the project",
     accessibilite: "Accessibility statement",
     infosSite: "Site information",
+  },
+
+  conditions: {
+    titre: "Terms of use",
+    intro:
+      "These terms govern the use of Repensons le Congo Quiz. They are written to be read: if anything is unclear, write to us and we will rephrase it.",
+    sections: [
+      {
+        titre: "What the app offers",
+        contenu:
+          "Repensons le Congo Quiz offers quizzes about the Democratic Republic of the Congo. Every answer comes with an explanation and a link to its source. The service is provided as is, without any guarantee of absolute accuracy: despite our sourcing work, mistakes remain possible and can be reported to us.",
+      },
+      {
+        titre: "Account and progress",
+        contenu:
+          "You can play without an account: your progress is then tied to an anonymous session linked to the browser you use. Creating an account with an email address and a password preserves that progress and gives access to the leaderboard. You are responsible for keeping your password confidential.",
+      },
+      {
+        titre: "Nickname and leaderboard",
+        contenu:
+          "The nickname you choose is public: it appears on the leaderboard alongside your country and experience. We may change or remove a nickname that is insulting, misleading or impersonates someone. No other account data is made public.",
+      },
+      {
+        titre: "Paid content",
+        contenu:
+          "Some quizzes and learning paths are paid. A one-off purchase grants permanent access to that content; a subscription stays active until cancelled. Prices are shown including tax before payment. The statutory right of withdrawal applies under European regulations.",
+      },
+      {
+        titre: "Fair use",
+        contenu:
+          "The app is intended for personal use. Bulk extraction of questions, resale of the content and automated play to distort the leaderboard are prohibited. Access may be suspended in case of abuse.",
+      },
+    ],
+  },
+
+  confidentialite: {
+    titre: "Privacy policy",
+    intro:
+      "We collect only what the game needs. No data resale, no advertising tracking.",
+    sections: [
+      {
+        titre: "Data we keep",
+        contenu:
+          "Your nickname, your country, your email address if you created an account, and your progress: games played, answers, points, stars, experience, daily streak and badges. That is all.",
+      },
+      {
+        titre: "Why we keep it",
+        contenu:
+          "To restore your progress from one session to the next, compute the leaderboard, suggest questions that fit your level and let you review your mistakes. Your email address is used to sign in and to reset your password.",
+      },
+      {
+        titre: "Anonymous session",
+        contenu:
+          "If you play without an account, an anonymous session is created automatically to hold your progress. It contains no name and no address. An anonymous session left inactive is deleted, along with the games attached to it.",
+      },
+      {
+        titre: "What we do not do",
+        contenu:
+          "We do not sell or rent your data. We use no advertising trackers. We do not combine your activity with data from other services.",
+      },
+      {
+        titre: "Hosting and processors",
+        contenu:
+          "Data is hosted by Supabase, on infrastructure located in the European Union. Payment, once enabled, will be handled by a specialised provider who alone processes card details: we never see them.",
+      },
+      {
+        titre: "Your rights",
+        contenu:
+          "You can export all of your data and delete your account from the Profile page, without going through us. Deletion removes the account and its games, with no delay and no residual copy. For any question, write to us.",
+      },
+    ],
+  },
+
+  accessibilite: {
+    titre: "Accessibility statement",
+    intro:
+      "Accessibility is part of this app's specification, not of its finishing touches. Here is where we stand, without embellishment.",
+    sections: [
+      {
+        titre: "Target level",
+        contenu:
+          "We aim for level AA of the WCAG 2.2 guidelines. The app is built and tested with that goal, but it has not yet been audited externally: we therefore claim no certified conformance.",
+      },
+      {
+        titre: "Keyboard navigation",
+        contenu:
+          "Every function works with a keyboard, including the intro carousel, the quiz answers and the leaderboard. Focus stays visible at all times and follows the screen being shown. A skip link leads straight to the content.",
+      },
+      {
+        titre: "Time and motion",
+        contenu:
+          "The game timer can be switched off at any moment from the game screen, without losing the current game. Nothing scrolls or changes on its own: the carousel only moves when you ask it to.",
+      },
+      {
+        titre: "Colour and contrast",
+        contenu:
+          "No information is carried by colour alone: a correct answer, a locked theme or a leaderboard row is also distinguished by text, a label or a shape. Contrast aims for a minimum ratio of 4.5 to 1.",
+      },
+      {
+        titre: "Locked content",
+        contenu:
+          "A paid theme or a level you have not unlocked stays visible and is announced to screen readers, along with the condition to meet. We never hide unavailable content: knowing it exists is part of the information.",
+      },
+      {
+        titre: "Known limits and feedback",
+        contenu:
+          "Not all images illustrating questions have a satisfactory text alternative, and the back office has not been audited yet. If you hit an obstacle, write to us describing the page and the tool you use: we fix those reports first.",
+      },
+    ],
   },
 
   erreurs: {
@@ -421,6 +531,11 @@ quizHub: {
     ligneReponse: (position: number, correcte: boolean, points: number) =>
       `Question ${position}: ${correcte ? "correct" : "incorrect"}, ${points} points.`,
     titreSuite: "What next",
+    niveauOuvertTitre: "Next level unlocked",
+    niveauOuvertTexte: (niveau: string) =>
+      `Two stars earned: the ${niveau.toLowerCase()} level is waiting for you.`,
+    jouerNiveauSuivant: (niveau: string) => `Play the ${niveau.toLowerCase()} level`,
+    toutFait: "You have earned both stars on all three levels of this topic.",
     rejouer: (niveau: string) => `Play the ${niveau.toLowerCase()} level again`,
     voirProgression: "See your progress",
   },
