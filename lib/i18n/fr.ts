@@ -127,6 +127,23 @@ quizHub: {
     infosSite: "Informations sur le site",
   },
 
+  illustrations: {
+    titre: "Illustrations",
+    intro:
+      "Une image par catégorie, affichée en tête de carte sur l'accueil et sur la page des catégories.",
+    consigne:
+      "Format AVIF ou WebP, 500 ko maximum, cadrage 16/10. Sans image téléversée, l'application utilise le fichier livré avec le code, et à défaut l'aplat de couleur.",
+    choisir: "Choisir une image",
+    retirer: "Retirer l'image",
+    sourceBase: "Image téléversée",
+    sourceFichier: (slug: string) => `Fichier du code : ${slug}.avif`,
+    deposee: (categorie: string) => `Image enregistrée pour ${categorie}.`,
+    retiree: (categorie: string) => `Image retirée pour ${categorie}.`,
+    mauvaisFormat: "Format refusé. Utilise un fichier AVIF ou WebP.",
+    tropLourd: "Fichier trop lourd : 500 ko maximum.",
+    echecDepot: (message: string) => `L'enregistrement a échoué : ${message}`,
+  },
+
   conditions: {
     titre: "Conditions d'utilisation",
     intro:

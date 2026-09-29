@@ -20,7 +20,7 @@
   overflow-y: auto;
   color-scheme: light;
   color: var(--s-encre);
-  font-family: var(--police-titre);
+  font-family: var(--police-texte);
 
   background:
     /* voile clair en haut pour la lisibilité du texte */
@@ -108,8 +108,11 @@
 
 .splash .splash-titre {
   margin: 0;
+  font-family: var(--police-titre);
   font-size: clamp(26px, 7.4vw, 34px);
-  font-weight: 800;
+  /* DM Serif Display n'existe qu'en 400 : demander plus donnerait un gras
+     synthétique, qui empâte les pleins et les déliés. */
+  font-weight: 400;
   letter-spacing: -0.02em;
   line-height: 1.1;
   color: var(--s-encre);
@@ -118,7 +121,7 @@
 .splash-sous-titre {
   margin: 6px 0 0;
   font-size: clamp(18px, 5vw, 22px);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--s-bleu);
 }
 
@@ -193,12 +196,15 @@
   justify-content: center;
   gap: 14px;
   width: min(100%, 320px);
-  padding: 17px 28px;
+  padding: 0 var(--espace-6);
+  min-height: var(--cible-bouton);
   border-radius: 999px;
   background: linear-gradient(180deg, var(--s-bleu-vif) 0%, var(--s-bleu) 100%);
   color: #fff;
-  font-size: 20px;
-  font-weight: 700;
+  font-size: var(--taille-corps);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   text-decoration: none;
   box-shadow: 0 10px 24px rgba(13, 74, 158, 0.35);
   transition: transform 0.2s ease, box-shadow 0.2s ease;

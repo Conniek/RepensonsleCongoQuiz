@@ -1,0 +1,16 @@
+Illustrations livrees avec le code.
+
+Nom attendu : <slug>.avif  (le slug francais de la categorie)
+Exemples :
+    histoire.avif
+    geographie-26-provinces.avif
+    gastronomie.avif
+
+Format  : AVIF de preference, WebP accepte
+Cadrage : 16/10
+Poids   : 100 ko visee, 500 ko maximum
+
+Ces fichiers servent de valeur par defaut. Une image televersee depuis le
+back-office (Admin > Illustrations) prend le dessus pour la categorie
+concernee. Si aucun des deux n'existe, la carte garde son aplat de couleur :
+rien ne casse.

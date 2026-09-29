@@ -6,9 +6,11 @@ import { creerClientNavigateur } from "@/lib/supabase/client";
 import { assurerSession } from "@/lib/session";
 import { dictionnaire, type Langue } from "@/lib/i18n";
 import { Etoile } from "./pictos";
+import CarteVisuel from "./carte-visuel";
 
 export type Categorie = {
   produit_requis?: string | null;
+  illustration?: string | null;
   categorie_id: string; libelle: string; slug: string; nb_questions: number;
 };
 
@@ -63,12 +65,16 @@ export default function CategoriesAccueil({
       </div>
 
       <ul className="cartes">
-        {ordonnees.map((c) => {
+        {ordonnees.map((c, index) => {
           const etoiles = etoilesDe(c.categorie_id);
           const pourcentage = Math.round((100 * etoiles) / ETOILES_MAX);
           return (
             <li key={c.categorie_id}>
-              <div className="carte-visuel" aria-hidden="true" />
+              <CarteVisuel
+                slug={c.slug}
+                illustration={c.illustration}
+                prioritaire={index < 2}
+              />
               <h3>{c.libelle}</h3>
               <p className="carte-compte">{t.accueil.nbQuestions(c.nb_questions)}</p>
 
@@ -91,7 +97,7 @@ export default function CategoriesAccueil({
                 <span className="visuellement-masque">{t.accueil.maitrise(pourcentage)}</span>
               </p>
 
-              <Link className="action" href={`/${langue}/categorie/${c.slug}`}>
+              <Link className="action avec-chevron" href={`/${langue}/categorie/${c.slug}`}>
                 <span aria-hidden="true">{t.accueil.jouer}</span>
                 <span className="visuellement-masque">
                   {t.categorie.jouerNiveau(c.libelle)}

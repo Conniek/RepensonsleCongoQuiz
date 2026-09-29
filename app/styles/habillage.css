@@ -20,6 +20,7 @@ body {
   margin-inline: auto;
   font-family: var(--police-texte);
   font-size: var(--taille-corps);
+  font-weight: var(--graisse-normale);
   line-height: var(--interligne-corps);
   color: var(--encre);
   background-color: var(--fond);
@@ -31,7 +32,7 @@ body {
 /* Le motif porte sa propre teinte faible, jamais la couleur du texte. */
 body { --motif-teinte: var(--motif-sombre); }
 
-h1, h2, h3, h4 {
+h1, h2, h3 {
   font-family: var(--police-titre);
   line-height: var(--interligne-titre);
   color: var(--encre);
@@ -40,15 +41,22 @@ h1, h2, h3, h4 {
 h1 {
   font-size: var(--taille-affiche);
   font-weight: var(--graisse-affiche);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;   /* un 800 respire mieux légèrement resserré */
   margin: var(--espace-5) 0 var(--espace-2);
 }
-h2 { font-size: var(--taille-titre-1); font-weight: var(--graisse-affiche); }
-h3 { font-size: var(--taille-titre-3); font-weight: var(--graisse-titre); margin: 0 0 var(--espace-1); }
-h4 { font-size: var(--taille-corps);   font-weight: var(--graisse-forte);  margin: 0 0 var(--espace-1); }
+h2 { font-size: var(--taille-titre-1); font-weight: var(--graisse-titre); letter-spacing: -0.01em; }
+h3 { font-size: var(--taille-titre-3); font-weight: var(--graisse-carte); margin: 0 0 var(--espace-1); }
+h4 {
+  font-family: var(--police-texte);
+  font-size: var(--taille-corps);
+  font-weight: var(--graisse-carte);
+  line-height: var(--interligne-titre);
+  color: var(--encre);
+  margin: 0 0 var(--espace-1);
+}
 
 p { margin: 0 0 var(--espace-3); }
-a { color: var(--bleu); font-weight: var(--graisse-forte); }
+a { color: var(--bleu); font-weight: var(--graisse-normale); }
 
 :focus-visible {
   outline: var(--trait-focus) solid var(--focus);
@@ -273,18 +281,7 @@ main > section { margin-bottom: var(--espace-6); }
   font-weight: var(--graisse-forte);
   margin-bottom: var(--espace-4);
 }
-.defi .action {
-  display: flex; align-items: center; justify-content: center;
-  min-height: var(--cible-tactile);
-  background: var(--encre);
-  color: var(--fond);
-  border-radius: var(--rayon-rond);
-  font-size: var(--taille-secondaire);
-  font-weight: var(--graisse-affiche);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  text-decoration: none;
-}
+.defi .action { display: flex; }
 @media (min-width: 34rem) {
   .defi { grid-template-columns: 1fr 1fr; align-items: center; }
 }
@@ -352,12 +349,24 @@ main > section { margin-bottom: var(--espace-6); }
 
 /* Emplacement de l'illustration à venir. */
 .carte-visuel {
-  height: calc(var(--espace-7) + var(--espace-6));
+  /* La hauteur vient du rapport, pas d'une valeur fixe : l'emplacement est
+     réservé avant même que l'image arrive, donc la page ne saute pas. */
+  aspect-ratio: 16 / 10;
   border-radius: var(--rayon-m);
   margin-bottom: var(--espace-3);
+  overflow: hidden;
+  /* L'aplat et le motif restent DERRIÈRE l'image : si le fichier n'existe
+     pas encore pour cette catégorie, la carte garde sa couleur au lieu
+     d'afficher un cadre vide ou une icône d'image cassée. */
   background-color: var(--bleu);
   --motif-teinte: var(--motif-clair);
   background-image: var(--motif-kuba);
+}
+.carte-visuel img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .cartes > li:nth-child(4n + 2) .carte-visuel { background-color: var(--terre-cuite); }
 .cartes > li:nth-child(4n + 3) .carte-visuel { background-color: var(--vert); }
@@ -388,18 +397,12 @@ main > section { margin-bottom: var(--espace-6); }
 }
 .carte-progression progress { flex: 1; margin: 0; background: var(--voile-sombre); }
 .carte-progression progress::-webkit-progress-bar { background: var(--voile-sombre); }
+/* Dans une grille de cartes, le bouton est plus compact : même forme,
+   mesures resserrées. */
 .cartes .action {
-  display: inline-flex; align-items: center; justify-content: center;
   min-height: var(--cible-tactile);
   padding: 0 var(--espace-5);
-  background: var(--encre);
-  color: var(--fond);
-  border-radius: var(--rayon-rond);
   font-size: var(--taille-etiquette);
-  font-weight: var(--graisse-affiche);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  text-decoration: none;
 }
 
 @media (min-width: 34rem) { .cartes { grid-template-columns: repeat(2, 1fr); } }
@@ -432,6 +435,7 @@ progress::-moz-progress-bar { background: var(--ocre); }
 
 .enonce {
   font-family: var(--police-titre);
+  font-weight: var(--graisse-titre);
   font-size: var(--taille-titre-1);
   font-weight: var(--graisse-affiche);
   line-height: var(--interligne-titre);
@@ -468,39 +472,105 @@ progress::-moz-progress-bar { background: var(--ocre); }
 figure { margin: 0 0 var(--espace-4); }
 img { max-width: 100%; height: auto; border-radius: var(--rayon-m); }
 
-/* --- Boutons ----------------------------------------------------------------------- */
-button {
-  min-height: var(--cible-tactile);
-  padding: 0 var(--espace-5);
+/* --- Boutons ------------------------------------------------------------------------
+   Une seule forme pour tout ce qui se clique comme un bouton : pilule pleine,
+   capitales, 800, et une hauteur confortable. `button` et `a.action` partagent
+   exactement les mêmes règles, pour qu'un lien déguisé en bouton ne trahisse
+   jamais sa nature par un décalage d'un pixel.
+   ------------------------------------------------------------------------------------ */
+button,
+.action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espace-3);
+  min-height: var(--cible-bouton);
+  padding: 0 var(--espace-6);
   font-family: var(--police-texte);
   font-size: var(--taille-secondaire);
   font-weight: var(--graisse-affiche);
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  text-decoration: none;
   color: var(--fond);
   background: var(--encre);
   border: 1px solid var(--encre);
   border-radius: var(--rayon-rond);
   cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease;
 }
-.reponses button, form button {
+
+button:hover,
+.action:hover { filter: brightness(1.18); }
+
+/* Un enfoncement franc mais court : le retour tactile compte plus que
+   l'animation. */
+button:active,
+.action:active { transform: translateY(1px); filter: brightness(0.95); }
+
+button:focus-visible,
+.action:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* Chevron optionnel, dessiné en CSS : pas d'image à charger, il prend la
+   couleur du texte et suit sa taille. `aria-hidden` implicite puisqu'il
+   n'existe que dans la feuille de style. */
+.avec-chevron::after {
+  content: "";
+  width: 0.62em;
+  height: 0.62em;
+  border-right: 0.18em solid currentColor;
+  border-top: 0.18em solid currentColor;
+  transform: rotate(45deg);
+  transition: translate 0.15s ease;
+}
+.avec-chevron:hover::after { translate: 3px 0; }
+
+/* Variante claire : l'ocre porte du texte sombre, jamais du blanc. */
+.action-ocre,
+form button[type="submit"] {
+  background: var(--ocre);
+  color: var(--encre-sur-ocre);
+  border-color: var(--ocre);
+}
+
+/* Variante discrète, pour une action secondaire à côté d'une principale. */
+.action-fantome {
+  background: transparent;
+  color: var(--encre);
+  border-color: var(--encre);
+}
+
+/* Bouton pleine largeur, dans une carte ou un formulaire. */
+.action-bloc { display: flex; width: 100%; }
+
+/* Dans un jeu de réponses ou un formulaire, le bouton redevient un
+   contenant de texte : ni capitales, ni interlettrage, et des angles plus
+   doux, parce qu'on y lit une phrase et non une étiquette. */
+.reponses button,
+form button {
   text-transform: none;
   letter-spacing: normal;
   font-size: var(--taille-corps);
+  font-weight: var(--graisse-carte);
   border-radius: var(--rayon-m);
 }
-form button[type="submit"] {
-  background: var(--ocre);
-  color: var(--encre-sur-ocre);   /* jamais du blanc sur de l'ocre */
-  border-color: var(--ocre);
-}
-button[aria-disabled="true"] {
+
+/* Indisponible : la forme reste, le contraste baisse, le trait devient
+   pointillé. On garde le bouton visible et annoncé plutôt que de le retirer. */
+button[aria-disabled="true"],
+button:disabled {
   background: var(--surface);
   color: var(--encre-discrete);
   border-color: var(--bordure);
   border-style: dashed;
   cursor: default;
+  filter: none;
 }
+button[aria-disabled="true"]:active,
+button:disabled:active { transform: none; }
 
 /* --- Offres ------------------------------------------------------------------------- */
 .offres { display: grid; gap: var(--espace-3); }
@@ -563,15 +633,11 @@ button[aria-disabled="true"] {
 .offre-plus strong, .offre-langue strong { color: var(--blanc-sur-couleur); }
 .offre-plus .etiquette, .offre-langue .etiquette { background: var(--ocre); color: var(--encre-sur-ocre); }
 .offre-plus a.action, .offre-langue a.action {
-  display: flex; align-items: center; justify-content: center;
-  min-height: calc(var(--cible-tactile) + var(--espace-1));
+  display: flex;
   margin-top: var(--espace-4);
   background: var(--ocre);
   color: var(--encre-sur-ocre);
-  border-radius: var(--rayon-m);
-  font-size: var(--taille-corps);
-  font-weight: var(--graisse-affiche);
-  text-decoration: none;
+  border-color: var(--ocre);
 }
 
 /* --- Listes de définitions et tableaux ------------------------------------------------- */
@@ -695,15 +761,7 @@ input[type="checkbox"] { width: auto; min-height: auto; }
   font-size: var(--taille-etiquette);
   font-weight: var(--graisse-titre);
 }
-.diapo .action, .sauvegarde .action, .offre-plus .action {
-  display: flex; align-items: center; justify-content: center; gap: var(--espace-2);
-  min-height: var(--cible-tactile);
-  border-radius: var(--rayon-rond);
-  background: var(--encre);
-  color: var(--fond);
-  font-weight: var(--graisse-affiche);
-  text-decoration: none;
-}
+.diapo .action, .sauvegarde .action, .offre-plus .action { display: flex; }
 
 /* --- Raccourcis : erreurs et historique ------------------------------------ */
 .raccourcis {
@@ -957,6 +1015,7 @@ input[type="checkbox"] { width: auto; min-height: auto; }
 /* Remplace le logo en haut de l'accueil : c'est le titre de la page. */
 .salutation {
   margin: var(--espace-5) 0 var(--espace-4);
+  font-weight: var(--graisse-affiche);
   font-size: var(--taille-titre-1);
   line-height: 1.2;
 }
@@ -1077,3 +1136,28 @@ table.detail-xp tfoot th, table.detail-xp tfoot td {
 /* Le bloc de progression se distingue par un filet, pas par une teinte
    seule : il reste repérable sans perception fine des couleurs. */
 .bloc-progression { border-left: 4px solid var(--vert); }
+
+/* --- Back-office : illustrations de catégories ---------------------------------- */
+.illustrations {
+  list-style: none;
+  margin: var(--espace-5) 0;
+  padding: 0;
+  display: grid;
+  gap: var(--espace-5);
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+}
+.illustrations > li {
+  padding: var(--espace-4);
+  background: var(--surface);
+  border: 1px solid var(--bordure);
+  border-radius: var(--rayon-m);
+}
+.illustrations h2 { margin: 0 0 var(--espace-1); font-size: var(--taille-corps); }
+.illustrations label {
+  display: block;
+  margin: var(--espace-3) 0 var(--espace-2);
+  font-weight: var(--graisse-carte);
+  font-size: var(--taille-secondaire);
+}
+.illustrations input[type="file"] { width: 100%; font: inherit; }
+.illustrations button { margin-top: var(--espace-3); width: 100%; }

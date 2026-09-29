@@ -130,7 +130,7 @@ export default function QuizHub({ langue, themes }: { langue: Langue; themes: Th
             <li className="diapo diapo-defi">
               <p className="etiquette-diapo"><Sablier taille={16} /> {t?.quizHub?.duJour}</p>
               <h3>{defi.libelle}</h3>
-              <Link className="action"
+              <Link className="action avec-chevron"
                     href={`/${langue}/partie?categorie=${defi.categorie_id}&niveau=${defi.niveau}&mode=defi_du_jour`}>
                 <span aria-hidden="true">{t?.quizHub?.jouer}</span>
                 <span className="visuellement-masque">{t.defi.jouer(defi.libelle)}</span>
@@ -142,7 +142,7 @@ export default function QuizHub({ langue, themes }: { langue: Langue; themes: Th
               <p className="etiquette-diapo"><Sablier taille={16} /> {t?.quizHub?.saisonnier}</p>
               <h3>{c.titre}</h3>
               {c.description && <p>{c.description}</p>}
-              <Link className="action" href={`/${langue}/quiz#campagne-${c.id}`}>
+              <Link className="action avec-chevron" href={`/${langue}/quiz#campagne-${c.id}`}>
                 {t?.quizHub?.voirDetails}
               </Link>
             </li>

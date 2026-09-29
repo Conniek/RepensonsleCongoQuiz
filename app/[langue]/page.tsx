@@ -18,7 +18,7 @@ export default async function Accueil({
   const supabase = await creerClientServeur();
   const { data, error } = await supabase
     .from("categorie_publique")
-    .select("categorie_id, libelle, slug, nb_questions, produit_requis")
+    .select("categorie_id, libelle, slug, nb_questions, produit_requis, illustration")
     .eq("langue", langue)
     .order("libelle");
 

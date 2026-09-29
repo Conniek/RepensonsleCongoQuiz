@@ -237,7 +237,7 @@ export default function Progression({
               {t.defi.recompense(defi.recompense_xp)}
             </p>
             <Link
-              className="action"
+              className="action avec-chevron"
               href={`/${langue}/partie?categorie=${defi.categorie_id}&niveau=${defi.niveau}&mode=defi_du_jour`}
             >
               <span aria-hidden="true">{t.defi.jouerMaintenant}</span>

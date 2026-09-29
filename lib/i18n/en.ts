@@ -121,6 +121,23 @@ quizHub: {
     infosSite: "Site information",
   },
 
+  illustrations: {
+    titre: "Illustrations",
+    intro:
+      "One image per category, shown at the top of the card on the home page and the categories page.",
+    consigne:
+      "AVIF or WebP, 500 kB maximum, 16:10 framing. With no uploaded image, the app falls back to the file shipped with the code, then to the colour block.",
+    choisir: "Choose an image",
+    retirer: "Remove image",
+    sourceBase: "Uploaded image",
+    sourceFichier: (slug: string) => `Code file: ${slug}.avif`,
+    deposee: (categorie: string) => `Image saved for ${categorie}.`,
+    retiree: (categorie: string) => `Image removed for ${categorie}.`,
+    mauvaisFormat: "Format rejected. Use an AVIF or WebP file.",
+    tropLourd: "File too large: 500 kB maximum.",
+    echecDepot: (message: string) => `Saving failed: ${message}`,
+  },
+
   conditions: {
     titre: "Terms of use",
     intro:

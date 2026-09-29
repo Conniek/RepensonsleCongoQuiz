@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { creerClientServeur } from "@/lib/supabase/serveur";
 import { dictionnaire, estLangue } from "@/lib/i18n";
 import { Verrou } from "../pictos";
+import CarteVisuel from "../carte-visuel";
 
 /* Cette page dépend des droits du visiteur : pas de cache partagé, sinon la
    version mise en cache pour un abonné s'afficherait aux autres. */
@@ -10,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 type Categorie = {
   categorie_id: string; libelle: string; slug: string; nb_questions: number;
-  produit_requis: string | null;
+  produit_requis: string | null; illustration: string | null;
 };
 
 export async function generateMetadata({
@@ -35,7 +36,7 @@ export default async function PageCategories({
   const supabase = await creerClientServeur();
   const { data } = await supabase
     .from("categorie_publique")
-    .select("categorie_id, libelle, slug, nb_questions, produit_requis")
+    .select("categorie_id, libelle, slug, nb_questions, produit_requis, illustration")
     .eq("langue", langue)
     .order("libelle");
 
@@ -62,14 +63,18 @@ export default async function PageCategories({
       <h1 tabIndex={-1}>{t.accueil.titreToutesCategories}</h1>
 
       <ul className="cartes">
-        {jouables.map((c) => {
+        {jouables.map((c, index) => {
           const ouvert = accessible(c.produit_requis);
           const offre = c.produit_requis === "plus"
             ? t.quizHub.offrePlus : t.quizHub.offreLangue;
 
           return (
             <li key={c.categorie_id} className={ouvert ? undefined : "carte-verrouillee"}>
-              <div className="carte-visuel" aria-hidden="true" />
+              <CarteVisuel
+                slug={c.slug}
+                illustration={c.illustration}
+                prioritaire={index < 2}
+              />
               <h2>
                 {/* Verrouillée, la carte mène à l'offre plutôt qu'à une
                     partie qui serait refusée : l'impasse devient une

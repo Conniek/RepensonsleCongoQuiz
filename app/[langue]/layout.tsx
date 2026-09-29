@@ -1,9 +1,22 @@
 import type { Metadata } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { dictionnaire, estLangue, LANGUES } from "@/lib/i18n";
 import Barre from "./barre";
 import Footer from "./footer";
+/* Une seule famille, Plus Jakarta Sans, en fonte variable : toutes les
+   graisses tiennent dans un seul fichier, donc un seul téléchargement.
+   next/font la récupère au build et la sert depuis notre domaine : aucun
+   appel à Google pendant la visite, rien à déclarer côté RGPD.
+   `display: swap` affiche le texte immédiatement dans la police système
+   puis bascule : jamais d'écran vide en attendant la police. */
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-jakarta",
+});
+
 import "../styles/jetons.css";
 import "../styles/habillage.css";
 
@@ -40,7 +53,7 @@ export default async function LangueLayout({
   const t = dictionnaire(langue);
 
   return (
-    <html lang={langue}>
+    <html lang={langue} className={jakarta.variable}>
       <body>
         <nav aria-label={t.navigation.accesRapide} className="evitement">
           <ul>

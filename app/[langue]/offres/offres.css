@@ -158,19 +158,22 @@
 }
 
 .btn {
-  display: inline-block;
-  padding: 12px 20px;
-  border-radius: var(--rayon-m);
-  font-size: var(--taille-corps);
-  font-weight: 600;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espace-3);
   width: 100%;
-  text-align: center;
-  margin-top: auto;
+  min-height: var(--cible-bouton);
+  padding: 0 var(--espace-6);
+  font-family: var(--police-texte);
+  font-size: var(--taille-secondaire);
+  font-weight: var(--graisse-affiche);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: var(--rayon-rond);
+  border: 1px solid transparent;
+  cursor: pointer;
 }
 
 .btn:disabled {

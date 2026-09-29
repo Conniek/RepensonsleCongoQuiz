@@ -40,6 +40,7 @@ export default async function AdminLayout({
           <li><Link href={`/${langue}/admin/recalibration`}>{t.admin.recalibration}</Link></li>
           <li><Link href={`/${langue}/admin/quiz-speciaux`}>{t.contenu.quizSpeciaux}</Link></li>
           <li><Link href={`/${langue}/admin/campagnes`}>{t.contenu.campagnes}</Link></li>
+          <li><Link href={`/${langue}/admin/illustrations`}>{t.illustrations.titre}</Link></li>
           <li><Link href={`/${langue}/admin/analyse`}>{t.analyse.titre}</Link></li>
           {/* Les inscrits ne sont visibles que des administrateurs : les
               éditeurs suivent la popularité, pas les données de compte. */}
