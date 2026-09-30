@@ -109,10 +109,40 @@ export default function Progression({
         ? t.accueil.salutAnonymeRetour
         : t.accueil.salutAnonymePremier;
 
+  const premierQuiz = !etat || etat.parties === 0;
+
   return (
     <>
-      {avecSalutation && salutation && (
-        <h1 className="salutation" tabIndex={-1}>{salutation}</h1>
+      {avecSalutation && etat && (
+        <header className="hero">
+          <div className="hero-entete">
+            <div className="hero-embleme">
+              {/* Décoratif : la devise juste à côté porte déjà le sens, et le
+                  drapeau n'apprend rien de plus à qui ne le voit pas. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/utilisateur.png" alt="" width={200} height={198}
+                   fetchPriority="high" />
+            </div>
+                    <div className="hero-mots">
+            {/* Le h1 porte la salutation entière : la coupure en deux lignes
+                est une mise en page, elle ne doit pas couper la phrase pour
+                qui l'écoute. */}
+            <h1 tabIndex={-1}>
+              {etat.pseudo ? (
+                <>
+                  <span className="hero-nom">{t.accueil.salutNom(etat.pseudo)}</span>
+                  <span className="hero-suite">
+                    {premierQuiz ? t.accueil.salutSuitePremier : t.accueil.salutSuiteRetour}
+                  </span>
+                </>
+              ) : (
+                <span className="hero-suite">{salutation}</span>
+              )}
+            </h1>
+            <p className="hero-baseline">{t.accueil.heroBaseline}</p>
+          </div>
+          </div>
+        </header>
       )}
 
       <section

@@ -34,14 +34,11 @@
   --focus: #17497C;
 
   /* --- Typographie ------------------------------------------------------ */
-  /* DM Serif Display pour les titres, DM Sans pour tout le reste. Les deux
-     sont chargées par next/font dans le layout et servies depuis notre
-     domaine : aucun appel à Google à la visite.
-     La pile système reste derrière : si la police tarde ou échoue, le texte
-     s'affiche quand même, avec des métriques proches. */
-  --police-titre: var(--font-jakarta), system-ui, -apple-system, "Segoe UI",
-                  Roboto, sans-serif;
-  --police-texte: var(--police-titre);
+  /* Pile système : rien à télécharger, rien à héberger, rien à déclarer au
+     RGPD, premier affichage immédiat sur connexion faible. Le jour où une
+     police de marque est retenue, seules ces deux valeurs changent. */
+  --police-titre: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --police-texte: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   --taille-affiche: 34px;
   --taille-titre-1: 26px;
@@ -52,13 +49,10 @@
   --taille-etiquette: 13px;
   --taille-chrono: 28px;
 
-  /* Une seule famille, quatre graisses. L'écart entre les niveaux fait la
-     hiérarchie : ni italique, ni seconde police à charger. */
-  --graisse-affiche: 800;   /* grands titres de page                    */
-  --graisse-titre: 700;     /* titres de section                        */
-  --graisse-carte: 600;     /* titres de carte, boutons secondaires     */
-  --graisse-forte: 600;     /* mises en valeur dans le texte            */
-  --graisse-normale: 500;   /* texte courant et liens : medium, pas 400 */
+  --graisse-affiche: 800;
+  --graisse-titre: 700;
+  --graisse-forte: 600;
+  --graisse-normale: 400;
 
   --interligne-titre: 1.2;
   --interligne-corps: 1.6;
@@ -71,6 +65,10 @@
   --espace-5: 24px;
   --espace-6: 32px;
   --espace-7: 48px;
+  --espace-8: 56px;
+  --espace-9: 64px;
+  --espace-10: 72px;
+ 
 
   /* --- Rayons ----------------------------------------------------------- */
   --rayon-s: 8px;
@@ -86,9 +84,6 @@
   /* 48px, soit le double du minimum WCAG : l'application s'utilise debout,
      en marchant, sur des écrans parfois petits. */
   --cible-tactile: 48px;
-  /* Les boutons sont plus hauts que la cible minimale : sur les maquettes
-     ce sont de vraies pilules, pas des rectangles arrondis. */
-  --cible-bouton: 56px;
   --largeur-lecture: 44rem;
   --trait-focus: 3px;
 
@@ -167,4 +162,4 @@
     --motif-sombre: rgba(255, 255, 255, 0.045);
     --motif-clair: rgba(255, 255, 255, 0.08);
   }
-}
+}  

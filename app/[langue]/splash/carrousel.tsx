@@ -80,7 +80,7 @@ export default function Carrousel({
         <Link href={`/${langue}`} className="splash-passer">
           {t.splash.passer}
         </Link>
-
+             
         <ul className="splash-langues" aria-label={t.splash.choisirLangue}>
           {LANGUES.map((l) => (
             <li key={l}>
@@ -95,6 +95,7 @@ export default function Carrousel({
           ))}
         </ul>
       </div>
+      
 
       <div
         className="splash-slide"
@@ -102,20 +103,10 @@ export default function Carrousel({
         aria-roledescription={t.splash.diapositive}
         aria-label={t.splash.positionSlide(position + 1, slides.length)}
       >
-        <h1 className="splash-titre">{slide.titre}</h1>
-        <p className="splash-sous-titre">{slide.sousTitre}</p>
-
-        <div className="splash-filet" aria-hidden="true">
-          <span /><span /><span />
-        </div>
-
+         <img src="/images/logo-repensons.png" alt="" width={300} 
+                   fetchPriority="high" />
+        
         <p className="splash-texte">{slide.texte}</p>
-
-        <ul className="splash-points">
-          {slide.points.map((point) => (
-            <li key={point}>{point}</li>
-          ))}
-        </ul>
       </div>
 
       <div className="splash-pilotage">

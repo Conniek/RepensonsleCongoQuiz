@@ -141,7 +141,7 @@
 .splash-filet span:nth-child(3) { background: var(--s-rouge); }
 
 .splash-texte {
-  margin: 0 0 var(--espace-5);
+  margin: var(--espace-5) 0 var(--espace-5);
   font-family: var(--police-texte);
   font-size: 16px;
   line-height: 1.55;
@@ -195,8 +195,8 @@
   align-items: center;
   justify-content: center;
   gap: 14px;
-  width: min(100%, 320px);
-  padding: 0 var(--espace-6);
+  width:auto;
+  padding: var(--espace-2) var(--espace-6);
   min-height: var(--cible-bouton);
   border-radius: 999px;
   background: linear-gradient(180deg, var(--s-bleu-vif) 0%, var(--s-bleu) 100%);
@@ -235,7 +235,7 @@
   .splash-cat-picto { width: 50px; height: 48px; border-radius: 14px; }
   .splash-cat-picto svg { width: 26px; height: 26px; }
   .splash-cat-nom { font-size: 12px; }
-  .splash-cta { font-size: 18px; }
+  .splash-cta {         font-size: 16px;  font-weight: 700; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -295,7 +295,6 @@
 }
 
 .splash-slide {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
