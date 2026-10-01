@@ -1,0 +1,72 @@
+/* =========================================================================
+   Tailwind 4 — adoption progressive.
+
+   DEUX PRÉCAUTIONS, qui expliquent la forme inhabituelle de ce fichier.
+
+   1. Le « preflight » de Tailwind n'est PAS importé.
+      Il remet à zéro les marges, les titres et les boutons. Sur un projet
+      neuf c'est souhaitable ; ici, il casserait d'un coup tout habillage.css.
+      On importe donc seulement le thème et les utilitaires. Le jour où le
+      dernier écran sera porté, on pourra rétablir le preflight et supprimer
+      habillage.css dans le même mouvement.
+
+   2. Aucune valeur littérale ici.
+      Les couleurs vivent dans jetons.css, et ce fichier ne fait qu'y
+      renvoyer. C'est ce que vérifie `npm run verifier:jetons`, et c'est ce
+      qui garantit qu'une seule source décrit l'identité visuelle.
+
+   `@theme inline` indique à Tailwind de reprendre la variable telle quelle
+   plutôt que d'en figer la valeur : un changement de thème reste donc
+   possible à l'exécution.
+   ========================================================================= */
+
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@theme inline {
+  /* Couleurs du prototype. Elles produisent bg-primaire, text-accent, etc. */
+  --color-fond: var(--fig-fond);
+  --color-encre: var(--fig-encre);
+  --color-carte: var(--fig-carte);
+  --color-primaire: var(--fig-primaire);
+  --color-primaire-contraste: var(--fig-primaire-contraste);
+  --color-secondaire: var(--fig-secondaire);
+  --color-doux: var(--fig-doux);
+  --color-doux-texte: var(--fig-doux-texte);
+  --color-accent: var(--fig-accent);
+  --color-accent-contraste: var(--fig-accent-contraste);
+  --color-bordure: var(--fig-bordure);
+  --color-splash: var(--fig-splash);
+
+  --color-pastel-bleu: var(--fig-pastel-bleu);
+  --color-pastel-ocre: var(--fig-pastel-ocre);
+  --color-pastel-rose: var(--fig-pastel-rose);
+  --color-pastel-vert: var(--fig-pastel-vert);
+  --color-pastel-violet: var(--fig-pastel-violet);
+  --color-pastel-menthe: var(--fig-pastel-menthe);
+
+  /* Espacements et rayons : on reprend l'échelle déjà en place, pour que les
+     écrans portés et les écrans d'origine respirent pareil. */
+  --spacing-1: var(--espace-1);
+  --spacing-2: var(--espace-2);
+  --spacing-3: var(--espace-3);
+  --spacing-4: var(--espace-4);
+  --spacing-5: var(--espace-5);
+  --spacing-6: var(--espace-6);
+  --spacing-7: var(--espace-7);
+
+  --radius-s: var(--rayon-s);
+  --radius-m: var(--rayon-m);
+  --radius-l: var(--rayon-l);
+  --radius-rond: var(--rayon-rond);
+
+  /* Polices : les mêmes variables que le reste de l'application. Changer de
+     famille se fait dans jetons.css, et les deux mondes suivent ensemble. */
+  --font-titre: var(--police-titre);
+  --font-texte: var(--police-texte);
+
+  --shadow-carte: var(--ombre-carte);
+  --shadow-flottante: var(--ombre-flottante);
+}

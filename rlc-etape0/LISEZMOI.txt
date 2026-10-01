@@ -1,0 +1,61 @@
+ETAPE 0 - Installer Tailwind 4 et transposer les jetons du prototype
+====================================================================
+
+AUCUN ECRAN N'EST MODIFIE. L'application doit s'afficher exactement comme
+avant ce lot.
+
+INSTALLATION
+
+    git checkout -b refonte-ui          (si ce n'est pas deja fait)
+    cp -R chemin/vers/rlc-etape0/. .
+    npm install
+    rm -rf .next && npm run dev
+
+CRITERE DE REUSSITE
+
+    Ouvre  http://localhost:3000/fr/test-tailwind
+
+    1. Le premier bloc est BLEU avec du texte clair, coins arrondis.
+    2. Le deuxieme est OCRE avec du texte sombre.
+    3. Les six pastels s'affichent en trois colonnes.
+       -> si c'est le cas : Tailwind compile et lit les jetons du prototype.
+
+    4. Les titres "Controle Tailwind" et "Et le reste de la page ?" gardent
+       leur taille et leur graisse habituelles, et le bouton en bas ressemble
+       aux autres boutons de l'application.
+       -> si c'est le cas : le preflight est bien desactive, rien d'existant
+          n'a bouge.
+
+    Puis fais un tour sur /fr, /fr/quiz et /fr/progression : tout doit etre
+    identique a avant.
+
+CE QUI A ETE FAIT, ET POURQUOI
+
+  postcss.config.mjs        le seul branchement necessaire en Tailwind 4
+  app/styles/tailwind.css   configuration en CSS (plus de tailwind.config.js)
+  app/styles/jetons.css     palette du prototype ajoutee a la fin (--fig-*)
+  app/[langue]/layout.tsx   import de tailwind.css AVANT les autres feuilles
+  package.json              tailwindcss + @tailwindcss/postcss
+
+  Le preflight de Tailwind n'est PAS importe. Il remet a zero les marges,
+  les titres et les boutons : il aurait casse habillage.css d'un seul coup.
+  On importe donc seulement le theme et les utilitaires. Le preflight sera
+  retabli le jour ou habillage.css disparaitra.
+
+  Les couleurs du prototype sont dans jetons.css, pas dans tailwind.css :
+  c'est la regle que verifier-jetons impose, et tailwind.css ne contient
+  donc aucune valeur litterale.
+
+  Les polices restent celles d'aujourd'hui (Plus Jakarta Sans). Le passage a
+  Nunito + Outfit se fera en changeant --police-titre et --police-texte dans
+  jetons.css : les deux mondes suivront ensemble.
+
+A SUPPRIMER PLUS TARD
+  app/[langue]/test-tailwind/   page de controle, inutile une fois la
+                                refonte terminee
+
+POINT A SIGNALER (sans rapport avec ce lot)
+  `npm run build` echoue aujourd'hui sur main : le script verifier:jetons
+  compte 260 valeurs litterales hors de jetons.css, et il est branche avant
+  next build. Mes ajouts n'en creent aucune, mais tant que ce n'est pas
+  traite, le projet ne peut pas se deployer. Voir le message de reponse.
