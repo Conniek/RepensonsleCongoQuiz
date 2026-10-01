@@ -674,6 +674,7 @@ main {
   margin-inline: auto;
   padding: 0 var(--espace-5) calc(var(--espace-7) * 2);
   overflow-x: clip;
+  background: linear-gradient(180deg, #28201787 0%, #393531bd 55%, #161412f0 100%), url(/images/background-with-roc-and-fl.png) center / cover no-repeat, var(--bleu-profond);
     background-size: contain;
     background-position: top;
 }
