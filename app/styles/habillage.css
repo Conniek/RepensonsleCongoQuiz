@@ -15,17 +15,16 @@
    pas un ornement. */
 body {
   margin: 0;
-  padding: 0;
-  /* Plus de largeur maximale ici : c'est <main> qui tient la colonne de
-     lecture. Le body doit rester pleine largeur, sinon aucun bloc ne peut
-     aller d'un bord à l'autre de l'écran. */
-  overflow-x: clip;
+  padding: 0 var(--espace-5) calc(var(--espace-7) * 2);
+  max-width: var(--largeur-lecture);
+  margin-inline: auto;
   font-family: var(--police-texte);
   font-size: var(--taille-corps);
   font-weight: var(--graisse-normale);
   line-height: var(--interligne-corps);
   color: var(--encre);
   background-color: var(--fond);
+  background-image: var(--motif-kuba);
   background-attachment: fixed;
   color-scheme: light dark;
   -webkit-text-size-adjust: 100%;
@@ -206,13 +205,13 @@ main > section { margin-bottom: var(--espace-6); }
   text-align: center;
 }
 .anneau-centre b {
-  font-size: var(--taille-titre-3);
+  font-size: var(--taille-titre-1);
   font-weight: var(--graisse-affiche);
   color: var(--blanc-sur-couleur);
   line-height: var(--interligne-titre);
 }
 .anneau-centre small {
-  font-size: 10px;
+  font-size: var(--taille-etiquette);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--sur-bleu-doux);
@@ -336,7 +335,7 @@ main > section { margin-bottom: var(--espace-6); }
 .medaillons .compteur-badge { display: block; font-weight: var(--graisse-forte); }
 
 /* --- Cartes catégories ------------------------------------------------------ */
-.cartes { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--espace-3); grid-template-columns: 1fr 1fr}
+.cartes { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--espace-3); }
 .cartes > li {
   background: var(--pastel-bleu);
   border: 0;
@@ -664,20 +663,7 @@ caption { text-align: start; padding-bottom: var(--espace-2); font-weight: var(-
 th, td { text-align: start; padding: var(--espace-3) var(--espace-4); border-bottom: 1px solid var(--bordure); vertical-align: top; }
 thead th { background: var(--surface-douce); font-size: var(--taille-etiquette); text-transform: uppercase; letter-spacing: 0.06em; }
 tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
-/* La colonne de lecture et les marges de page vivent ici. Un bloc qui veut
-   aller d'un bord à l'autre s'en échappe avec la règle .pleine-largeur.
-   `clip` plutôt que `auto` : on ne veut pas que cette échappée fasse
-   apparaître une barre de défilement. Les contenus larges (tableaux,
-   carrousels) ont déjà leur propre conteneur défilant. */
-main {
-  max-width: var(--largeur-lecture);
-  margin-inline: auto;
-  padding: 0 var(--espace-5) calc(var(--espace-7) * 2);
-  overflow-x: clip;
-  background: linear-gradient(180deg, #28201787 0%, #393531bd 55%, #161412f0 100%), url(/images/background-with-roc-and-fl.png) center / cover no-repeat, var(--bleu-profond);
-    background-size: contain;
-    background-position: top;
-}
+main { overflow-x: auto; }
 
 /* --- Formulaires ---------------------------------------------------------------------- */
 label { display: inline-block; font-weight: var(--graisse-forte); margin-bottom: var(--espace-1); }
@@ -1027,6 +1013,12 @@ input[type="checkbox"] { width: auto; min-height: auto; }
 
 /* --- Salutation d'accueil (v2) -------------------------------------------------- */
 /* Remplace le logo en haut de l'accueil : c'est le titre de la page. */
+.salutation {
+  margin: var(--espace-5) 0 var(--espace-4);
+  font-weight: var(--graisse-affiche);
+  font-size: var(--taille-titre-1);
+  line-height: 1.2;
+}
 
 /* --- Thème verrouillé (v2) ------------------------------------------------------ */
 /* Le thème reste une carte de plein droit : même taille, même place. Il est
@@ -1169,101 +1161,3 @@ table.detail-xp tfoot th, table.detail-xp tfoot td {
 }
 .illustrations input[type="file"] { width: 100%; font: inherit; }
 .illustrations button { margin-top: var(--espace-3); width: 100%; }
-
-/* --- Bandeau d'accueil --------------------------------------------------------------
-   Le bandeau s'échappe de la colonne de lecture pour occuper toute la
-   largeur de l'écran : `margin-inline: calc(50% - 50vw)` le recentre sur la
-   fenêtre quelle que soit la largeur de <main>. Le body étant en
-   `overflow-x: clip`, cette échappée ne crée aucune barre de défilement.
-
-   À l'intérieur, le contenu revient dans la colonne de lecture et reprend
-   les marges de page : le fond va d'un bord à l'autre, pas le texte.
-   ------------------------------------------------------------------------------------ */
-.hero {
-  width: 100vw;
-  margin-inline: calc(50% - 50vw);
-  margin-top: 0;
-  /* De la place en bas pour que la carte vienne s'y poser à moitié. */
-  padding: var(--espace-6) 0 calc(var(--espace-7) + var(--espace-4));
-  color: #fff;
-}
-
-@media (min-width: 48rem) {
-  .hero {
-    background:
-      linear-gradient(180deg, rgba(14, 48, 110, 0.88) 0%, rgba(14, 48, 110, 0.80) 55%,
-                      rgba(14, 48, 110, 0.94) 100%),
-      url("/images/hero-congo-1280.webp") center / cover no-repeat,
-      var(--bleu-profond);
-  }
-}
-
-/* Le texte, lui, reste dans la colonne et garde les marges de page. */
-.hero-entete {
-  max-width: var(--largeur-lecture);
-  margin-inline: auto;
-  padding: env(safe-area-inset-top, 0px) var(--espace-5) 0;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: var(--espace-4);
-  align-items: normal;
-}
-
-.hero-mots h1 {
-  margin: 0;
-  color: #fff;
-  font-size: clamp(24px, 6.2vw, 36px);
-  line-height: 1.14;
-  letter-spacing: -0.02em;
-  text-wrap: balance;
-}
-.hero-nom { display: block; font-weight: var(--graisse-affiche); }
-.hero-suite { display: block; font-weight: var(--graisse-normale); }
-
-.hero-baseline {
-  margin: var(--espace-3) 0 0;
-  font-style: italic;
-  font-size: var(--taille-secondaire);
-  /* Blanc franc plutôt qu'un blanc transparent : sur une photo, une opacité
-     réduite fait tomber le contraste sous le seuil AA dès que le fond
-     s'éclaircit. */
-  color: #fff;
-  max-width: 26ch;
-}
-
-.hero-embleme {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--espace-2);
-}
-.hero-embleme img {
-  width: clamp(92px, 26vw, 160px);
-  height: auto;
-  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.35));
-}
-.hero-devise {
-  margin: 0;
-  max-width: 10ch;
-  text-align: center;
-  font-size: var(--taille-etiquette);
-  font-weight: var(--graisse-carte);
-  letter-spacing: 0.14em;
-  line-height: 1.6;
-  text-transform: uppercase;
-  color: #fff;
-}
-
-/* La carte remonte sur le bandeau, un peu plus étroite que la colonne :
-   ce retrait la détache du bleu au lieu de la coller aux bords. */
-.hero + .progression {
-  width: 88%;
-  box-shadow: var(--ombre-flottante);
-}
-
-@media (max-width: 26rem) {
-  .hero-entete { gap: var(--espace-3); }
-  .hero-embleme img { width: 84px; }
-  .hero-devise { font-size: 11px; letter-spacing: 0.1em; }
-  .hero + .progression { width: 100%; }
-}

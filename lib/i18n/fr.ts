@@ -300,12 +300,18 @@ quizHub: {
     positionSlide: (n: number, total: number) => `${n} sur ${total}`,
     allerSlide: (n: number) => `Aller à la diapositive ${n}`,
     slides: [
-
+      {
+        titre: "Repensons le Congo Quiz",
+        sousTitre: "Un grand pays, mille histoires.",
+        texte:
+          "1 445 questions sourcées sur la République démocratique du Congo : histoire, géographie, culture, nature et bien plus.",
+        points: ["Histoire", "Géographie", "Culture", "Nature", "Musique"],
+      },
       {
         titre: "Apprendre en jouant",
         sousTitre: "Chaque réponse expliquée et sourcée.",
         texte:
-          "1 445 questions sourcées sur la République démocratique du Congo : histoire, géographie, culture, nature et bien plus.",
+          "Après chaque question, l'explication complète et le lien vers la source. Un quiz et un cours à la fois.",
         points: ["Sources vérifiées", "Explications", "Liens directs", "12 catégories"],
       },
       {
@@ -406,14 +412,6 @@ quizHub: {
     titrePage: "Repensons le Congo Quiz — apprendre la RDC en jouant",
     salutPremier: (pseudo: string) => `Salut ${pseudo}, prêt à démarrer ton premier quiz ?`,
     salutRetour: (pseudo: string) => `Salut ${pseudo}, on reprend où tu t'es arrêté ?`,
-    /* Le bandeau coupe la salutation en deux lignes : l'appel par le prénom,
-       puis la question. Deux clés plutôt qu'une césure dans le CSS, qui
-       tomberait au mauvais endroit dès que le pseudo est long. */
-    salutNom: (pseudo: string) => `Salut ${pseudo},`,
-    salutSuitePremier: "prêt à démarrer ton premier quiz ?",
-    salutSuiteRetour: "on reprend où tu t'es arrêté ?",
-    heroBaseline: "Découvre, apprends, et deviens un expert du Congo !",
-    heroDevise: "Connaître le Congo autrement",
     salutAnonymePremier: "Prêt à démarrer ton premier quiz ?",
     salutAnonymeRetour: "Prêt à reprendre ?",
     titreCategories: "Catégories",
