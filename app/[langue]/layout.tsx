@@ -1,20 +1,25 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Nunito, Outfit  } from "next/font/google";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { dictionnaire, estLangue, LANGUES } from "@/lib/i18n";
 import Barre from "./barre";
-import Footer from "./footer";
-/* Une seule famille, Plus Jakarta Sans, en fonte variable : toutes les
+/* Une seule famille, Nunito Sans, en fonte variable : toutes les
    graisses tiennent dans un seul fichier, donc un seul téléchargement.
    next/font la récupère au build et la sert depuis notre domaine : aucun
    appel à Google pendant la visite, rien à déclarer côté RGPD.
    `display: swap` affiche le texte immédiatement dans la police système
    puis bascule : jamais d'écran vide en attendant la police. */
-const jakarta = Plus_Jakarta_Sans({
+const nunito = Nunito({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-jakarta",
+  variable: "--font-nunito",
+});
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-outfit",
 });
 
 /* L'ordre compte : Tailwind d'abord, puis les feuilles existantes, qui
@@ -56,7 +61,7 @@ export default async function LangueLayout({
   const t = dictionnaire(langue);
 
   return (
-    <html lang={langue} className={jakarta.variable}>
+    <html lang={langue} className={nunito.variable}>
       <body>
         <nav aria-label={t.navigation.accesRapide} className="evitement">
           <ul>

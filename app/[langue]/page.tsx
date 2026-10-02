@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { creerClientServeur } from "@/lib/supabase/serveur";
-import { dictionnaire, estLangue, LANGUE_PAR_DEFAUT } from "@/lib/i18n";
-import Progression from "./progression";
-import CategoriesAccueil, { type Categorie } from "./categories-accueil";
+import { estLangue } from "@/lib/i18n";
+import type { CategorieSource } from "@/lib/vues";
+import AccueilEcran from "./accueil-ecran";
 
 export const revalidate = 300;
 
@@ -13,56 +13,19 @@ export default async function Accueil({
 }) {
   const { langue } = await params;
   if (!estLangue(langue)) notFound();
-  const t = dictionnaire(langue);
 
+  /* Le catalogue vient du serveur : la page s'affiche et s'indexe sans
+     attendre la session. La progression se superpose après montage. */
   const supabase = await creerClientServeur();
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("categorie_publique")
     .select("categorie_id, libelle, slug, nb_questions, produit_requis, illustration")
     .eq("langue", langue)
     .order("libelle");
 
-  if (error) {
-    return (
-      <>
-        <h1>{t.marque.nom}</h1>
-        <p role="alert">{t.accueil.erreurCategories}</p>
-      </>
-    );
-  }
-
-  const toutes = (data ?? []) as Categorie[];
-  /* L'accueil ne montre que les thèmes ouverts : un thème payant sans
-     cadenas serait un piège. Les verrouillés vivent sur la page Quiz, qui
-     sait les griser et expliquer la condition. */
-  const jouables = toutes.filter(
-    (c) => c.nb_questions >= 7 && c.produit_requis == null
+  const categories = ((data ?? []) as CategorieSource[]).filter(
+    (c) => c.nb_questions >= 7
   );
-  const total = jouables.reduce((s, c) => s + c.nb_questions, 0);
 
-  return (
-    <>
-      {/* Phrase d'orientation : masquée à l'œil, mais bien présente pour les
-          moteurs et les lecteurs d'écran. Elle sera reprise visuellement sur
-          l'écran d'accueil de première visite. */}
-      <p className="visuellement-masque">
-        {t.marque.presentation(total, jouables.length)}
-      </p>
-
-      {langue !== LANGUE_PAR_DEFAUT && jouables.length < toutes.length && (
-        <p className="note">{t.disponibilite.banniereLangue}</p>
-      )}
-
-      {/* La salutation sert de titre de page : elle remplace le logo, et
-          réutilise les données déjà chargées par la progression plutôt que
-          de rappeler la même RPC une seconde fois. */}
-      <Progression langue={langue} avecSalutation />
-
-      {jouables.length === 0 ? (
-        <p>{t.disponibilite.aucuneCategorie}</p>
-      ) : (
-        <CategoriesAccueil langue={langue} categories={jouables} total={jouables.length} />
-      )}
-    </>
-  );
+  return <AccueilEcran langue={langue} categories={categories} />;
 }

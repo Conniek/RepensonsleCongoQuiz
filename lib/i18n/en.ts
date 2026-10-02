@@ -440,6 +440,13 @@ quizHub: {
     chargement: "Loading your progress…",
     jamaisJoue:
       "You haven’t played yet. Start a first round to begin earning experience and badges.",
+    reussite: "success",
+    xpSurSeuil: (xp: number, seuil: number) => `${xp} / ${seuil} XP`,
+    jours: "days",
+    serieJours: (n: number) => `${n} day${n > 1 ? "s" : ""} in a row`,
+    badges: "Badges",
+    badgeObtenu: "Earned",
+    partBonnesReponses: "correct answers",
     rangActuel: "Current rank:",
     resteAvantRang: (restant: number, rang: string, xp: number, seuil: number) =>
       `You need ${restant} more experience points to reach the next rank, ${rang}. You have ${xp} out of ${seuil}.`,

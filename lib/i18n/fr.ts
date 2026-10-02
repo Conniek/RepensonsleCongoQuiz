@@ -450,6 +450,14 @@ quizHub: {
     chargement: "Chargement de ta progression…",
     jamaisJoue:
       "Tu n’as pas encore joué. Lance une première partie pour commencer à gagner des points d’expérience et des badges.",
+    // --- Écran d'accueil porté du prototype ---------------------------
+    reussite: "réussite",
+    xpSurSeuil: (xp: number, seuil: number) => `${xp} / ${seuil} XP`,
+    jours: "jours",
+    serieJours: (n: number) => `${n} ${pluriel(n, "jour")} d'affilée`,
+    badges: "Badges",
+    badgeObtenu: "Obtenu",
+    partBonnesReponses: "de bonnes réponses",
     rangActuel: "Rang actuel :",
     resteAvantRang: (restant: number, rang: string, xp: number, seuil: number) =>
       `Il te reste ${restant} points d’expérience pour atteindre le rang suivant, ${rang}. Tu en as ${xp} sur ${seuil}.`,

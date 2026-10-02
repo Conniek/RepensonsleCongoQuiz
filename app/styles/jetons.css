@@ -12,7 +12,7 @@
    Changer l'identité visuelle = changer ce fichier, rien d'autre.
    ========================================================================= */
 
-:root {
+:root, html, body {
   /* --- Couleurs, thème clair ------------------------------------------- */
   --fond: #FAF7F0;              /* Crème chaud, jamais blanc pur : éblouit au soleil. */
   --surface: #FFFFFF;
@@ -37,8 +37,8 @@
   /* Pile système : rien à télécharger, rien à héberger, rien à déclarer au
      RGPD, premier affichage immédiat sur connexion faible. Le jour où une
      police de marque est retenue, seules ces deux valeurs changent. */
-  --police-titre: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --police-texte: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --police-titre: "Nunito", sans-serif;
+  --police-texte: "Outfit", sans-serif;
 
   --taille-affiche: 34px;
   --taille-titre-1: 26px;
@@ -198,5 +198,6 @@
   --fig-pastel-menthe: #D4EEE8;
 
   --fig-rayon: 16px;
-  --fig-flou-voile: 6px;   /* flou du voile derrière une fenêtre modale */
+  --fig-flou-voile: 6px;
+  --taille-anneau: 84px;   /* anneau de réussite de l'accueil */   /* flou du voile derrière une fenêtre modale */
 }

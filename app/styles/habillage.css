@@ -674,8 +674,6 @@ main {
   margin-inline: auto;
   padding: 0 var(--espace-5) calc(var(--espace-7) * 2);
   overflow-x: clip;
-    background-size: contain;
-    background-position: top;
 }
 
 /* --- Formulaires ---------------------------------------------------------------------- */
@@ -1273,3 +1271,18 @@ table.detail-xp tfoot th, table.detail-xp tfoot td {
    eux. Elles disparaîtront avec habillage.css à la fin de la refonte. */
 dialog { border: none; }
 dialog::backdrop { backdrop-filter: blur(var(--fig-flou-voile)); }
+
+/* Anneau de réussite : un dégradé conique, sans image ni SVG. La part
+   remplie vient de la variable --part, posée en ligne par le composant. */
+.anneau {
+  width: var(--taille-anneau);
+  height: var(--taille-anneau);
+  border-radius: 50%;
+  background: conic-gradient(var(--ocre) 0 var(--part), var(--voile-clair) var(--part) 100%);
+}
+.anneau-centre {
+  width: 82%;
+  height: 82%;
+  background: var(--bleu-profond);
+  color: var(--blanc-sur-couleur);
+}
