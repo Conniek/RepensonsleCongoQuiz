@@ -323,6 +323,9 @@ main > section { margin-bottom: var(--espace-6); }
   color: var(--encre-sur-ocre);
   display: grid; place-items: center;
 }
+.medaillons > li:not(.a-venir) .pastille {
+  border: 2px solid var(--encre);
+}
 .medaillons li:nth-child(2) .pastille { background: var(--vert); color: var(--blanc-sur-couleur); }
 .medaillons li:nth-child(3) .pastille { background: var(--bleu); color: var(--blanc-sur-couleur); }
 /* Le prochain badge : anneau d'avancement autour du verrou. */

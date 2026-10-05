@@ -86,6 +86,7 @@ export default function AccueilEcran({
         : t.accueil.salutAnonymeRetour;
 
   const reussite = etat?.taux_reussite ?? 0;
+  const initialeProfil = (etat?.pseudo?.trim().charAt(0) ?? "D").toUpperCase();
   const obtenus = (etat?.badges ?? []).filter((b) => b.obtenu);
   const enCours = (etat?.badges ?? [])
     .filter((b) => !b.obtenu && b.avancement > 0)
@@ -112,24 +113,24 @@ export default function AccueilEcran({
       </p>
 
       {/* En-tête */}
-      <header className="flex items-start justify-between gap-2">
-        <div className="flex-1">
-          <p className="text-xs font-bold uppercase tracking-widest opacity-60 m-0">
-            {t.quizHub.surtitre}
-          </p>
-          <h1 className="mt-1 mb-1">{salutation ?? t.accueil.salutAnonymePremier}</h1>
+      <header className="flex items-baseline justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <h1 className="mt-0 mb-1">{salutation ?? t.accueil.salutAnonymePremier}</h1>
           <p className="text-sm opacity-70 m-0">{t.accueil.heroBaseline}</p>
         </div>
 
-        <p className="shrink-0 m-0 flex flex-col items-center gap-0.5">
+        <Link
+          href={`/${langue}/profil`}
+          aria-label={etat?.pseudo ? `Voir le profil de ${etat.pseudo}` : "Voir le profil"}
+          className="shrink-0 m-0 flex items-center no-underline"
+        >
           <span
-            className="w-14 h-14 rounded-l grid place-items-center text-3xl bg-bleu"
+            className="w-14 h-14 rounded-full grid place-items-center text-2xl font-black text-encre bg-bleu shadow-carte leading-none"
             aria-hidden="true"
           >
-            🇨🇩
+            {initialeProfil}
           </span>
-          <span className="text-[10px] font-semibold opacity-60">RDC</span>
-        </p>
+        </Link>
       </header>
 
       {/* Carte de rang */}
