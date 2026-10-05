@@ -1,13 +1,13 @@
 .page {
-  --background: #fafafa;
-  --foreground: #fff;
+  --background: var(--fond);
+  --foreground: var(--surface);
 
-  --text-primary: #000;
-  --text-secondary: #666;
+  --text-primary: var(--encre);
+  --text-secondary: var(--encre-discrete);
 
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-  --button-secondary-border: #ebebeb;
+  --button-primary-hover: var(--bleu-profond);
+  --button-secondary-hover: var(--surface-douce);
+  --button-secondary-border: var(--bordure);
 
   display: flex;
   flex: 1;
@@ -22,12 +22,12 @@
   display: flex;
   flex: 1;
   width: 100%;
-  max-width: 800px;
+  max-width: calc(var(--largeur-lecture) * 1.2);
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
   background-color: var(--foreground);
-  padding: 120px 60px;
+  padding: calc(var(--espace-9) * 1.875) calc(var(--espace-8) * 1.125);
 }
 
 .intro {
@@ -35,29 +35,29 @@
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  gap: 24px;
+  gap: var(--espace-5);
 }
 
 .intro h1 {
-  max-width: 320px;
-  font-size: 40px;
-  font-weight: 600;
-  line-height: 48px;
-  letter-spacing: -2.4px;
+  max-width: calc(var(--largeur-lecture) * 0.7);
+  font-size: var(--taille-affiche);
+  font-weight: var(--graisse-titre);
+  line-height: var(--interligne-titre);
+  letter-spacing: -0.02em;
   text-wrap: balance;
   color: var(--text-primary);
 }
 
 .intro p {
-  max-width: 440px;
-  font-size: 18px;
-  line-height: 32px;
+  max-width: calc(var(--largeur-lecture) * 0.65);
+  font-size: var(--taille-corps);
+  line-height: var(--interligne-corps);
   text-wrap: balance;
   color: var(--text-secondary);
 }
 
 .intro a {
-  font-weight: 500;
+  font-weight: var(--graisse-normale);
   color: var(--text-primary);
 }
 
@@ -65,29 +65,29 @@
   display: flex;
   flex-direction: row;
   width: 100%;
-  max-width: 440px;
-  gap: 16px;
-  font-size: 14px;
+  max-width: calc(var(--largeur-lecture) * 0.65);
+  gap: var(--espace-4);
+  font-size: var(--taille-etiquette);
 }
 
 .ctas a {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 128px;
+  height: var(--cible-tactile);
+  padding: 0 var(--espace-4);
+  border-radius: var(--rayon-rond);
   border: 1px solid transparent;
   transition: 0.2s;
   cursor: pointer;
   width: fit-content;
-  font-weight: 500;
+  font-weight: var(--graisse-normale);
 }
 
 a.primary {
   background: var(--text-primary);
   color: var(--background);
-  gap: 8px;
+  gap: var(--espace-2);
 }
 
 a.secondary {
@@ -109,17 +109,17 @@ a.secondary {
 
 @media (max-width: 600px) {
   .main {
-    padding: 48px 24px;
+    padding: calc(var(--espace-7) * 1.05) var(--espace-5);
   }
 
   .intro {
-    gap: 16px;
+    gap: var(--espace-4);
   }
 
   .intro h1 {
-    font-size: 32px;
-    line-height: 40px;
-    letter-spacing: -1.92px;
+    font-size: var(--taille-titre-1);
+    line-height: var(--interligne-titre);
+    letter-spacing: -0.01em;
   }
 }
 
@@ -129,15 +129,15 @@ a.secondary {
   }
 
   .page {
-    --background: #000;
-    --foreground: #000;
+    --background: var(--encre);
+    --foreground: var(--encre);
 
-    --text-primary: #ededed;
-    --text-secondary: #999;
+    --text-primary: var(--blanc-sur-couleur);
+    --text-secondary: var(--encre-discrete);
 
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-    --button-secondary-border: #1a1a1a;
+    --button-primary-hover: var(--sur-bleu-doux);
+    --button-secondary-hover: var(--bleu-nuit);
+    --button-secondary-border: var(--bleu-nuit);
   }
 }
 
@@ -146,5 +146,5 @@ a.secondary {
   font-size: 0.9em;
   background: color-mix(in srgb, currentColor 8%, transparent);
   padding: 0.1em 0.4em;
-  border-radius: 6px;
+  border-radius: var(--espace-1);
 }

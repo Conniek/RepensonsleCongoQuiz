@@ -12,6 +12,7 @@ export const dynamic = "force-dynamic";
 type Categorie = {
   categorie_id: string; libelle: string; slug: string;
   nb_questions: number; nb_facile: number; nb_moyen: number; nb_difficile: number;
+  produit_requis: string | null;
 };
 
 async function trouver(langue: string, slug: string) {

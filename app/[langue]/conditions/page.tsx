@@ -40,7 +40,7 @@ export default async function PageConditions({
       <p className="intro-legal">{conditions.intro}</p>
 
       <div className="contenu-legal">
-        {conditions.sections.map((section, idx) => (
+        {conditions.sections.map((section: { titre: string; contenu: string }, idx: number) => (
           <section key={idx}>
             <h2>{section.titre}</h2>
             <p>{section.contenu}</p>
@@ -52,7 +52,7 @@ export default async function PageConditions({
         <p>
           {t.navigation.accesRapide && "Des questions ? "}
           <a href={`mailto:contact@repensonslecongoqiz.app`}>
-            {t.profil.feedback || "Nous contacter"}
+            {t.pageProfil.feedback || "Nous contacter"}
           </a>
         </p>
       </div>

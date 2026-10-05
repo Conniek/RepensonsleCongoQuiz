@@ -40,7 +40,7 @@ export default async function PageConfidentialite({
       <p className="intro-legal">{confidentialite.intro}</p>
 
       <div className="contenu-legal">
-        {confidentialite.sections.map((section, idx) => (
+        {confidentialite.sections.map((section: { titre: string; contenu: string }, idx: number) => (
           <section key={idx}>
             <h2>{section.titre}</h2>
             <p>{section.contenu}</p>
@@ -52,7 +52,7 @@ export default async function PageConfidentialite({
         <p>
           {t.navigation.accesRapide && "Des questions ? "}
           <a href={`mailto:contact@repensonslecongoqiz.app`}>
-            {t.profil.feedback || "Nous contacter"}
+            {t.pageProfil.feedback || "Nous contacter"}
           </a>
         </p>
       </div>

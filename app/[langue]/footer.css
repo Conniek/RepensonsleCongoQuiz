@@ -6,7 +6,7 @@
 }
 
 .footer-contenu {
-  max-width: 1200px;
+  max-width: min(100%, calc(var(--largeur-lecture) * 1.8));
   margin: 0 auto var(--espace-6);
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -44,7 +44,7 @@
 
 .footer-links {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(calc(var(--espace-7) * 3), 1fr));
   gap: var(--espace-5);
 }
 
@@ -79,7 +79,7 @@
 }
 
 .footer-bas {
-  max-width: 1200px;
+  max-width: min(100%, calc(var(--largeur-lecture) * 1.8));
   margin: 0 auto;
   padding-top: var(--espace-6);
   border-top: 1px solid var(--bordure);

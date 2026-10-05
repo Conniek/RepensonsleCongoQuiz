@@ -13,14 +13,14 @@ import {
   type MaitriseSource,
   type VueCategorie,
 } from "@/lib/vues";
-import { CarteTheme, CarteThemeVerrouille } from "./carte-theme";
+import { CarteTheme } from "./carte-theme";
 import SelecteurNiveau from "./selecteur-niveau";
 
 type Defi = {
   categorie_id: string;
   libelle: string;
   niveau: Niveau;
-  xp_bonus: number;
+  recompense_xp: number;
   fait: boolean;
 } | null;
 
@@ -85,7 +85,7 @@ export default function QuizEcran({
           <h2 id="titre-defi" className="visuellement-masque">{t.defi.titre}</h2>
 
           {defi.fait ? (
-            <p className="flex items-center gap-3 p-4 rounded-l bg-doux m-0">
+            <p className="flex items-center gap-3 p-4 rounded-l bg-pastel-creme m-0">
               <span aria-hidden="true" className="text-2xl">✓</span>
               <span>
                 <span className="block font-black">{t.quizHub.defiFait}</span>
@@ -95,13 +95,13 @@ export default function QuizEcran({
           ) : (
             <Link
               href={`/${langue}/partie?categorie=${defi.categorie_id}&niveau=${defi.niveau}&defi=1`}
-              className="flex items-center gap-3 p-4 rounded-l no-underline bg-primaire text-primaire-contraste shadow-flottante"
+              className="flex items-center gap-3 p-4 rounded-l no-underline bg-encre text-sur-encre shadow-flottante"
             >
               <span aria-hidden="true" className="text-2xl">⚡</span>
               <span className="flex-1">
                 <span className="block font-black">{t.defi.titre}</span>
                 <span className="block text-xs opacity-80">
-                  {t.quizHub.defiAnnonce(defi.libelle, t.niveaux[defi.niveau], defi.xp_bonus)}
+                  {t.quizHub.defiAnnonce(defi.libelle, t.niveaux[defi.niveau], defi.recompense_xp)}
                 </span>
               </span>
               <span aria-hidden="true">→</span>
@@ -123,13 +123,11 @@ export default function QuizEcran({
               onJouer={setChoisi}
             />
           ))}
-          {plus.map((vue) =>
-            vue.accessible ? (
-              <CarteTheme key={vue.id} vue={vue} langue={langue} onJouer={setChoisi} />
-            ) : (
-              <CarteThemeVerrouille key={vue.id} vue={vue} langue={langue} />
-            )
-          )}
+          {/* La carte connaît son état : verrouillée, elle montre le cadenas
+              et mène aux offres. Rien à décider ici. */}
+          {plus.map((vue) => (
+            <CarteTheme key={vue.id} vue={vue} langue={langue} onJouer={setChoisi} />
+          ))}
         </ul>
       </section>
 
@@ -139,13 +137,9 @@ export default function QuizEcran({
           <h2 id="titre-langues">{t.quizHub.langues}</h2>
           <p className="text-sm opacity-70">{t.quizHub.languesTexte}</p>
           <ul className="list-none p-0 m-0 grid grid-cols-2 gap-3">
-            {langues.map((vue) =>
-              vue.accessible ? (
-                <CarteTheme key={vue.id} vue={vue} langue={langue} onJouer={setChoisi} />
-              ) : (
-                <CarteThemeVerrouille key={vue.id} vue={vue} langue={langue} />
-              )
-            )}
+            {langues.map((vue) => (
+              <CarteTheme key={vue.id} vue={vue} langue={langue} onJouer={setChoisi} />
+            ))}
           </ul>
         </section>
       )}

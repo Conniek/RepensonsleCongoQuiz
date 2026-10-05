@@ -58,10 +58,10 @@ export default async function PageResultat({
      est le plus disposée à enchaîner, donc celui où on le lui propose.
      La règle d'ouverture reste serveur (niveau_debloque) ; ici on ne fait
      que proposer le lien, qui échouerait de toute façon s'il était prématuré. */
+  const niveau = partie.niveau as Niveau;
   const niveauSuivant =
     niveau === "facile" ? "moyen" : niveau === "moyen" ? "difficile" : null;
   const niveauOuvert = etoiles >= 2 && niveauSuivant !== null;
-  const niveau = partie.niveau as Niveau;
   const gagnes = (partie.badges_gagnes ?? []) as string[];
   const libelle = categorie?.libelle ?? partie.categorie_id;
 

@@ -11,6 +11,7 @@
  *  fonctions calculent ne sert qu'à l'affichage. */
 
 import type { Niveau } from "@/lib/slug";
+import type { CardTone } from "@/ui";
 
 /* ------------------------------------------------------------------ */
 /* Ce que renvoie la base                                              */
@@ -48,27 +49,30 @@ export type VueCategorie = {
   etoilesTotal: number;
   /** Avancement en pourcentage, pour la barre de la carte. */
   avancement: number;
-  /** Classe Tailwind de fond pastel, stable pour une catégorie donnée. */
-  teinte: string;
+  /** Teinte de la carte, stable pour une catégorie donnée. C'est un NOM, pas
+   *  une classe : le design system seul sait à quoi il correspond. */
+  teinte: CardTone;
 };
 
 export const ETOILES_MAX = 6;
 
-/** Six pastels, attribués par rang d'affichage. La couleur reste la même
- *  d'un écran à l'autre tant que l'ordre des catégories ne change pas ;
+/** Teintes des cartes, attribuées par rang d'affichage. La couleur reste la
+ *  même d'un écran à l'autre tant que l'ordre des catégories ne change pas ;
  *  l'ordre vient de la base, il est donc stable.
  *
- *  Les noms de classes sont écrits EN ENTIER, et c'est volontaire : Tailwind
- *  lit le code source comme du texte pour savoir quelles classes produire.
- *  Un `bg-${teinte}` assemblé à l'exécution ne serait jamais généré, et les
- *  cartes s'afficheraient sans couleur. */
-const PASTELS = [
-  "bg-pastel-bleu",
-  "bg-pastel-ocre",
-  "bg-pastel-rose",
-  "bg-pastel-vert",
-  "bg-pastel-violet",
-  "bg-pastel-menthe",
+ *  Six pastels, qui portent tous le texte en encre. Ils se détachent à peine
+ *  du fond jaune : ce sont le rayon et l'ombre qui dessinent la carte.
+ *
+ *  Ce sont des NOMS de teintes, pas des classes : la correspondance vit dans
+ *  ui/Card.tsx, où les classes sont écrites en entier pour que Tailwind les
+ *  génère. */
+const TEINTES = [
+  "pastel-creme",
+  "pastel-bleu",
+  "pastel-rose",
+  "pastel-vert",
+  "pastel-violet",
+  "pastel-menthe",
 ] as const;
 
 /** Un droit sur un parcours de langue est aussi couvert par le pack. */
@@ -115,7 +119,7 @@ export function vueCategories(
       etoiles,
       etoilesTotal: total,
       avancement: Math.round((100 * total) / ETOILES_MAX),
-      teinte: PASTELS[index % PASTELS.length],
+      teinte: TEINTES[index % TEINTES.length],
     };
   });
 }

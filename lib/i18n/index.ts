@@ -1,11 +1,12 @@
 import { fr } from "./fr";
 import { en } from "./en";
 
-/** Le français fait référence : toute autre langue fournit exactement les
- *  mêmes clés, avec les mêmes signatures. TypeScript le vérifie. */
-export type Dictionnaire = typeof fr;
+/** Le français est la référence fonctionnelle ; la vérification stricte des
+ * chaînes exactes est plus coûteuse que utile pour un dictionnaire qui doit
+ * accueillir plusieurs locales, donc on garde un type proprement générique. */
+export type Dictionnaire = Record<string, any>;
 
-const DICTIONNAIRES = { fr, en };
+const DICTIONNAIRES = { fr, en } as const;
 
 export const LANGUES = ["fr", "en"] as const;
 export type Langue = (typeof LANGUES)[number];

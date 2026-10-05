@@ -26,29 +26,36 @@
 @import "tailwindcss/utilities.css" layer(utilities);
 
 @theme inline {
-  /* Couleurs du prototype. Elles produisent bg-primaire, text-accent, etc. */
-  --color-fond: var(--fig-fond);
+  /* Couleurs de la charte. Elles produisent bg-jaune, text-encre, etc. */
+  --color-jaune: var(--fig-jaune);
   --color-encre: var(--fig-encre);
+  --color-fond: var(--fig-fond);
   --color-carte: var(--fig-carte);
-  --color-primaire: var(--fig-primaire);
-  --color-primaire-contraste: var(--fig-primaire-contraste);
-  --color-secondaire: var(--fig-secondaire);
-  --color-doux: var(--fig-doux);
-  --color-doux-texte: var(--fig-doux-texte);
-  --color-accent: var(--fig-accent);
-  --color-accent-contraste: var(--fig-accent-contraste);
-  --color-bordure: var(--fig-bordure);
-  --color-splash: var(--fig-splash);
-
+  --color-creme: var(--fig-creme);
+  --color-sourd: var(--fig-jaune-sourd);
+  --color-bleu: var(--fig-bleu);
+  --color-rouge: var(--fig-rouge);
+  --color-vert: var(--fig-vert);
+  --color-bleu-profond: var(--fig-bleu-profond);
+  --color-bleu-roi: var(--fig-bleu-roi);
+  --color-pastel-creme: var(--fig-pastel-creme);
   --color-pastel-bleu: var(--fig-pastel-bleu);
-  --color-pastel-ocre: var(--fig-pastel-ocre);
   --color-pastel-rose: var(--fig-pastel-rose);
   --color-pastel-vert: var(--fig-pastel-vert);
   --color-pastel-violet: var(--fig-pastel-violet);
   --color-pastel-menthe: var(--fig-pastel-menthe);
+  --color-discret: var(--fig-texte-discret);
+  --color-bordure: var(--fig-bordure);
 
-  /* Espacements et rayons : on reprend l'échelle déjà en place, pour que les
-     écrans portés et les écrans d'origine respirent pareil. */
+  /* Textes posés sur un aplat. Les nommer évite de choisir du blanc au
+     jugé : sur le bleu clair de la charte, le blanc tombe à 2,63. */
+  --color-sur-encre: var(--fig-sur-encre);
+  --color-sur-bleu: var(--fig-sur-bleu);
+  --color-sur-rouge: var(--fig-sur-rouge);
+  --color-sur-vert: var(--fig-sur-vert);
+  --color-sur-bleu-profond: var(--fig-sur-bleu-profond);
+
+  /* Espacements et rayons repris de l'échelle existante. */
   --spacing-1: var(--espace-1);
   --spacing-2: var(--espace-2);
   --spacing-3: var(--espace-3);
@@ -59,14 +66,20 @@
 
   --radius-s: var(--rayon-s);
   --radius-m: var(--rayon-m);
-  --radius-l: var(--rayon-l);
+  --radius-l: var(--fig-rayon);
   --radius-rond: var(--rayon-rond);
 
-  /* Polices : les mêmes variables que le reste de l'application. Changer de
-     famille se fait dans jetons.css, et les deux mondes suivent ensemble. */
   --font-titre: var(--police-titre);
   --font-texte: var(--police-texte);
 
   --shadow-carte: var(--ombre-carte);
   --shadow-flottante: var(--ombre-flottante);
+}
+
+.rounded {
+   border-radius: var(--rayon-l);
+}
+
+.m-0 {
+   margin: 0;
 }

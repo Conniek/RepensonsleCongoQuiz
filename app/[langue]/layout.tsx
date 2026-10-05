@@ -1,26 +1,20 @@
 import type { Metadata } from "next";
-import { Nunito, Outfit  } from "next/font/google";
+import { Poppins } from "next/font/google";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { dictionnaire, estLangue, LANGUES } from "@/lib/i18n";
 import Barre from "./barre";
-/* Une seule famille, Nunito Sans, en fonte variable : toutes les
-   graisses tiennent dans un seul fichier, donc un seul téléchargement.
-   next/font la récupère au build et la sert depuis notre domaine : aucun
-   appel à Google pendant la visite, rien à déclarer côté RGPD.
-   `display: swap` affiche le texte immédiatement dans la police système
-   puis bascule : jamais d'écran vide en attendant la police. */
-const nunito = Nunito({
+/* Poppins, comme la charte Instagram : les titres en 800, le texte en 500.
+   L'export Figma importe aussi Bebas Neue, mais ne l'applique nulle part :
+   sa règle `.font-display` renvoie vers Poppins. On ne charge donc pas une
+   police que personne n'utilise. */
+const poppins = Poppins({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
-  variable: "--font-nunito",
+  variable: "--font-poppins",
 });
 
-const outfit = Outfit({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-outfit",
-});
 
 /* L'ordre compte : Tailwind d'abord, puis les feuilles existantes, qui
    gardent ainsi la priorité sur les utilitaires pendant toute la refonte. */
@@ -61,7 +55,7 @@ export default async function LangueLayout({
   const t = dictionnaire(langue);
 
   return (
-    <html lang={langue} className={nunito.variable}>
+    <html lang={langue} className={poppins.variable}>
       <body>
         <nav aria-label={t.navigation.accesRapide} className="evitement">
           <ul>

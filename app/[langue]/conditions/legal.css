@@ -39,7 +39,7 @@
   margin-top: var(--espace-7);
   padding: var(--espace-6);
   background: var(--surface-douce);
-  border-left: 4px solid var(--ocre);
+  border-left: var(--espace-1) solid var(--ocre);
   border-radius: var(--rayon-m);
 }
 

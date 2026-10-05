@@ -12,33 +12,43 @@
    Changer l'identité visuelle = changer ce fichier, rien d'autre.
    ========================================================================= */
 
-:root, html, body {
-  /* --- Couleurs, thème clair ------------------------------------------- */
-  --fond: #FAF7F0;              /* Crème chaud, jamais blanc pur : éblouit au soleil. */
-  --surface: #FFFFFF;
-  --surface-douce: #F2EDE3;
-  --bordure: #E0D8CA;
+:root, html, body{
+  /* --- Couleurs : charte Repensons le Congo ---------------------------- */
+  /* Les noms sont inchangés, seules les valeurs le sont : habillage.css et
+     tous les écrans déjà écrits suivent la charte sans une ligne de plus.
+     Les rapports notés sont ceux du texte par-dessus l'aplat. */
+  --fond: #FFD700;              /* jaune de marque, fond général        */
+  --surface: #FFF4C7;           /* crème des cartes      16,47 en encre */
+  --surface-douce: #FDF0C8;     /* 16,00 en encre                       */
+  --bordure: rgba(21, 21, 27, 0.3);
+  --bordure-forte: rgba(21, 21, 27, 0.4);
+  --blanc: #FFFFFF;
 
-  --encre: #1A1614;             /* 15:1 sur --fond */
-  --encre-discrete: #5E5852;    /* 6,2:1 sur --fond */
+  --encre: #15151B;             /* 12,96 sur le jaune                   */
+  --encre-discrete: #525066;    /* 5,55 sur le jaune, 7,05 sur la crème */
 
-  --bleu: #17497C;              /* blanc dessus : 8,9:1 */
-  --bleu-profond: #0F3357;
-  --ocre: #E3A72F;              /* ENCRE dessus (8:1), jamais du blanc (1,9:1) */
-  --terre-cuite: #B8552F;       /* blanc dessus : 5,6:1 */
-  --vert: #2F5D45;              /* blanc dessus : 7,7:1 */
-  --rouge: #A32B1E;             /* blanc dessus : 7,3:1 */
+  --fig-sur-bleu-profond: #07589c; 
+  --bleu: #2D5BB9;              /* bleu roi, blanc dessus : 6,0         */
+  --bleu-profond: #07589C;      /* blanc dessus : 7,28                  */
+  --ocre: #F1C627;              /* ENCRE dessus (11,12), jamais du blanc */
+  --terre-cuite: #CE2947;       /* blanc dessus : 5,21                  */
+  --vert: #08745B;              /* blanc dessus : 5,74                  */
+  --rouge: #CE2947;             /* blanc dessus : 5,21                  */
 
   --blanc-sur-couleur: #FFFFFF;
-  --encre-sur-ocre: #1A1614;    /* Ne change pas en thème sombre : l'ocre reste clair. */
-  --focus: #17497C;
+  --encre-sur-ocre: #15151B;
+  /* Le focus doit se voir sur le jaune comme sur l'encre : le rouge de la
+     charte tient les deux (3,71 et 3,50), là où l'encre disparaîtrait sur
+     les aplats sombres et le jaune sur le fond. */
+  --focus: #CE2947;
 
   /* --- Typographie ------------------------------------------------------ */
   /* Pile système : rien à télécharger, rien à héberger, rien à déclarer au
      RGPD, premier affichage immédiat sur connexion faible. Le jour où une
      police de marque est retenue, seules ces deux valeurs changent. */
-  --police-titre: "Nunito", sans-serif;
-  --police-texte: "Outfit", sans-serif;
+  --police-titre: var(--font-poppins), system-ui, -apple-system, "Segoe UI",
+                  Roboto, sans-serif;
+  --police-texte: var(--police-titre);
 
   --taille-affiche: 34px;
   --taille-titre-1: 26px;
@@ -48,11 +58,34 @@
   --taille-secondaire: 15px;
   --taille-etiquette: 13px;
   --taille-chrono: 28px;
+  --taille-splash-titre-min: 26px;
+  --taille-splash-titre-max: 34px;
+  --taille-splash-sous-titre-min: 18px;
+  --taille-splash-sous-titre-max: 22px;
+  --taille-splash-logo-max: 280px;
+  --taille-splash-cat-picto-largeur: 58px;
+  --taille-splash-cat-picto-hauteur: 54px;
+  --taille-splash-cat-icone: 30px;
+  --taille-splash-cta-icone: 22px;
+  --taille-splash-tag: 13px;
+  --taille-splash-padding-bas-min: 180px;
+  --taille-splash-padding-bas-max: 360px;
+  --taille-hero-icône: 84px;
+  --taille-hero-icône-max: 152px;
+  --taille-hero-devise-court: 11px;
+  --ombre-splash: 0 4px 16px rgba(26, 22, 20, 0.08);
+  --ombre-splash-menu: 0 8px 24px rgba(26, 22, 20, 0.14);
+  --ombre-cta: 0 10px 24px rgba(13, 74, 158, 0.35);
+  --ombre-cta-hover: 0 14px 28px rgba(13, 74, 158, 0.4);
+  --ombre-hero: 0 6px 18px rgba(0, 0, 0, 0.35);
+  --glissement-cta: calc(var(--espace-1) * -1);
+  --glissement-cta-icone: var(--espace-1);
 
   --graisse-affiche: 800;
   --graisse-titre: 700;
+  --graisse-carte: 600;
   --graisse-forte: 600;
-  --graisse-normale: 400;
+  --graisse-normale: 500;
 
   --interligne-titre: 1.2;
   --interligne-corps: 1.6;
@@ -100,6 +133,9 @@
   /* --- Voiles sur couleur ------------------------------------------------- */
   --voile-clair: rgba(255, 255, 255, 0.16);
   --voile-sombre: rgba(26, 22, 20, 0.10);
+  --voile-bleu-fort-1: rgba(14, 48, 110, 0.88);
+  --voile-bleu-fort-2: rgba(14, 48, 110, 0.80);
+  --voile-bleu-fort-3: rgba(14, 48, 110, 0.94);
   --sur-bleu-doux: #C8DBF0;
   --sur-bleu-texte: #DCE8F5;
   --bleu-nuit: #123055;
@@ -126,78 +162,7 @@
     repeating-linear-gradient(-45deg, var(--motif-teinte, var(--motif-sombre)) 0 2px, transparent 2px 22px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --fond: #16130F;
-    --surface: #211C17;
-    --surface-douce: #2A241E;
-    --bordure: #3A322A;
-
-    --encre: #F3ECE3;
-    --encre-discrete: #B5AA9C;
-
-    --bleu: #4E8FD1;
-    --bleu-profond: #17497C;
-    --ocre: #E3A72F;
-    --terre-cuite: #D9744B;
-    --pastel-bleu: #1C2A3A;
-    --pastel-terre: #33221B;
-    --pastel-vert: #1E2B24;
-    --pastel-ocre: #2E2618;
-    --accent-histoire: #B08422;
-    --jauge-histoire: #E3A72F;
-    --voile-clair: rgba(255, 255, 255, 0.12);
-    --voile-sombre: rgba(255, 255, 255, 0.10);
-    --sur-bleu-doux: #9FBBD8;
-    --sur-bleu-texte: #C8DBF0;
-    --bleu-nuit: #0E2540;
-    --vert: #4E8F6C;
-    --rouge: #E0705E;
-
-    --blanc-sur-couleur: #16130F;
-    --focus: #8FC0F0;
-
-    --ombre-carte: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --ombre-flottante: 0 6px 20px rgba(0, 0, 0, 0.5);
-    --motif-sombre: rgba(255, 255, 255, 0.045);
-    --motif-clair: rgba(255, 255, 255, 0.08);
-  }
-}  
-/* =========================================================================
-   Palette du prototype Figma — étape 0 de la refonte.
-
-   Ces valeurs sont déclarées ici, et nulle part ailleurs : c'est la règle
-   que `npm run verifier:jetons` fait respecter. Le fichier Tailwind ne
-   contient donc aucune couleur littérale, seulement des renvois vers ces
-   variables.
-
-   Elles ne sont pas encore appliquées : aucun écran ne les utilise tant que
-   le portage n'a pas commencé. Elles existent pour que Tailwind ait de quoi
-   construire ses classes (bg-primary, text-accent, etc.).
-   ========================================================================= */
-:root {
-  --fig-fond: #FAF5EC;
-  --fig-encre: #111008;
-  --fig-carte: #FFFFFF;
-  --fig-primaire: #1B3D8F;
-  --fig-primaire-contraste: #FFFFFF;
-  --fig-secondaire: #2E5CB8;
-  --fig-doux: #F0EBE0;
-  --fig-doux-texte: #7A7060;
-  --fig-accent: #F0B429;
-  --fig-accent-contraste: #111008;
-  --fig-bordure: #E0D8CC;
-  --fig-splash: #1565C0;
-
-  /* Pastels des cartes de catégories, repris du prototype. */
-  --fig-pastel-bleu: #D6E8F7;
-  --fig-pastel-ocre: #FBEBC8;
-  --fig-pastel-rose: #F7DBDB;
-  --fig-pastel-vert: #D8EEDC;
-  --fig-pastel-violet: #E4DEF5;
-  --fig-pastel-menthe: #D4EEE8;
-
-  --fig-rayon: 16px;
-  --fig-flou-voile: 6px;
-  --taille-anneau: 84px;   /* anneau de réussite de l'accueil */   /* flou du voile derrière une fenêtre modale */
-}
+/* Pas de thème sombre : la charte est jaune et encre, et une inversion
+   automatique produirait une application qui ne lui ressemble plus. Le
+   `color-scheme: light` de habillage.css le dit au navigateur, pour qu'il
+   n'inverse pas non plus les champs de formulaire. */
