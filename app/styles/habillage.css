@@ -271,11 +271,18 @@ main > section { margin-bottom: var(--espace-6); }
   background-image: var(--motif-kuba);
 }
 .defi-visuel {
+  flex: 0 0 38%;
   min-height: calc(var(--espace-7) * 2);
-  border-radius: var(--rayon-m);
+  overflow: hidden;
   background-color: var(--vert);
   --motif-teinte: var(--motif-clair);
   background-image: var(--motif-kuba);
+}
+.defi-visuel img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .defi .sur-titre { color: var(--encre-sur-ocre); opacity: 0.75; }
 .defi h2 {

@@ -18,6 +18,7 @@
      tous les écrans déjà écrits suivent la charte sans une ligne de plus.
      Les rapports notés sont ceux du texte par-dessus l'aplat. */
   --fond: #FFD700;              /* jaune de marque, fond général        */
+  --fig-jaune: var(--fond);
   --surface: #FFF4C7;           /* crème des cartes      16,47 en encre */
   --surface-douce: #FDF0C8;     /* 16,00 en encre                       */
   --bordure: rgba(21, 21, 27, 0.3);
@@ -25,6 +26,8 @@
   --blanc: #FFFFFF;
 
   --encre: #15151B;             /* 12,96 sur le jaune                   */
+  --fig-encre: var(--encre);
+  --fig-sur-encre: var(--fig-jaune);
   --encre-discrete: #525066;    /* 5,55 sur le jaune, 7,05 sur la crème */
 
   --fig-sur-bleu-profond: #07589c; 

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { creerClientNavigateur } from "@/lib/supabase/client";
 import { assurerSession } from "@/lib/session";
 import { dictionnaire, type Langue } from "@/lib/i18n";
+import { urlIllustration } from "@/lib/illustrations";
 import { PictoBadge } from "./pictos";
 import { Card, Medallion, Meter, Ring, SectionHeader, Tag } from "@/ui";
 import {
@@ -73,6 +74,9 @@ export default function AccueilEcran({
   const vues = vueCategories(categories, maitrise, droits).filter(
     (v) => v.produitRequis === null
   );
+  const categorieDefi = defi
+    ? categories.find((categorie) => categorie.categorie_id === defi.categorie_id)
+    : undefined;
 
   const premierQuiz = !etat || etat.parties === 0;
   const salutation = !etat
@@ -218,6 +222,17 @@ export default function AccueilEcran({
             href={`/${langue}/partie?categorie=${defi.categorie_id}&niveau=${defi.niveau}&defi=1`}
             className="flex rounded overflow-hidden no-underline text-encre bg-carte shadow-flottante"
           >
+            <span className="defi-visuel">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={urlIllustration(defi.slug, categorieDefi?.illustration)}
+                alt=""
+                width={640}
+                height={400}
+                loading="lazy"
+                decoding="async"
+              />
+            </span>
             <span className="flex-1 p-4">
               <span className="block text-[10px] font-black uppercase tracking-widest opacity-70">
                 {t.defi.titre}
@@ -226,7 +241,7 @@ export default function AccueilEcran({
               <span className="block text-xs font-semibold mt-1">
                 {t.defi.recompense(defi.recompense_xp)}
               </span>
-              <span className="mt-3 block py-2 px-3 rounded-m text-center text-xs font-black uppercase tracking-widest bg-encre text-sur-encre">
+              <span className="mt-3 block py-2 px-3 rounded-m text-center text-xs font-black uppercase tracking-widest bg-encre text-jaune">
                 {t.defi.jouerMaintenant}
               </span>
             </span>
