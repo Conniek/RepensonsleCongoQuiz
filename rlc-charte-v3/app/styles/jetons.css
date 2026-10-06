@@ -1,0 +1,140 @@
+/* =========================================================================
+   JETONS — source unique de vérité pour l'apparence.
+   =========================================================================
+   Repris du design system « Repensons le Congo ». C'est le SEUL fichier de
+   l'application autorisé à contenir des valeurs littérales : couleurs,
+   longueurs, ombres.
+
+   Partout ailleurs, uniquement des var(--…). Le contrôle
+   `npm run verifier:jetons` échoue si une valeur littérale apparaît dans un
+   autre fichier de style.
+
+   Changer l'identité visuelle = changer ce fichier, rien d'autre.
+   ========================================================================= */
+
+:root {
+  /* --- Couleurs : charte Repensons le Congo ---------------------------- */
+  /* Les noms sont inchangés, seules les valeurs le sont : habillage.css et
+     tous les écrans déjà écrits suivent la charte sans une ligne de plus.
+     Les rapports notés sont ceux du texte par-dessus l'aplat. */
+  --fond: #FFD700;              /* jaune de marque, fond général        */
+  --surface: #FFF4C7;           /* crème des cartes      16,47 en encre */
+  --surface-douce: #FDF0C8;     /* 16,00 en encre                       */
+  --bordure: rgba(21, 21, 27, 0.3);
+
+  --encre: #15151B;             /* 12,96 sur le jaune                   */
+  --encre-discrete: #525066;    /* 5,55 sur le jaune, 7,05 sur la crème */
+
+  --bleu: #2D5BB9;              /* bleu roi, blanc dessus : 6,0         */
+  --bleu-profond: #07589C;      /* blanc dessus : 7,28                  */
+  --ocre: #F1C627;              /* ENCRE dessus (11,12), jamais du blanc */
+  --terre-cuite: #CE2947;       /* blanc dessus : 5,21                  */
+  --vert: #08745B;              /* blanc dessus : 5,74                  */
+  --rouge: #CE2947;             /* blanc dessus : 5,21                  */
+
+  --blanc-sur-couleur: #FFFFFF;
+  --encre-sur-ocre: #15151B;
+  /* Le focus doit se voir sur le jaune comme sur l'encre : le rouge de la
+     charte tient les deux (3,71 et 3,50), là où l'encre disparaîtrait sur
+     les aplats sombres et le jaune sur le fond. */
+  --focus: #CE2947;
+
+  /* --- Typographie ------------------------------------------------------ */
+  /* Pile système : rien à télécharger, rien à héberger, rien à déclarer au
+     RGPD, premier affichage immédiat sur connexion faible. Le jour où une
+     police de marque est retenue, seules ces deux valeurs changent. */
+  --police-titre: var(--font-poppins), system-ui, -apple-system, "Segoe UI",
+                  Roboto, sans-serif;
+  --police-texte: var(--police-titre);
+
+  --taille-affiche: 34px;
+  --taille-titre-1: 26px;
+  --taille-titre-2: 20px;
+  --taille-titre-3: 17px;
+  --taille-corps: 17px;
+  --taille-secondaire: 15px;
+  --taille-etiquette: 13px;
+  --taille-chrono: 28px;
+
+  --graisse-affiche: 800;
+  --graisse-titre: 700;
+  --graisse-carte: 600;
+  --graisse-forte: 600;
+  --graisse-normale: 500;
+
+  --interligne-titre: 1.2;
+  --interligne-corps: 1.6;
+
+  /* --- Espacements ------------------------------------------------------ */
+  --espace-1: 4px;
+  --espace-2: 8px;
+  --espace-3: 12px;
+  --espace-4: 16px;
+  --espace-5: 24px;
+  --espace-6: 32px;
+  --espace-7: 48px;
+  --espace-8: 56px;
+  --espace-9: 64px;
+  --espace-10: 72px;
+ 
+
+  /* --- Rayons ----------------------------------------------------------- */
+  --rayon-s: 8px;
+  --rayon-m: 14px;
+  --rayon-l: 22px;
+  --rayon-rond: 999px;
+
+  /* --- Ombres ----------------------------------------------------------- */
+  --ombre-carte: 0 1px 2px rgba(26, 22, 20, 0.05);
+  --ombre-flottante: 0 6px 20px rgba(26, 22, 20, 0.14);
+
+  /* --- Tailles ---------------------------------------------------------- */
+  /* 48px, soit le double du minimum WCAG : l'application s'utilise debout,
+     en marchant, sur des écrans parfois petits. */
+  --cible-tactile: 48px;
+  --largeur-lecture: 44rem;
+  --trait-focus: 3px;
+
+  /* --- Fonds pastel des cartes catégories -------------------------------- */
+  /* Quatre teintes dérivées des couleurs d'accent, assez claires pour porter
+     l'encre à plus de 12:1. Elles tournent par position dans la grille. */
+  --pastel-bleu: #E4EDF6;
+  --pastel-terre: #F7E3DA;
+  --pastel-vert: #E3EDE6;
+  --pastel-ocre: #F6EBDA;
+  --accent-histoire: #7A4A1E;
+  --jauge-histoire: #B08422;
+
+  /* --- Voiles sur couleur ------------------------------------------------- */
+  --voile-clair: rgba(255, 255, 255, 0.16);
+  --voile-sombre: rgba(26, 22, 20, 0.10);
+  --sur-bleu-doux: #C8DBF0;
+  --sur-bleu-texte: #DCE8F5;
+  --bleu-nuit: #123055;
+
+  /* --- Points de rupture ------------------------------------------------ */
+  /* Une variable CSS ne fonctionne PAS dans une media query : ces valeurs
+     restent donc littérales dans habillage.css. Elles sont listées ici pour
+     rester trouvables, et c'est la seule exception à la règle du « aucune
+     valeur littérale hors de ce fichier ».
+       34rem  → deux colonnes de cartes
+       48rem  → mise en page large
+     Le contrôle npm run verifier:jetons ignore les lignes @media. */
+
+  /* --- Motif kuba -------------------------------------------------------- */
+  /* Texture de fond, jamais un ornement posé.
+     Deux variantes : une teinte sombre pour le fond de page, une claire pour
+     les surfaces colorées. La première version utilisait currentColor sans
+     opacité, ce qui produisait un quadrillage noir sur tout l'écran. */
+  --motif-sombre: rgba(26, 22, 20, 0.05);
+  --motif-clair: rgba(255, 255, 255, 0.10);
+
+  --motif-kuba:
+    repeating-linear-gradient(45deg,  var(--motif-teinte, var(--motif-sombre)) 0 2px, transparent 2px 22px),
+    repeating-linear-gradient(-45deg, var(--motif-teinte, var(--motif-sombre)) 0 2px, transparent 2px 22px);
+}
+
+/* Pas de thème sombre : la charte est jaune et encre, et une inversion
+   automatique produirait une application qui ne lui ressemble plus. Le
+   `color-scheme: light` de habillage.css le dit au navigateur, pour qu'il
+   n'inverse pas non plus les champs de formulaire. */

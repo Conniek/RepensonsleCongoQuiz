@@ -19,17 +19,19 @@ export default async function PagePartie({
 
   if (!categorie || !niveau) {
     return (
-      <>
+      <div className="ecran-partie">
         <h1>{t.partie.titrePage}</h1>
         <p role="alert">{t.partie.parametreManquant}</p>
-      </>
+      </div>
     );
   }
 
   return (
-    <Suspense fallback={<p>{t.partie.preparation}</p>}>
-      <Jeu langue={langue} categorieId={categorie} niveau={niveau as Niveau}
-           mode={mode === "defi_du_jour" ? "defi_du_jour" : "solo"} />
-    </Suspense>
+    <div className="ecran-partie">
+      <Suspense fallback={<p>{t.partie.preparation}</p>}>
+        <Jeu langue={langue} categorieId={categorie} niveau={niveau as Niveau}
+             mode={mode === "defi_du_jour" ? "defi_du_jour" : "solo"} />
+      </Suspense>
+    </div>
   );
 }

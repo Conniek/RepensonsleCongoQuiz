@@ -523,13 +523,16 @@ quizHub: {
   },
 
   partie: {
+    score: "Score",
+    difficulte: "Difficulté",
+    difficulteValeur: (n: number) => `Difficulté ${n} sur 5`,
     scoreCourant: (n: number) => `${n} points`,
     scoreCourantDetail: (n: number) => `Score en cours : ${n} points`,
     titrePage: "Partie en cours",
     preparation: "Préparation de la partie…",
     parametreManquant: "Catégorie ou niveau manquant.",
     question: (position: number, total: number) =>
-      `Question ${position} sur ${total}`,
+      `Question ${position}/${total}`,
     avancement: "Avancement dans la partie",
     titreChrono: "Temps restant",
     secondes: (s: string) => `${s} s`,
@@ -541,11 +544,10 @@ quizHub: {
     alerte10: "10 secondes",
     alerte5: "5 secondes",
     enonce: "Énoncé",
-    meta: (categorie: string, sousCategorie: string | null, difficulte: number) =>
-      `${categorie}${sousCategorie ? ` · ${sousCategorie}` : ""} · difficulté ${difficulte} sur 5`,
     bonneReponseSuffixe: " — bonne réponse",
     bonneReponse: "Bonne réponse",
     mauvaiseReponse: "Mauvaise réponse",
+    explication: "Explication",
     pointsGagnes: (n: number) => `${n} points gagnés sur cette question.`,
     source: "Source :",
     consulterSource: "consulter la source",
@@ -562,6 +564,14 @@ quizHub: {
     titrePage: "Résultat de la partie",
     remportee: "Partie remportée",
     terminee: "Partie terminée",
+    heroTitreGagnee: "Victoire !",
+    heroTitreEncouragement: "Bonne tentative !",
+    heroMessageGagnee: (categorie: string) => `Tu maîtrises ${categorie} !`,
+    heroMessageEncouragement: "Continue de t’entraîner !",
+    libelleScoreHero: "Score",
+    bonnesReponsesHero: (bonnes: number, total: number) =>
+      `${bonnes}/${total} bonnes réponses`,
+    objectif: "Objectif :",
     titreScore: "Ton score",
     points: "Points",
     pointsValeur: (n: number) => `${n} points`,
@@ -587,7 +597,9 @@ quizHub: {
     xpVictoire: "Bonus de victoire",
     xpDefi: "Bonus du défi du jour",
     xpTotal: "Total",
-    titreDetail: "Le détail de tes réponses",
+    titreDetail: "Détail des réponses",
+    statutReponse: (correcte: boolean) =>
+      correcte ? "Bonne réponse" : "Mauvaise réponse",
     ligneReponse: (position: number, correcte: boolean, points: number) =>
       `Question ${position} : ${correcte ? "bonne réponse" : "mauvaise réponse"}, ${points} points.`,
     titreSuite: "Et maintenant",

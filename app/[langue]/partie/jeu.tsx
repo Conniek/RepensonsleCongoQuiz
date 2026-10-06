@@ -50,6 +50,7 @@ export default function Jeu({
   // occupent la première position.
   const [ordre, setOrdre] = useState<number[]>([]);
   const [retour, setRetour] = useState<Retour | null>(null);
+  const [choixSelectionne, setChoixSelectionne] = useState<number | null>(null);
   const [restant, setRestant] = useState(DUREE_MS);
   const [enPause, setEnPause] = useState(false);
   const [chronoActif, setChronoActif] = useState(true);
@@ -125,6 +126,7 @@ export default function Jeu({
 
   const repondre = useCallback(async (choix: number | null) => {
     if (!partieId || retour) return;
+    setChoixSelectionne(choix);
     const duree = Date.now() - debutRef.current;
     const { data, error } = await supabase.rpc("valider_reponse", {
       p_partie_id: partieId, p_position: position,
@@ -161,6 +163,7 @@ export default function Jeu({
     if (position + 1 < questions.length) {
       const p = position + 1;
       setPosition(p); setRetour(null);
+      setChoixSelectionne(null);
       setOrdre(melanger(questions[p].reponses.map((_, i) => i)));
       setRestant(DUREE_MS); setAlerteTemps("");
       seuilRef.current = 99; debutRef.current = Date.now();
@@ -194,7 +197,34 @@ export default function Jeu({
 
   return (
     <>
-      <h1 tabIndex={-1} ref={titreRef}>
+      <div className="brand-mark">
+        <div className="brand-mark__crest" aria-hidden="true"><span /></div>
+        <p className="brand-mark__name">Repensons<br />le Congo</p>
+      </div>
+      <div className="entete-question">
+        <div className="score-courant difficulte-courante">
+          <span aria-hidden="true" className="score-courant-visuel">
+            <span className="score-courant-libelle">{t.partie.difficulte}</span>
+            <span className="score-courant-valeur">{question.difficulte}/5</span>
+          </span>
+          <span className="visuellement-masque">
+            {t.partie.difficulteValeur(question.difficulte)}
+          </span>
+        </div>
+        <p className="meta meta-categorie">
+          {libelleCategorie}
+        </p>
+        <div className="score-courant">
+          <span aria-hidden="true" className="score-courant-visuel">
+            <span className="score-courant-libelle">{t.partie.score}</span>
+            <span className="score-courant-valeur">{scoreCumule}</span>
+          </span>
+          <span className="visuellement-masque">
+            {t.partie.scoreCourantDetail(scoreCumule)}
+          </span>
+        </div>
+      </div>
+      <h1 className="titre-question" tabIndex={-1} ref={titreRef}>
         {t.partie.question(position + 1, questions.length)}
       </h1>
 
@@ -203,22 +233,32 @@ export default function Jeu({
           L'information textuelle reste portée par le titre de la page. */}
       <ul className="segments" aria-hidden="true">
         {questions.map((q, i) => (
-          <li key={q.id} className={i <= position ? "fait" : undefined} />
+          <li
+            key={q.id}
+            className={i === position ? "actif" : i < position ? "passe" : "a-venir"}
+          />
         ))}
       </ul>
 
       <section aria-labelledby="titre-chrono">
-        <h2 id="titre-chrono">{t.partie.titreChrono}</h2>
         {chronoActif ? (
           <>
-            {/* Masqué aux technologies d'assistance : dix mises à jour par
-                seconde satureraient le lecteur d'écran. */}
-            {/* Pastille compacte : le chronomètre ne prend plus une section
-                entière pour une information secondaire. */}
-            <p aria-hidden="true" className="chrono">
-              {t.partie.secondes((restant / 1000).toFixed(1))}
-            </p>
-            <p>
+            <div className="chrono-entete">
+              <h2 id="titre-chrono" className="meta meta-categorie">
+                {t.partie.titreChrono}
+              </h2>
+              <span aria-hidden="true" className="chrono-compteur">
+                {t.partie.secondes(String(Math.ceil(restant / 1000)))}
+              </span>
+            </div>
+            <progress
+              aria-labelledby="titre-chrono"
+              aria-hidden="true"
+              className="chrono-progression"
+              max={DUREE_MS}
+              value={restant}
+            />
+            <p className="visuellement-masque">
               <button type="button" onClick={() => setEnPause((v) => !v)}>
                 {enPause ? t.partie.reprendre : t.partie.mettreEnPause}
               </button>{" "}
@@ -228,20 +268,17 @@ export default function Jeu({
             </p>
           </>
         ) : (
-          <p>{t.partie.chronoDesactive}</p>
+          <>
+            <h2 id="titre-chrono" className="meta meta-categorie">
+              {t.partie.titreChrono}
+            </h2>
+            <p>{t.partie.chronoDesactive}</p>
+          </>
         )}
         <p role="status" aria-live="polite" className="visuellement-masque">
           {alerteTemps}
         </p>
 
-        {/* Le chiffre est visible, la phrase complète est lue : « 375 » seul
-            ne dit rien à un lecteur d'écran. */}
-        <p className="score-courant">
-          <span aria-hidden="true">{t.partie.scoreCourant(scoreCumule)}</span>
-          <span className="visuellement-masque">
-            {t.partie.scoreCourantDetail(scoreCumule)}
-          </span>
-        </p>
       </section>
 
       {/* Rappel des règles : il a sa place ici, au moment où l'on joue,
@@ -253,9 +290,6 @@ export default function Jeu({
 
       <article aria-labelledby="enonce">
         <h2 className="visuellement-masque">{t.partie.enonce}</h2>
-        <p className="meta">
-          {t.partie.meta(libelleCategorie, question.sous_categorie, question.difficulte)}
-        </p>
 
         {question.image_id && (
           <figure>
@@ -272,12 +306,14 @@ export default function Jeu({
         <ul aria-labelledby="enonce" className="reponses">
           {ordre.map((indexOrigine) => {
             const estBonne = retour?.bonne_reponse === indexOrigine;
+            const estMauvaiseSelection =
+              retour && !retour.correcte && choixSelectionne === indexOrigine;
             return (
               <li key={indexOrigine}>
                 <button type="button"
                         aria-disabled={retour ? true : undefined}
                         onClick={() => repondre(indexOrigine)}
-                        className={retour && estBonne ? "bonne" : undefined}>
+                        className={estBonne ? "bonne" : estMauvaiseSelection ? "mauvaise" : undefined}>
                   {question.reponses[indexOrigine]}
                   {retour && estBonne ? t.partie.bonneReponseSuffixe : ""}
                 </button>
@@ -293,26 +329,37 @@ export default function Jeu({
         {retour && (
           <>
             <h2>{retour.correcte ? t.partie.bonneReponse : t.partie.mauvaiseReponse}</h2>
-            {retour.explication && <p>{retour.explication}</p>}
-            <p>{t.partie.pointsGagnes(retour.points)}</p>
-            {retour.source_url && (
-              <p>
-                {t.partie.source}{" "}
-                <a href={retour.source_url} rel="noopener" target="_blank">
-                  {retour.source_titre ?? t.partie.consulterSource}
-                </a>{" "}
-                {t.commun.nouvelleFenetre}
-              </p>
+            {retour.explication && (
+              <section className="carte-explication" aria-labelledby="titre-explication">
+                <h3 id="titre-explication">
+                  <span aria-hidden="true">💡</span>
+                  {t.partie.explication}
+                </h3>
+                <p>{retour.explication}</p>
+                {retour.source_url && (
+                  <p className="source-explication">
+                    <span aria-hidden="true">📚</span>
+                    <a href={retour.source_url} rel="noopener" target="_blank">
+                      {retour.source_titre ?? t.partie.consulterSource}
+                    </a>{" "}
+                    <span className="visuellement-masque">{t.commun.nouvelleFenetre}</span>
+                  </p>
+                )}
+              </section>
             )}
+            <p className="visuellement-masque">
+              {t.partie.pointsGagnes(retour.points)}
+            </p>
           </>
         )}
       </div>
 
       {retour && (
         <p>
-          <button type="button" onClick={suivante}>
+          <button type="button" className="bouton-question-suivante" onClick={suivante}>
             {position + 1 < questions.length
               ? t.partie.questionSuivante : t.partie.voirResultat}
+            <span aria-hidden="true">→</span>
           </button>
         </p>
       )}

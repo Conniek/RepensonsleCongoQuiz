@@ -1,0 +1,12 @@
+CORRECTIF - quiz-ecran.tsx
+==========================
+
+J'ai fusionne CarteTheme et CarteThemeVerrouille en un seul composant a deux
+etats, mais j'avais oublie de mettre a jour l'ecran qui importait les deux.
+
+    cp -R chemin/vers/rlc-correctif/. .
+    rm -rf .next && npm run dev
+
+Un seul fichier change. La carte connait maintenant son etat : verrouillee,
+elle affiche le cadenas et mene aux offres. L'ecran n'a plus de branche a
+ecrire, ni sur les themes Plus, ni sur les langues.

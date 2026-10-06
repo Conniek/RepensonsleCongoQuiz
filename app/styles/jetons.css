@@ -38,6 +38,36 @@
   --vert: #08745B;              /* blanc dessus : 5,74                  */
   --rouge: #CE2947;             /* blanc dessus : 5,21                  */
 
+  --brand-navy: var(--encre);
+  --brand-blue: var(--bleu);
+  --brand-red: var(--rouge);
+  --brand-yellow: var(--fond);
+  --brand-name-size: 0.85rem;
+  --brand-name-stroke: 0.65px;
+  --brand-crest-size: 2.65rem;
+  --brand-crest-star-top: 0.2rem;
+  --brand-crest-star-left: 0.35rem;
+  --brand-crest-star-size: 0.7rem;
+
+  --feedback-erreur-fond: rgb(248, 215, 218);
+  --feedback-erreur-bordure: rgb(220, 53, 69);
+  --feedback-erreur-bordure-douce: rgb(245, 198, 203);
+  --feedback-erreur-texte: rgb(114, 28, 36);
+  --feedback-succes-fond: rgb(212, 237, 218);
+  --feedback-succes-bordure: rgb(40, 167, 69);
+  --feedback-succes-bordure-douce: rgb(195, 230, 203);
+  --feedback-succes-texte: rgb(21, 87, 36);
+  --resultat-fond: var(--rouge);
+  --resultat-victoire-fond: var(--encre);
+  --resultat-texte-doux: rgba(255, 255, 255, 0.72);
+  --resultat-icone-fond: rgba(255, 255, 255, 0.16);
+  --resultat-titre-taille: clamp(2.5rem, 10vw, 4.5rem);
+  --resultat-score-taille: clamp(5rem, 20vw, 8rem);
+  --resultat-icone-diametre: 10rem;
+  --resultat-hauteur-min: 70svh;
+  --resultat-detail-question-size: 12px;
+  --resultat-detail-answer-size: 0.75em;
+
   --blanc-sur-couleur: #FFFFFF;
   --encre-sur-ocre: #15151B;
   /* Le focus doit se voir sur le jaune comme sur l'encre : le rouge de la
@@ -57,6 +87,10 @@
   --taille-titre-1: 26px;
   --taille-titre-2: 20px;
   --taille-titre-3: 17px;
+  --taille-enonce-question: 20px;
+  --taille-question-index: 18px;
+  --taille-categorie-partie: 12px;
+  --taille-score-libelle: 11px;
   --taille-corps: 17px;
   --taille-secondaire: 15px;
   --taille-etiquette: 13px;
@@ -104,6 +138,8 @@
   --espace-8: 56px;
   --espace-9: 64px;
   --espace-10: 72px;
+  --marge-enonce-haut: 30px;
+  --marge-enonce-bas: 40px;
  
 
   /* --- Rayons ----------------------------------------------------------- */

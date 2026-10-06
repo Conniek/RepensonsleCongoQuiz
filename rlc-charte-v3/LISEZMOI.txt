@@ -1,0 +1,59 @@
+CHARTE v3 - cette fois elle s'applique partout
+==============================================
+
+    cp -R chemin/vers/rlc-charte-v3/. .
+    rm -rf .next && npm run dev
+    npx tsc --noEmit
+
+POURQUOI RIEN NE CHANGEAIT
+
+  La charte n'etait posee que sur les jetons Tailwind (--fig-*). Or les
+  ecrans de l'application ne lisent pas ces jetons : ils lisent --fond,
+  --encre, --bleu, --ocre, definis dans jetons.css et utilises par
+  habillage.css. Ces valeurs-la etaient restees creme et bleu.
+
+  Cette fois, ce sont les jetons DE BASE qui portent la charte. Les NOMS ne
+  changent pas, donc habillage.css et tous les ecrans deja ecrits suivent
+  sans une ligne de plus :
+
+      --fond            #FAF7F0 creme   ->  #FFD700 jaune
+      --surface         #FFFFFF blanc   ->  #FFF4C7 creme
+      --encre           #1A1614         ->  #15151B
+      --bleu            #17497C         ->  #2D5BB9 bleu roi
+      --ocre            #E3A72F         ->  #F1C627
+      --rouge/terre     ...             ->  #CE2947
+      --vert            #2F5D45         ->  #08745B
+      --police-titre    system-ui       ->  Poppins
+
+AUTRES CORRECTIONS
+
+  - « +undefined points d'experience » sur le defi du jour : la RPC renvoie
+    recompense_xp, l'ecran lisait xp_bonus.
+  - Le splash avait sa propre palette, anterieure a la charte (bleu nuit,
+    photo du fleuve sous un voile bleu). Il lit maintenant les jetons.
+  - ThEME SOMBRE RETIRE. La charte est jaune et encre ; une inversion
+    automatique produisait une application qui ne lui ressemblait plus.
+    color-scheme passe a light, pour que le navigateur n'inverse pas non
+    plus les champs de formulaire. C'etait la carte T6 du backlog : elle est
+    tranchee, dis-moi si tu preferes l'inverse.
+
+VERIFICATIONS DE CONTRASTE
+    encre sur jaune        12,96      blanc sur bleu roi      6,00
+    encre sur creme        16,47      blanc sur rouge         5,21
+    texte discret/jaune     5,55      blanc sur vert          5,74
+    encre sur ocre         11,12      focus rouge sur jaune    3,71
+                                      focus rouge sur encre    3,50
+
+  Le focus est en rouge et non en encre : l'encre disparaitrait sur les
+  aplats sombres, et le jaune sur le fond.
+
+CRITERE DE REUSSITE
+    Toutes les pages ont un fond JAUNE, pas creme : /fr, /fr/quiz,
+    /fr/progression, /fr/profil, /fr/splash, /fr/design-system.
+    Le defi du jour affiche « +50 points d'experience ».
+
+RESTE A FAIRE
+    - le logo BrandWordmark n'est pose nulle part : dis-moi ou (splash seul,
+      ou aussi en en-tete d'accueil) ;
+    - 248 valeurs litterales restent hors de jetons.css, surtout dans
+      splash.css et offres.css. Le portage des ecrans les fera disparaitre.

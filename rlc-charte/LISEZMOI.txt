@@ -1,0 +1,60 @@
+CHARTE REPENSONS LE CONGO - design system 0.2.0
+===============================================
+
+    cp -R chemin/vers/rlc-charte/. .
+    rm -rf .next && npm run dev
+    npx tsc --noEmit
+
+CRITERE DE REUSSITE
+    /fr/design-system   8 teintes de la charte, 4 etiquettes, boutons encre
+                        et jaune, AnswerOption en vert et rouge.
+    /fr et /fr/quiz     tout est passe au jaune et a l'encre : fond jaune,
+                        cartes creme cerclees d'encre, carte de rang en encre
+                        a texte jaune.
+
+CE QUE J'AI VERIFIE DANS L'EXPORT FIGMA, ET CORRIGE
+
+  1. Blanc sur le bleu clair #40A8E8 : 2,63 contre 1. Tres loin du seuil AA
+     de 4,5. J'ai mis de l'encre (6,91). Les couleurs de texte sur aplat sont
+     desormais NOMMEES (--color-sur-bleu, --color-sur-rouge...), pour qu'on ne
+     choisisse plus du blanc au jugé.
+
+  2. Bebas Neue est importee depuis Google Fonts mais JAMAIS appliquee : la
+     regle .font-display de l'export renvoie vers Poppins. Une police
+     telechargee pour rien. Je ne l'ai pas reprise. Si tu veux les gros titres
+     facon Instagram, c'est une decision a prendre : Bebas est en capitales
+     uniquement, donc a reserver aux titres courts.
+
+  3. Les polices passaient par @import Google Fonts. Je les charge par
+     next/font : telechargement au build, service depuis ton domaine, rien a
+     declarer cote RGPD.
+
+  4. L'export declare --border: rgba(26,26,58,0.3) alors que l'encre vaut
+     #15151B. Deux bleus nuit differents dans la meme charte. J'ai aligne sur
+     l'encre.
+
+MESURES DE CONTRASTE (toutes >= 4,5 sauf mention)
+    encre sur jaune           12,96
+    encre sur carte creme     16,47
+    encre sur bleu clair       6,91
+    blanc sur rouge            5,21
+    blanc sur vert             5,74
+    jaune sur encre           12,96
+    texte discret sur jaune    5,55
+
+TROIS DECISIONS, DETAILLEES DANS ui/DECISIONS.md
+  - le texte sur le bleu de la charte est de l'encre, jamais du blanc ;
+  - les cartes claires portent un filet d'encre, parce que sur fond jaune
+    une carte creme ne se detache que de 1,3 contre 1 ;
+  - le rouge et le vert ne servent pas de fond aux cartes de categories :
+    ils demandent du texte clair, et six cartes bariolees se liraient mal.
+    Ils restent pour les etats juste / faux / alerte.
+
+CE QUI RESTE A FAIRE SUR LA MARQUE
+  - le logo : l'export le REDESSINE en CSS (un cercle avec une bande rouge
+    et une etoile). Mieux vaut utiliser le vrai fichier. Envoie-moi le logo
+    en SVG et je le pose a la place.
+  - la baseline officielle est « Idees, debats, histoire. » ; l'application
+    affiche encore « Un grand pays, mille histoires. » Dis-moi laquelle garder.
+  - les photos de categories gagneraient a passer en noir et blanc, comme sur
+    Instagram. Un filtre CSS suffit, aucune image a retoucher.

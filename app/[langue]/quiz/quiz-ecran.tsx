@@ -73,7 +73,7 @@ export default function QuizEcran({
   const { libres, plus, langues } = trierParFamille(vues);
 
   return (
-    <div className="pb-24">
+    <div className="mt-5 pb-24">
       <p className="text-xs font-bold uppercase tracking-widest opacity-60 m-0">
         {t.quizHub.surtitre}
       </p>
@@ -95,7 +95,7 @@ export default function QuizEcran({
           ) : (
             <Link
               href={`/${langue}/partie?categorie=${defi.categorie_id}&niveau=${defi.niveau}&defi=1`}
-              className="flex items-center gap-3 p-4 rounded-l no-underline bg-encre text-sur-encre shadow-flottante"
+              className="flex items-center gap-3 p-4 rounded no-underline bg-encre white-sur-bleu-profond shadow-flottante"
             >
               <span aria-hidden="true" className="text-2xl">⚡</span>
               <span className="flex-1">

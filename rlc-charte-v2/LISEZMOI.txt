@@ -1,0 +1,50 @@
+CHARTE v2 - correction d'apres tes maquettes (design system 0.2.1)
+==================================================================
+
+    cp -R chemin/vers/rlc-charte-v2/. .
+    rm -rf .next && npm run dev
+    npx tsc --noEmit
+
+CE QUE J'AVAIS MAL FAIT
+
+  J'avais reduit la palette a huit teintes de marque en ecartant les pastels.
+  Tes captures montrent exactement l'inverse : fond jaune, et cartes de
+  categories en six pastels (creme, bleu, rose, vert, violet, menthe).
+  Les valeurs viennent du champ cardColor de l'export, que j'avais manque :
+      #FDF0C8  #D6EBF5  #F5D8D0  #D6EDD6  #E8E0F5  #D6F0ED
+
+  J'avais aussi ajoute un filet d'encre d'office sur les cartes claires. Les
+  maquettes n'en ont pas : ce sont le rayon et l'ombre qui dessinent la carte.
+  Le filet reste disponible en option (outline).
+
+  Enfin la carte de rang de l'accueil est en BLEU ROI (#2D5BB9), pas en encre.
+
+LE LOGO
+
+  Nouveau composant ui/BrandWordmark.tsx, d'apres ta precision : Poppins,
+  -webkit-text-stroke 1px en encre, lettrage en capitales, baseline
+  « Idees. Debats. Histoire. » et ecusson au drapeau.
+
+  C'est du TEXTE, pas une image : net a toute taille, zero octet telecharge,
+  lisible par les moteurs. Si -webkit-text-stroke n'est pas compris, le texte
+  s'affiche plein au lieu de disparaitre.
+
+  Il n'est pas encore pose sur le splash : dis-moi ou tu le veux (splash seul,
+  ou aussi en en-tete d'accueil) et je le branche.
+
+MESURES DE CONTRASTE DES PASTELS (texte en encre)
+    creme 16,00   bleu 14,77   rose 13,52
+    vert  14,67   violet 14,21  menthe 15,19
+  Tous tres au-dessus du seuil. En revanche ils ne se distinguent du fond
+  jaune que de 1,04 a 1,23 : d'ou l'ombre portee, qui n'est pas decorative.
+
+CRITERE DE REUSSITE
+    /fr/design-system   6 pastels + 7 aplats, le logo en haut de page
+    /fr                 carte de rang BLEU ROI, cartes de categories pastel
+    /fr/quiz            defi en encre, cartes pastel, etiquette Plus bleu roi
+
+RESTE A TRANCHER
+    - la baseline : « Idees, debats, histoire. » (identite) ou « Un grand
+      pays, mille histoires. » (application) ?
+    - les photos de categories en noir et blanc comme sur Instagram ?
+      Un filtre CSS suffit, aucune image a retoucher.

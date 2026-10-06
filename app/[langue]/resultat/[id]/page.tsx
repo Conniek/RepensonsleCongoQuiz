@@ -33,26 +33,59 @@ export default async function PageResultat({
         .eq("categorie_id", partie.categorie_id)
         .eq("niveau", partie.niveau).maybeSingle(),
     ]);
+  const reponsesPartie = (reponses ?? []) as {
+    position: number;
+    correcte: boolean;
+    points: number;
+    question_id: string;
+  }[];
 
   // Les énoncés, pour que le récapitulatif dise de quelle question il parle.
-  const idsQuestions = (reponses ?? []).map((r) => r.question_id);
+  const idsQuestions = reponsesPartie.map((r) => r.question_id);
   const { data: enonces } = idsQuestions.length
-    ? await supabase.from("question_publique").select("id, enonce")
+    ? await supabase.from("question_publique").select("id, enonce, reponses")
         .eq("langue", langue).in("id", idsQuestions)
-    : { data: [] as { id: string; enonce: string }[] };
+    : { data: [] as { id: string; enonce: string; reponses: unknown }[] };
+  const { data: corrections, error: erreurCorrections } = await supabase
+    .rpc("resultat_reponses_correctes", { p_partie_id: id });
+  let correctionsPartie = (corrections ?? []) as {
+    position: number;
+    bonne_reponse: number;
+  }[];
+  if (erreurCorrections) {
+    if (erreurCorrections.code !== "PGRST202") throw erreurCorrections;
+    const { data: erreurs, error: erreurHistorique } = await supabase.rpc(
+      "mes_erreurs",
+      { p_langue: langue, p_limite: 10000 },
+    );
+    if (erreurHistorique) throw erreurHistorique;
+    const erreursPartie = (erreurs ?? []) as {
+      question_id: string;
+      bonne_reponse: number;
+    }[];
+    correctionsPartie = reponsesPartie.flatMap((r) => {
+      const erreur = erreursPartie.find((item) => item.question_id === r.question_id);
+      return !r.correcte && erreur
+        ? [{ position: r.position, bonne_reponse: erreur.bonne_reponse }]
+        : [];
+    });
+  }
 
   const enonceDe = (qid: string) =>
     (enonces ?? []).find((q) => q.id === qid)?.enonce ?? "";
+  const bonneReponseDe = (position: number) => {
+    const correction = correctionsPartie.find((r) => r.position === position);
+    const question = (enonces ?? []).find(
+      (q) => q.id === reponsesPartie.find((r) => r.position === position)?.question_id,
+    );
+    const options = question?.reponses;
+    return Array.isArray(options) && typeof correction?.bonne_reponse === "number"
+      ? options[correction.bonne_reponse]
+      : null;
+  };
 
   const gagnee = partie.points >= 900 && partie.bonnes >= 5;
   const etoiles = maitrise?.etoiles ?? 0;
-
-  /* Décomposition de l'expérience. Le TOTAL affiché reste partie.xp_gagne,
-     écrit par terminer_partie : les lignes n'expliquent qu'un chiffre déjà
-     décidé côté serveur, elles ne le recalculent pas. */
-  const xpBase = Math.floor(partie.points / 10);
-  const xpVictoire = gagnee ? 40 : 0;
-  const xpDefi = gagnee && partie.mode === "defi_du_jour" ? 50 : 0;
 
   /* Deux étoiles ouvrent le niveau suivant : c'est le moment où la personne
      est le plus disposée à enchaîner, donc celui où on le lui propose.
@@ -67,49 +100,84 @@ export default async function PageResultat({
 
   return (
     <>
-      <h1 tabIndex={-1}>{gagnee ? t.resultat.remportee : t.resultat.terminee}</h1>
-
-      <section aria-labelledby="titre-score">
-        <h2 id="titre-score">{t.resultat.titreScore}</h2>
-        <dl>
-          <dt>{t.resultat.points}</dt>
-          <dd>{t.resultat.pointsValeur(partie.points)}</dd>
-          <dt>{t.resultat.bonnesReponses}</dt>
-          <dd>{t.resultat.bonnesValeur(partie.bonnes, partie.deck.length)}</dd>
-          <dt>{t.resultat.experience}</dt>
-          <dd>{t.resultat.experienceValeur(partie.xp_gagne)}</dd>
-          <dt>{t.resultat.conditionVictoire}</dt>
-          <dd>
-            {t.resultat.conditionTexte}{" "}
-            {gagnee ? t.resultat.conditionAtteinte : t.resultat.conditionNonAtteinte}
-          </dd>
-        </dl>
-        {partie.deck_complete && <p className="note">{t.resultat.deckComplete}</p>}
-        {!partie.chrono_actif && <p className="note">{t.resultat.sansChrono}</p>}
+      <section
+        className={`resultat-hero${gagnee ? " resultat-hero--victoire" : ""}`}
+        aria-labelledby="titre-resultat"
+      >
+        <div className="resultat-hero-contenu">
+          <span className="resultat-hero-icone" aria-hidden="true">
+            {gagnee ? "🏆" : "💪"}
+          </span>
+          <h1 id="titre-resultat" tabIndex={-1}>
+            {gagnee
+              ? t.resultat.heroTitreGagnee
+              : t.resultat.heroTitreEncouragement}
+          </h1>
+          <p className="resultat-hero-message">{gagnee
+            ? t.resultat.heroMessageGagnee(libelle)
+            : t.resultat.heroMessageEncouragement}
+          </p>
+          <p className="resultat-hero-libelle">{t.resultat.libelleScoreHero}</p>
+          <p className="resultat-hero-score">{partie.points}</p>
+          <p className="resultat-hero-bonnes">
+            {t.resultat.bonnesReponsesHero(partie.bonnes, partie.deck.length)}
+          </p>
+          {gagnee
+            ? (
+              <div className="resultat-hero-etoile-groupe">
+                <p className="etoile-gagnee">{t.resultat.etoileGagnee}</p>
+                <div className="resultat-hero-etoiles" aria-hidden="true">
+                  {[0, 1].map((index) => (
+                    <span
+                      key={index}
+                      className={index < etoiles ? "gagnee" : "etoile-a-gagner"}
+                    >
+                      ⭐
+                    </span>
+                  ))}
+                </div>
+                <p className="resultat-hero-etoiles-niveau">
+                  {t.resultat.etoilesNiveau(etoiles)}
+                </p>
+                {etoiles >= 2 && !niveauSuivant && (
+                  <p className="resultat-hero-note">{t.resultat.toutFait}</p>
+                )}
+              </div>
+            )
+            : <p className="resultat-hero-objectif">
+                <strong>{t.resultat.objectif}</strong> {t.resultat.conditionTexte}
+              </p>}
+          {partie.deck_complete && <p className="resultat-hero-note">{t.resultat.deckComplete}</p>}
+          {!partie.chrono_actif && <p className="resultat-hero-note">{t.resultat.sansChrono}</p>}
+        </div>
       </section>
 
       {gagnes.length > 0 && (
-        <section aria-labelledby="titre-badges">
+        <section
+          aria-labelledby="titre-badges"
+          className={gagnee ? "resultat-apres-victoire" : undefined}
+        >
           <h2 id="titre-badges">{t.badges.nouveaux(gagnes.length)}</h2>
           <ul>{gagnes.map((b) => <li key={b}><strong>{b}</strong></li>)}</ul>
         </section>
       )}
 
-      <section aria-labelledby="titre-etoile">
-        <h2 id="titre-etoile">{t.resultat.titreEtoile}</h2>
-        {gagnee ? (
-          <p className="etoile-gagnee">{t.resultat.etoileGagnee}</p>
-        ) : (
+      {!gagnee && (
+        <section aria-labelledby="titre-etoile">
+          <h2 id="titre-etoile">{t.resultat.titreEtoile}</h2>
           <p>{t.resultat.pasDEtoile}</p>
-        )}
-        <p>{t.resultat.etoilesNiveau(etoiles)}</p>
-        {etoiles >= 2 && !niveauSuivant && (
-          <p className="note">{t.resultat.toutFait}</p>
-        )}
-      </section>
+          <p>{t.resultat.etoilesNiveau(etoiles)}</p>
+          {etoiles >= 2 && !niveauSuivant && (
+            <p className="note">{t.resultat.toutFait}</p>
+          )}
+        </section>
+      )}
 
       {niveauOuvert && (
-        <section aria-labelledby="titre-niveau-ouvert" className="bloc-progression">
+        <section
+          aria-labelledby="titre-niveau-ouvert"
+          className={`bloc-progression${gagnee && gagnes.length === 0 ? " resultat-apres-victoire" : ""}`}
+        >
           <h2 id="titre-niveau-ouvert">{t.resultat.niveauOuvertTitre}</h2>
           <p>{t.resultat.niveauOuvertTexte(t.niveaux[niveauSuivant])}</p>
           <p>
@@ -121,51 +189,40 @@ export default async function PageResultat({
         </section>
       )}
 
-      <section aria-labelledby="titre-xp">
-        <h2 id="titre-xp">{t.resultat.titreXp}</h2>
-        <table className="detail-xp">
-          <tbody>
-            <tr>
-              <th scope="row">{t.resultat.xpBase}</th>
-              <td>{xpBase}</td>
-            </tr>
-            {xpVictoire > 0 && (
-              <tr>
-                <th scope="row">{t.resultat.xpVictoire}</th>
-                <td>{xpVictoire}</td>
-              </tr>
-            )}
-            {xpDefi > 0 && (
-              <tr>
-                <th scope="row">{t.resultat.xpDefi}</th>
-                <td>{xpDefi}</td>
-              </tr>
-            )}
-          </tbody>
-          <tfoot>
-            <tr>
-              <th scope="row">{t.resultat.xpTotal}</th>
-              <td>{partie.xp_gagne}</td>
-            </tr>
-          </tfoot>
-        </table>
-      </section>
-
-      <section aria-labelledby="titre-detail">
+      <section
+        aria-labelledby="titre-detail"
+        className={gagnee && gagnes.length === 0 && !niveauOuvert
+          ? "resultat-apres-victoire"
+          : undefined}
+      >
         <h2 id="titre-detail">{t.resultat.titreDetail}</h2>
-        <ol>
-          {(reponses ?? []).map((r) => (
-            <li key={r.position} className={r.correcte ? "reponse-juste" : "reponse-fausse"}>
-              <p className="recap-enonce">{enonceDe(r.question_id)}</p>
-              <p className="recap-bilan">
-                {t.resultat.ligneReponse(r.position + 1, r.correcte, r.points)}
-              </p>
-            </li>
-          ))}
+        <ol className="liste-resultat-reponses">
+          {reponsesPartie.map((r) => {
+            const bonneReponse = r.correcte ? null : bonneReponseDe(r.position);
+            return (
+              <li key={r.position} className={r.correcte ? "reponse-juste" : "reponse-fausse"}>
+                <span className="recap-etat" aria-hidden="true">
+                  {r.correcte ? "✓" : "×"}
+                </span>
+                <div className="recap-contenu">
+                  <p className="recap-enonce">{enonceDe(r.question_id)}</p>
+                  {bonneReponse && (
+                    <p className="recap-correction">
+                      <span aria-hidden="true">→ </span>
+                      {bonneReponse}
+                    </p>
+                  )}
+                </div>
+                <span className="visuellement-masque">
+                  {t.resultat.statutReponse(r.correcte)}
+                </span>
+              </li>
+            );
+          })}
         </ol>
       </section>
 
-      <section aria-labelledby="titre-suite">
+      <section aria-labelledby="titre-suite" className="visuellement-masque">
         <h2 id="titre-suite">{t.resultat.titreSuite}</h2>
         <ul>
           <li>
@@ -184,6 +241,22 @@ export default async function PageResultat({
           <li><Link href={`/${langue}`}>{t.commun.retourAccueil}</Link></li>
         </ul>
       </section>
+
+      <nav className="resultat-actions" aria-label={t.resultat.titreSuite}>
+        <Link
+          className="action action-bloc"
+          href={gagnee
+            ? `/${langue}/profil`
+            : `/${langue}/partie?categorie=${partie.categorie_id}&niveau=${niveau}`}
+        >
+          {gagnee
+            ? t.resultat.voirProgression
+            : t.resultat.rejouer(t.niveaux[niveau])}
+        </Link>
+        <Link className="action action-bloc resultat-action-accueil" href={`/${langue}`}>
+          {t.commun.retourAccueil}
+        </Link>
+      </nav>
     </>
   );
 }
