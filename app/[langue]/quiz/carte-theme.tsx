@@ -108,7 +108,7 @@ export function CarteTheme({
 
         {verrouille && (
           <p className="absolute top-2 right-2 m-0">
-            <Tag tone={estPlus ? "bleu-roi" : "jaune"} icone="🔒">
+            <Tag tone={estPlus ? "gris" : "jaune"} icone="🔒">
               {offre}
             </Tag>
           </p>
@@ -121,6 +121,7 @@ export function CarteTheme({
               small
               full
               arrow
+              className={estPlus ? "!bg-discret !text-white !border-discret" : ""}
             >
               {t.quizHub.debloquer}
               <span className="visuellement-masque"> {vue.libelle}</span>

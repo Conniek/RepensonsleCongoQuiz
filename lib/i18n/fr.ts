@@ -302,7 +302,7 @@ quizHub: {
 
   splash: {
     sousTitre: "Jouer · apprendre · célébrer le Congo",
-    signatureMarque: "Idées. Débats. Histoire.",
+    signatureMarque: "Le quiz",
     paragraphe:
       "Apprenez la République démocratique du Congo à travers 1 445 questions sourcées : histoire, géographie, musique, gastronomie, langues, nature, économie et bien plus. Chaque réponse inclut une explication et un lien vers sa source.",
     cta: "Commencer le quiz",
@@ -331,34 +331,24 @@ quizHub: {
         sousTitre: "Jouer · apprendre · célébrer le Congo",
         texte:
           "Découvrez la République démocratique du Congo à travers ses histoires, ses cultures et ses paysages.",
-        points: ["Histoire", "Géographie", "Culture", "Nature", "Musique"],
       },
       {
-        titre: "Apprendre en jouant",
-        sousTitre: "Chaque réponse expliquée et sourcée.",
+        titre: "1. Découvre",
+        sousTitre: "Le Congo autrement",
         texte:
-          "Après chaque question, découvrez l'explication complète et la source primaire. Quiz ou cours ? Les deux à la fois.",
-        points: ["Sources vérifiées", "Explications", "Liens directs", "12 catégories"],
-        icone: "📚",
-        iconesPoints: ["📚", "💡", "🔗", "🌍"],
+          "Des questions variées sur l'histoire, la culture, la société d'aujourd'hui.",
       },
       {
-        titre: "Progresser chaque jour",
-        sousTitre: "Étoiles, niveaux, classement mondial.",
+        titre: "2. Apprends",
+        sousTitre: "Des explications claires",
         texte:
-          "Défiez-vous chaque jour, montez de niveau et grimpez dans le classement. 5 rangs, de Curieux du Congo à Mémoire du Congo.",
-        points: ["Six étoiles par thème", "Badges", "Séries quotidiennes", "Classement"],
-        icone: "🏆",
-        iconesPoints: ["⭐", "🏅", "🔥", "🏆"],
+          "Après chaque réponse, découvre une explication simple pour mieux comprendre.",
       },
       {
-        titre: "Quiz spéciaux & Langues",
-        sousTitre: "Multijoueur et parcours linguistiques.",
+        titre: "3. Célèbre",
+        sousTitre: "Tes connaissances",
         texte:
-          "Accédez à des quiz événementiels exclusifs et au parcours complet d'apprentissage du Lingala, enregistré par des locuteurs natifs.",
-        points: ["Quiz Élections", "Quiz Indépendance", "Parcours lingala", "Audio natif"],
-        icone: "🔤",
-        iconesPoints: ["📦", "⭐", "🔤", "🎧"],
+          "Cumule des points, débloque des badges et vois ta progression !",
       },
     ],
   },

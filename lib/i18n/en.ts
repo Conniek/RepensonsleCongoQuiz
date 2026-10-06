@@ -293,7 +293,7 @@ quizHub: {
 
   splash: {
     sousTitre: "Play · learn · celebrate the Congo",
-    signatureMarque: "Ideas. Debates. History.",
+    signatureMarque: "The quiz",
     paragraphe:
       "Discover the Democratic Republic of the Congo through 1,445 sourced questions: history, geography, music, food, languages, nature, economy and much more. Every answer comes with an explanation and a link to its source.",
     cta: "Start the quiz",
@@ -322,34 +322,24 @@ quizHub: {
         sousTitre: "One vast country, a thousand stories.",
         texte:
           "1,445 sourced questions about the Democratic Republic of the Congo: history, geography, culture, nature and much more.",
-        points: ["History", "Geography", "Culture", "Nature", "Music"],
       },
       {
         titre: "Learn while you play",
         sousTitre: "Every answer explained and sourced.",
         texte:
           "After each question you get the full explanation and a link to the source. A quiz and a lesson at once.",
-        points: ["Verified sources", "Explanations", "Direct links", "12 categories"],
-        icone: "📚",
-        iconesPoints: ["📚", "💡", "🔗", "🌍"],
       },
       {
         titre: "Progress every day",
         sousTitre: "Stars, levels, leaderboard.",
         texte:
           "Take the daily challenge, earn stars and climb the leaderboard. Five ranks, from Curious about Congo to Memory of Congo.",
-        points: ["Six stars per topic", "Badges", "Daily streaks", "Leaderboard"],
-        icone: "🏆",
-        iconesPoints: ["⭐", "🏅", "🔥", "🏆"],
       },
       {
         titre: "Special quizzes & languages",
         sousTitre: "Multiplayer and language paths.",
         texte:
           "Event quizzes and the full Lingala learning path, recorded by native speakers.",
-        points: ["Elections quiz", "Independence quiz", "Lingala path", "Native audio"],
-        icone: "🔤",
-        iconesPoints: ["📦", "⭐", "🔤", "🎧"],
       },
     ],
   },

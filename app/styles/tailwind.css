@@ -44,7 +44,7 @@
   --color-pastel-vert: var(--fig-pastel-vert);
   --color-pastel-violet: var(--fig-pastel-violet);
   --color-pastel-menthe: var(--fig-pastel-menthe);
-  --color-discret: var(--fig-texte-discret);
+  --color-discret: var(--encre-discrete);
   --color-bordure: var(--fig-bordure);
 
   /* Textes posés sur un aplat. Les nommer évite de choisir du blanc au

@@ -38,6 +38,19 @@
   --vert: #08745B;              /* blanc dessus : 5,74                  */
   --rouge: #CE2947;             /* blanc dessus : 5,21                  */
 
+  --fond-onboarding: #151519;
+  --surface-onboarding: #303035;
+  --surface-douce-onboarding: #242428;
+  --bordure-onboarding: #58585e;
+  --texte-onboarding: #F7F7F8;
+  --texte-discret-onboarding: #A4A4AA;
+  --surface-embleme-onboarding: #38383D;
+  --texte-placeholder-onboarding: #85858B;
+  --succes-onboarding: #84D6A0;
+  --erreur-onboarding: #FF8585;
+  --desactive-onboarding: #85858A;
+  --rayon-image-carte: 63px;
+
   --brand-navy: var(--encre);
   --brand-blue: var(--bleu);
   --brand-red: var(--rouge);

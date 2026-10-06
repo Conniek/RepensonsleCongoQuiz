@@ -25,9 +25,6 @@ export default function Carrousel({
     titre: string;
     sousTitre: string;
     texte: string;
-    points: readonly string[];
-    icone?: string;
-    iconesPoints?: readonly string[];
   }[];
 }) {
   const t = dictionnaire(langue);
@@ -144,22 +141,17 @@ export default function Carrousel({
           </>
         ) : (
           <>
-            <div className="splash-slide-icone" aria-hidden="true">
-              {slide.icone}
+            <div className="brand-mark splash-brand-mark splash-slide-brand" aria-hidden="true">
+              <div className="brand-mark__crest"><span /></div>
+              <div className="splash-marque-texte">
+                <p className="brand-mark__name">Repensons<br />le Congo</p>
+                <p className="splash-signature">{t.splash.signatureMarque}</p>
+              </div>
             </div>
             <h1 className="splash-titre">{slide.titre}</h1>
             <p className="splash-sous-titre">{slide.sousTitre}</p>
 
             <p className="splash-texte">{slide.texte}</p>
-
-            <ul className="splash-points">
-              {slide.points.map((point, index) => (
-                <li key={point}>
-                  <span aria-hidden="true">{slide.iconesPoints?.[index]}</span>
-                  <span>{point}</span>
-                </li>
-              ))}
-            </ul>
           </>
         )}
       </div>

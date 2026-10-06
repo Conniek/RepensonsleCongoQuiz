@@ -498,7 +498,7 @@ main > section { margin-bottom: var(--espace-6); }
 }
 
 .shadow-carte  img {
-  border-bottom-right-radius: 63px;
+  border-bottom-right-radius: var(--rayon-image-carte);
     border-bottom-left-radius: 0;
 }
 
@@ -1537,9 +1537,9 @@ table.classement tr.moi { background: var(--surface-douce); font-weight: var(--g
 .brand-mark {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: var(--espace-2);
-  margin: 0 auto var(--espace-3);
+  margin: 0 0 var(--espace-3);
 }
 .brand-mark__name {
   margin: 0;

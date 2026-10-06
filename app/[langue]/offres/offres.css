@@ -8,12 +8,14 @@
 }
 
 .offres-brand {
-  flex-direction: column;
+  justify-content: flex-start;
   gap: var(--espace-4);
-  margin: 0 auto var(--espace-4);
+  margin: 0 0 var(--espace-4);
+  text-align: left;
 }
 
 .offres-brand .brand-mark__name {
+  min-width: 0;
   max-width: 100%;
   font-family: var(--police-titre);
   font-size: clamp(var(--taille-titre-1), 9vw, calc(var(--taille-affiche) * 1.5));
@@ -22,7 +24,7 @@
   letter-spacing: -0.03em;
   color: var(--blanc);
   -webkit-text-stroke-width: 0;
-  text-align: center;
+  text-align: left;
   text-transform: none;
 }
 

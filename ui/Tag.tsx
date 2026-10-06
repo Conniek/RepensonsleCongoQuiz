@@ -4,7 +4,8 @@ import type { ReactNode } from "react";
  *  jaune, et son inverse cerclée d'encre. */
 const TONS = {
   encre: "bg-encre text-sur-encre",
-  "bleu-roi": "bg-bleu-roi text-sur-bleu-profond",
+  "bleu-roi": "bg-bleu-roi text-white",
+  gris: "bg-discret text-white",
   jaune: "bg-jaune text-encre border border-encre",
   rouge: "bg-rouge text-sur-rouge",
   contour: "bg-transparent text-encre border border-encre",
