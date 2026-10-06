@@ -74,9 +74,10 @@ export default function QuizEcran({
 
   return (
     <div className="mt-5 pb-24">
-      <p className="text-xs font-bold uppercase tracking-widest opacity-60 m-0">
-        {t.quizHub.surtitre}
-      </p>
+      <div className="brand-mark">
+        <div className="brand-mark__crest" aria-hidden="true"><span /></div>
+        <p className="brand-mark__name">Repensons<br />le Congo</p>
+      </div>
       <h1 className="mt-1">{t.quizHub.titre}</h1>
 
       {/* Défi du jour */}

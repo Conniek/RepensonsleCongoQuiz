@@ -50,8 +50,6 @@ quizHub: {
     langues: "Langues",
     languesTexte:
       "Apprends le lingala niveau par niveau, avec l'audio enregistré par des locuteurs natifs.",
-    // --- Écran porté du prototype -------------------------------------
-    surtitre: "République démocratique du Congo",
     questions: (n: number) => `${n} questions`,
     avancement: (pct: number) => `${pct} % du thème`,
     etoilesSur: (n: number, max: number) => `${n} ${pluriel(n, "étoile")} sur ${max}`,

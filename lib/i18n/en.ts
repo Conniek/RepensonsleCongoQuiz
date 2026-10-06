@@ -44,7 +44,6 @@ quizHub: {
     langues: "Languages",
     languesTexte:
       "Learn Lingala level by level, with audio recorded by native speakers.",
-    surtitre: "Democratic Republic of the Congo",
     questions: (n: number) => `${n} questions`,
     avancement: (pct: number) => `${pct}% of the topic`,
     etoilesSur: (n: number, max: number) => `${n} star${n > 1 ? "s" : ""} out of ${max}`,
