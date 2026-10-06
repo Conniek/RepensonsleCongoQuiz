@@ -67,16 +67,21 @@ quizHub: {
   },
 
   pageProgression: {
-    titre: "Ta progression",
+    titre: "Progression",
+    invite: "Invité",
+    salutation: (pseudo: string) => `Bravo ${pseudo}, voici ta progression`,
     ajouterPseudo: "Ajouter un pseudo",
-    thematiques: "Thématiques jouées",
+    thematiques: "Par thème",
     aucuneThematique: "Aucune thématique jouée pour le moment.",
     sauvegardeTitre: "Sauvegarder",
     sauvegardeTexte: "Crée un compte pour sauvegarder ta progression.",
     sauvegardeAction: "Créer un compte",
     indicateurs: "Indicateurs",
     kpiQuiz: "Quiz terminés",
+    kpiBonnes: "Bonnes réponses",
     kpiSerie: "Série en cours",
+    kpiRecordSerie: "Meilleure série",
+    jours: (n: number) => `${n} j`,
     kpiTheme: "Thème favori",
     kpiEtoiles: "Étoiles",
     kpiEtoilesValeur: (total: number, max: number) => `${total} sur ${max}`,
@@ -92,6 +97,10 @@ quizHub: {
 
   pageProfil: {
     titre: "Ton profil",
+    resumeLabel: "Résumé du profil",
+    invite: "Invité",
+    sessionInvite: "Session invité",
+    xpTotal: "XP total",
     sauvegardeTitre: "Sauvegarder",
     sauvegardeAction: "Créer un compte",
     monCompte: "Mon compte",
@@ -104,6 +113,7 @@ quizHub: {
     paysNonRenseigne: "Non renseigné",
     paysEnregistre: "Pays enregistré.",
     langueDefaut: "Langue par défaut",
+    langueErreur: (message: string) => `La langue n’a pas pu être enregistrée : ${message}`,
     enregistrer: "Enregistrer",
     whatsapp: "Nous contacter sur WhatsApp",
     nouvelleFenetre: "(nouvelle fenêtre)",
@@ -281,6 +291,9 @@ quizHub: {
     colNiveau: "Niveau",
     colScore: "Score",
     colResultat: "Résultat",
+    points: (points: number) => `${points} pts`,
+    resume: (niveau: string, bonnes: number, total: number, date: string) =>
+      `${niveau} · ${bonnes}/${total} · ${date}`,
     score: (points: number, bonnes: number, total: number) =>
       `${points} points · ${bonnes} ${pluriel(bonnes, "bonne")} sur ${total}`,
     gagnee: "Gagnée",
@@ -288,7 +301,8 @@ quizHub: {
   },
 
   splash: {
-    sousTitre: "Un grand pays, mille histoires.",
+    sousTitre: "Jouer · apprendre · célébrer le Congo",
+    signatureMarque: "Idées. Débats. Histoire.",
     paragraphe:
       "Apprenez la République démocratique du Congo à travers 1 445 questions sourcées : histoire, géographie, musique, gastronomie, langues, nature, économie et bien plus. Chaque réponse inclut une explication et un lien vers sa source.",
     cta: "Commencer le quiz",
@@ -297,6 +311,7 @@ quizHub: {
     categories: {
       histoire: "Histoire",
       geographie: "Géographie",
+      culture: "Culture",
       musique: "Musique",
       nature: "Nature",
       economie: "Économie et plus",
@@ -304,34 +319,46 @@ quizHub: {
 
     // Carrousel d'introduction.
     region: "Carrousel de présentation",
-    passer: "Passer",
+    passer: "Passer →",
     suivant: "Suivant",
     precedent: "Précédent",
     diapositive: "diapositive",
     positionSlide: (n: number, total: number) => `${n} sur ${total}`,
     allerSlide: (n: number) => `Aller à la diapositive ${n}`,
     slides: [
-
+      {
+        titre: "Repensons le Congo",
+        sousTitre: "Jouer · apprendre · célébrer le Congo",
+        texte:
+          "Découvrez la République démocratique du Congo à travers ses histoires, ses cultures et ses paysages.",
+        points: ["Histoire", "Géographie", "Culture", "Nature", "Musique"],
+      },
       {
         titre: "Apprendre en jouant",
         sousTitre: "Chaque réponse expliquée et sourcée.",
         texte:
-          "1 445 questions sourcées sur la République démocratique du Congo : histoire, géographie, culture, nature et bien plus.",
+          "Après chaque question, découvrez l'explication complète et la source primaire. Quiz ou cours ? Les deux à la fois.",
         points: ["Sources vérifiées", "Explications", "Liens directs", "12 catégories"],
+        icone: "📚",
+        iconesPoints: ["📚", "💡", "🔗", "🌍"],
       },
       {
         titre: "Progresser chaque jour",
-        sousTitre: "Étoiles, niveaux, classement.",
+        sousTitre: "Étoiles, niveaux, classement mondial.",
         texte:
-          "Relève le défi du jour, gagne des étoiles et grimpe au classement. Cinq rangs, de Curieux du Congo à Mémoire du Congo.",
+          "Défiez-vous chaque jour, montez de niveau et grimpez dans le classement. 5 rangs, de Curieux du Congo à Mémoire du Congo.",
         points: ["Six étoiles par thème", "Badges", "Séries quotidiennes", "Classement"],
+        icone: "🏆",
+        iconesPoints: ["⭐", "🏅", "🔥", "🏆"],
       },
       {
-        titre: "Quiz spéciaux et langues",
-        sousTitre: "Des contenus qui vont plus loin.",
+        titre: "Quiz spéciaux & Langues",
+        sousTitre: "Multijoueur et parcours linguistiques.",
         texte:
-          "Des quiz événementiels et le parcours complet d'apprentissage du lingala, enregistré par des locuteurs natifs.",
+          "Accédez à des quiz événementiels exclusifs et au parcours complet d'apprentissage du Lingala, enregistré par des locuteurs natifs.",
         points: ["Quiz Élections", "Quiz Indépendance", "Parcours lingala", "Audio natif"],
+        icone: "🔤",
+        iconesPoints: ["📦", "⭐", "🔤", "🎧"],
       },
     ],
   },
@@ -910,37 +937,43 @@ quizHub: {
   offres: {
     titre: "Trois façons d’apprendre",
     intro:
-      "Le quiz reste gratuit. Les offres ajoutent du contenu, elles ne verrouillent rien.",
+      "La base gratuite reste gratuite pour toujours. Les offres débloquent du contenu supplémentaire.",
     independantes:
       "Plus et Parcours de langue sont indépendants : chacun s’achète seul.",
 
-    gratuitCategorie: "Culture générale",
-    gratuitEtiquette: "Gratuit",
-    gratuitTitre: "Quiz général RDC",
-    gratuitTexte: (questions: number, categories: number) =>
-      `Les ${questions} questions et les ${categories} catégories restent accessibles gratuitement : histoire, géographie, musique, personnages, institutions, langues, gastronomie, économie, nature et plus encore.`,
-    gratuitPoint1: "Facile · Moyen · Difficile",
-    gratuitPoint2: "Progression, expérience, badges et défi quotidien",
-    gratuitPoint3: "Questions illustrées et explications sourcées",
-    gratuitPublicite: "Financé par la publicité. Les offres payantes la retirent.",
+    gratuitEtiquette: "Actuel",
+    gratuitTitre: "Gratuit",
+    gratuitSousTitre: "Pour toujours",
+    gratuitAvantages: (questions: number, categories: number) => [
+      `${questions.toLocaleString("fr-FR")} questions sourcées`,
+      `${categories} catégories thématiques`,
+      "Progression, XP et badges",
+      "Défi du jour",
+      "Classement mondial",
+      "Séries quotidiennes",
+    ],
 
-    plusCategorie: "Repensons le Congo Plus",
-    plusEtiquette: "Nouveau",
-    plusTitre: "Le Congo ne s’arrête pas au quiz.",
-    plusTexte:
-      "Débloque des quiz exclusifs sur les grandes figures, les histoires méconnues et les régions de la RDC.",
-    plusPoint1: "Des sujets qu’on connaît… beaucoup moins qu’on ne le croit.",
-    plusPoint2: "Sans aucune publicité.",
+    plusCategorie: "Quiz spéciaux et sans pub",
+    plusEtiquette: "Recommandé",
+    plusTitre: "Repensons le Congo Plus",
+    plusAvantages: [
+      "Quiz spéciaux (Élections, Indépendance…)",
+      "Quiz événementiels exclusifs",
+      "Suppression de la publicité",
+      "Tout le contenu gratuit inclus",
+    ],
     plusPrix: "15,99 € à vie",
     plusPrixDetail: "ou 0,99 € par quiz spécial, à l’unité",
     plusAction: "Découvrir Plus",
 
-    langueCategorie: "Parcours de langue",
-    langueTitre: "Parle la langue de tes parents.",
-    langueTexte:
-      "Un parcours complet en cinq niveaux, des salutations à la conversation courante, avec l’audio enregistré par des locuteurs natifs.",
-    langueDisponible: "Lingala",
-    langueBientot: (langue: string) => `${langue} · bientôt`,
+    langueTitre: "Parcours Lingala",
+    langueCategorie: "Langue nationale · 5 niveaux",
+    langueAvantages: [
+      "Parcours complet en 5 niveaux",
+      "Audio enregistré par des locuteurs natifs",
+      "Exercices de prononciation",
+      "Vocabulaire et grammaire",
+    ],
     languePrix: "19,99 € à vie",
     languePrixDetail: "ou 4,99 € par mois · achat unique, sans renouvellement",
     langueAction: "Commencer le lingala",

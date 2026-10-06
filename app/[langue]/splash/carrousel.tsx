@@ -26,6 +26,8 @@ export default function Carrousel({
     sousTitre: string;
     texte: string;
     points: readonly string[];
+    icone?: string;
+    iconesPoints?: readonly string[];
   }[];
 }) {
   const t = dictionnaire(langue);
@@ -35,6 +37,7 @@ export default function Carrousel({
   const regionRef = useRef<HTMLDivElement>(null);
 
   const dernier = position === slides.length - 1;
+  const couverture = position === 0;
   const destination = premiereVisite ? `/${langue}/onboarding` : `/${langue}`;
 
   function allerA(index: number) {
@@ -97,25 +100,68 @@ export default function Carrousel({
       </div>
 
       <div
-        className="splash-slide"
+        className={`splash-slide${couverture ? " splash-slide--couverture" : ""}`}
         role="group"
         aria-roledescription={t.splash.diapositive}
         aria-label={t.splash.positionSlide(position + 1, slides.length)}
       >
-        <h1 className="splash-titre">{slide.titre}</h1>
-        <p className="splash-sous-titre">{slide.sousTitre}</p>
+        {couverture ? (
+          <>
+            <div className="splash-embleme" aria-hidden="true">
+              <span className="splash-embleme-feuille splash-embleme-feuille--gauche">🌿</span>
+              <div className="splash-embleme-drapeau">
+                <span className="splash-embleme-etoile">★</span>
+                <span className="splash-embleme-personnage">🤴🏿</span>
+              </div>
+              <span className="splash-embleme-feuille splash-embleme-feuille--droite">🌿</span>
+            </div>
 
-        <div className="splash-filet" aria-hidden="true">
-          <span /><span /><span />
-        </div>
+            <div className="splash-marque">
+              <div className="brand-mark splash-brand-mark">
+                <div className="brand-mark__crest" aria-hidden="true"><span /></div>
+                <div className="splash-marque-texte">
+                  <h1 className="brand-mark__name">Repensons<br />le Congo</h1>
+                  <p className="splash-signature">{t.splash.signatureMarque}</p>
+                </div>
+              </div>
+              <p className="splash-sous-titre">{t.splash.sousTitre}</p>
+            </div>
 
-        <p className="splash-texte">{slide.texte}</p>
+            <ul className="splash-categories" aria-label={t.splash.apercuCategories}>
+              {[
+                { icone: "🏛️", nom: t.splash.categories.histoire },
+                { icone: "🗺️", nom: t.splash.categories.geographie },
+                { icone: "🎭", nom: t.splash.categories.culture },
+                { icone: "🌍", nom: t.splash.categories.nature },
+                { icone: "🎵", nom: t.splash.categories.musique },
+              ].map((categorie) => (
+                <li key={categorie.nom}>
+                  <span aria-hidden="true">{categorie.icone}</span>
+                  {categorie.nom}
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : (
+          <>
+            <div className="splash-slide-icone" aria-hidden="true">
+              {slide.icone}
+            </div>
+            <h1 className="splash-titre">{slide.titre}</h1>
+            <p className="splash-sous-titre">{slide.sousTitre}</p>
 
-        <ul className="splash-points">
-          {slide.points.map((point) => (
-            <li key={point}>{point}</li>
-          ))}
-        </ul>
+            <p className="splash-texte">{slide.texte}</p>
+
+            <ul className="splash-points">
+              {slide.points.map((point, index) => (
+                <li key={point}>
+                  <span aria-hidden="true">{slide.iconesPoints?.[index]}</span>
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </div>
 
       <div className="splash-pilotage">
@@ -136,9 +182,6 @@ export default function Carrousel({
         {dernier ? (
           <Link href={destination} className="splash-cta">
             {t.splash.cta}
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M5 12h14M13 6l6 6-6 6" />
-            </svg>
           </Link>
         ) : (
           <button type="button" className="splash-cta" onClick={suivant}>

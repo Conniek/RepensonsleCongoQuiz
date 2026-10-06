@@ -32,6 +32,11 @@ export default function Erreurs({ langue }: { langue: Langue }) {
 
   return (
     <>
+      <div className="brand-mark entete-quiz-logo" aria-hidden="true">
+        <div className="brand-mark__crest"><span /></div>
+        <p className="brand-mark__name">Repensons<br />le Congo</p>
+      </div>
+
       <nav aria-label={t.navigation.filAriane}>
         <ol className="ariane">
           <li><Link href={`/${langue}/quiz`}>{t.quizHub.titre}</Link></li>
@@ -50,14 +55,17 @@ export default function Erreurs({ langue }: { langue: Langue }) {
         <ol className="liste-erreurs">
           {liste.map((e) => (
             <li key={e.question_id}>
-              <p className="meta">{e.categorie}</p>
-              <h2>{e.enonce}</h2>
-              <p>
-                <strong>{t.erreurs.bonneReponse}</strong> {e.reponses[e.bonne_reponse]}
+              <p className="erreur-categorie">{e.categorie}</p>
+              <h2 className="erreur-enonce">{e.enonce}</h2>
+              <p className="erreur-correction">
+                <span aria-hidden="true">→</span>
+                <strong>{e.reponses[e.bonne_reponse]}</strong>
               </p>
-              {e.explication && <p>{e.explication}</p>}
+              {e.explication && (
+                <p className="erreur-explication">{e.explication}</p>
+              )}
               {e.source_url && (
-                <p>
+                <p className="erreur-source">
                   {t.partie.source}{" "}
                   <a href={e.source_url} rel="noopener" target="_blank">
                     {e.source_titre ?? t.partie.consulterSource}

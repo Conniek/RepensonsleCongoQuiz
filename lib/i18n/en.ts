@@ -61,19 +61,21 @@ quizHub: {
   },
 
   pageProgression: {
-    titre: "Ta progression",
+    titre: "Progress",
+    invite: "Guest",
+    salutation: (pseudo: string) => `Well done, ${pseudo}. Here's your progress`,
     ajouterPseudo: "Ajouter un pseudo",
-    thematiques: "Thématiques jouées",
+    thematiques: "By topic",
     aucuneThematique: "Aucune thématique jouée pour le moment.",
     sauvegardeTitre: "Sauvegarder",
     sauvegardeTexte: "Crée un compte pour sauvegarder ta progression.",
     sauvegardeAction: "Créer un compte",
     indicateurs: "Indicateurs",
-    kpiQuiz: "Quiz terminés",
-    kpiSerie: "Série en cours",
-    kpiTheme: "Thème favori",
-    kpiEtoiles: "Étoiles",
-    kpiEtoilesValeur: (total: number, max: number) => `${total} sur ${max}`,
+    kpiQuiz: "Games played",
+    kpiBonnes: "Correct answers",
+    kpiSerie: "Current streak",
+    kpiRecordSerie: "Best streak",
+    jours: (n: number) => `${n} d`,
     badges: "Badges",
     voirPlus: "Voir plus",
     voirTousLesBadges: (n: number) => `Voir les ${n} badges`,
@@ -86,6 +88,10 @@ quizHub: {
 
   pageProfil: {
     titre: "Ton profil",
+    resumeLabel: "Profile summary",
+    invite: "Guest",
+    sessionInvite: "Guest session",
+    xpTotal: "Total XP",
     sauvegardeTitre: "Sauvegarder",
     sauvegardeAction: "Créer un compte",
     monCompte: "Mon compte",
@@ -98,6 +104,7 @@ quizHub: {
     paysNonRenseigne: "Not set",
     paysEnregistre: "Country saved.",
     langueDefaut: "Default language",
+    langueErreur: (message: string) => `Language could not be saved: ${message}`,
     enregistrer: "Enregistrer",
     whatsapp: "Nous contacter sur WhatsApp",
     nouvelleFenetre: "(nouvelle fenêtre)",
@@ -275,6 +282,9 @@ quizHub: {
     colNiveau: "Level",
     colScore: "Score",
     colResultat: "Result",
+    points: (points: number) => `${points} pts`,
+    resume: (niveau: string, bonnes: number, total: number, date: string) =>
+      `${niveau} · ${bonnes}/${total} · ${date}`,
     score: (points: number, bonnes: number, total: number) =>
       `${points} points · ${bonnes} correct out of ${total}`,
     gagnee: "Won",
@@ -282,7 +292,8 @@ quizHub: {
   },
 
   splash: {
-    sousTitre: "One vast country, a thousand stories.",
+    sousTitre: "Play · learn · celebrate the Congo",
+    signatureMarque: "Ideas. Debates. History.",
     paragraphe:
       "Discover the Democratic Republic of the Congo through 1,445 sourced questions: history, geography, music, food, languages, nature, economy and much more. Every answer comes with an explanation and a link to its source.",
     cta: "Start the quiz",
@@ -291,6 +302,7 @@ quizHub: {
     categories: {
       histoire: "History",
       geographie: "Geography",
+      culture: "Culture",
       musique: "Music",
       nature: "Nature",
       economie: "Economy and more",
@@ -298,7 +310,7 @@ quizHub: {
 
     // Intro carousel.
     region: "Introduction carousel",
-    passer: "Skip",
+    passer: "Skip →",
     suivant: "Next",
     precedent: "Previous",
     diapositive: "slide",
@@ -318,6 +330,8 @@ quizHub: {
         texte:
           "After each question you get the full explanation and a link to the source. A quiz and a lesson at once.",
         points: ["Verified sources", "Explanations", "Direct links", "12 categories"],
+        icone: "📚",
+        iconesPoints: ["📚", "💡", "🔗", "🌍"],
       },
       {
         titre: "Progress every day",
@@ -325,13 +339,17 @@ quizHub: {
         texte:
           "Take the daily challenge, earn stars and climb the leaderboard. Five ranks, from Curious about Congo to Memory of Congo.",
         points: ["Six stars per topic", "Badges", "Daily streaks", "Leaderboard"],
+        icone: "🏆",
+        iconesPoints: ["⭐", "🏅", "🔥", "🏆"],
       },
       {
-        titre: "Special quizzes and languages",
-        sousTitre: "Content that goes further.",
+        titre: "Special quizzes & languages",
+        sousTitre: "Multiplayer and language paths.",
         texte:
           "Event quizzes and the full Lingala learning path, recorded by native speakers.",
         points: ["Elections quiz", "Independence quiz", "Lingala path", "Native audio"],
+        icone: "🔤",
+        iconesPoints: ["📦", "⭐", "🔤", "🎧"],
       },
     ],
   },
@@ -877,37 +895,43 @@ quizHub: {
 
   offres: {
     titre: "Three ways to learn",
-    intro: "The quiz stays free. The paid offers add content, they lock nothing.",
+    intro: "The free core stays free forever. Offers unlock extra content.",
     independantes:
       "Plus and the Language course are independent: each can be bought on its own.",
 
-    gratuitCategorie: "General knowledge",
-    gratuitEtiquette: "Free",
-    gratuitTitre: "General DRC quiz",
-    gratuitTexte: (questions: number, categories: number) =>
-      `All ${questions} questions and ${categories} categories stay free: history, geography, music, figures, institutions, languages, food, economy, nature and more.`,
-    gratuitPoint1: "Easy · Medium · Hard",
-    gratuitPoint2: "Progress, experience, badges and daily challenge",
-    gratuitPoint3: "Illustrated questions and sourced explanations",
-    gratuitPublicite: "Funded by advertising. The paid offers remove it.",
+    gratuitEtiquette: "Current",
+    gratuitTitre: "Free",
+    gratuitSousTitre: "Forever",
+    gratuitAvantages: (questions: number, categories: number) => [
+      `${questions.toLocaleString("en-US")} sourced questions`,
+      `${categories} topic categories`,
+      "Progress, XP and badges",
+      "Daily challenge",
+      "World leaderboard",
+      "Daily streaks",
+    ],
 
-    plusCategorie: "Repensons le Congo Plus",
-    plusEtiquette: "New",
-    plusTitre: "The Congo doesn’t stop at the quiz.",
-    plusTexte:
-      "Unlock exclusive quizzes on major figures, little-known histories and the regions of the DRC.",
-    plusPoint1: "Subjects we know… far less well than we think.",
-    plusPoint2: "No advertising at all.",
+    plusCategorie: "Special quizzes, without ads",
+    plusEtiquette: "Recommended",
+    plusTitre: "Repensons le Congo Plus",
+    plusAvantages: [
+      "Special quizzes (Elections, Independence…)",
+      "Exclusive event quizzes",
+      "No advertising",
+      "All free content included",
+    ],
     plusPrix: "€15.99 for life",
     plusPrixDetail: "or €0.99 per special quiz",
     plusAction: "Discover Plus",
 
-    langueCategorie: "Language course",
-    langueTitre: "Speak your parents’ language.",
-    langueTexte:
-      "A full course in five levels, from greetings to everyday conversation, with audio recorded by native speakers.",
-    langueDisponible: "Lingala",
-    langueBientot: (langue: string) => `${langue} · coming soon`,
+    langueTitre: "Lingala course",
+    langueCategorie: "National language · 5 levels",
+    langueAvantages: [
+      "Complete course in 5 levels",
+      "Audio recorded by native speakers",
+      "Pronunciation exercises",
+      "Vocabulary and grammar",
+    ],
     languePrix: "€19.99 for life",
     languePrixDetail: "or €4.99 per month · one-off purchase, no renewal",
     bientotDisponible: "Coming soon",

@@ -14,6 +14,11 @@ import {
 import Fenetre from "../fenetre";
 
 type Droit = { produit: string; fin_le: string | null; a_vie: boolean };
+type ResumeProfil = { rang: string; xp: number };
+
+function memoriserLangue(langue: Langue) {
+  document.cookie = `langue=${langue}; path=/; max-age=31536000; samesite=lax`;
+}
 
 export default function ProfilClient({ langue }: { langue: Langue }) {
   const t = dictionnaire(langue);
@@ -22,8 +27,8 @@ export default function ProfilClient({ langue }: { langue: Langue }) {
   const [anonyme, setAnonyme] = useState(true);
   const [email, setEmail] = useState<string | null>(null);
   const [pseudo, setPseudo] = useState<string | null>(null);
+  const [resumeProfil, setResumeProfil] = useState<ResumeProfil | null>(null);
   const [droits, setDroits] = useState<Droit[]>([]);
-  const [langueChoisie, setLangueChoisie] = useState<Langue>(langue);
   const [pays, setPays] = useState("");
   const listePays = paysTries(langue);
   const [message, setMessage] = useState("");
@@ -47,6 +52,9 @@ export default function ProfilClient({ langue }: { langue: Langue }) {
         setAnonyme(session?.user?.is_anonymous ?? true);
         setEmail(session?.user?.email ?? null);
         setPseudo(p.data?.pseudo ?? null);
+        if (p.data) {
+          setResumeProfil({ rang: p.data.rang, xp: p.data.xp });
+        }
         setDroits((d.data ?? []) as Droit[]);
         setPays(prof.data?.pays ?? "");
       } catch {
@@ -63,14 +71,18 @@ export default function ProfilClient({ langue }: { langue: Langue }) {
     setMessage(t.pageProfil.paysEnregistre);
   }
 
-  async function enregistrerLangue(e: React.FormEvent) {
-    e.preventDefault();
-    await creerClientNavigateur().rpc("definir_langue", { p_langue: langueChoisie });
-    // Cookie lu par le proxy pour rediriger vers cette langue à la prochaine
-    // visite de la racine du site.
-    document.cookie = `langue=${langueChoisie}; path=/; max-age=31536000; samesite=lax`;
+  async function enregistrerLangue(langueCible: Langue) {
+    const { error } = await creerClientNavigateur().rpc("definir_langue", {
+      p_langue: langueCible,
+    });
+    if (error) {
+      setMessage(t.pageProfil.langueErreur(error.message));
+      return;
+    }
+    // Le proxy utilise ce cookie pour rediriger la prochaine visite de la racine.
+    memoriserLangue(langueCible);
     setMessage(t.pageProfil.langueEnregistree);
-    if (langueChoisie !== langue) router.push(`/${langueChoisie}/profil`);
+    if (langueCible !== langue) router.push(`/${langueCible}/profil`);
   }
 
   async function seDeconnecter() {
@@ -88,6 +100,29 @@ export default function ProfilClient({ langue }: { langue: Langue }) {
   return (
     <>
       <h1 tabIndex={-1}>{t.pageProfil.titre}</h1>
+
+      {resumeProfil && (
+        <section className="profil-resume" aria-label={t.pageProfil.resumeLabel}>
+          <span className="profil-resume-avatar" aria-hidden="true">
+            {!anonyme && pseudo?.trim()
+              ? pseudo.trim().charAt(0).toLocaleUpperCase(langue)
+              : "?"}
+          </span>
+          <div className="profil-resume-identite">
+            <strong className="profil-resume-pseudo">
+              {pseudo?.trim() || t.pageProfil.invite}
+            </strong>
+            <span className="profil-resume-rang">{resumeProfil.rang}</span>
+            {anonyme && (
+              <span className="profil-resume-session">{t.pageProfil.sessionInvite}</span>
+            )}
+          </div>
+          <div className="profil-resume-xp">
+            <strong>{resumeProfil.xp.toLocaleString(langue)}</strong>
+            <span>{t.pageProfil.xpTotal}</span>
+          </div>
+        </section>
+      )}
 
       <div role="status" aria-live="polite">{message && <p>{message}</p>}</div>
 
@@ -130,7 +165,7 @@ export default function ProfilClient({ langue }: { langue: Langue }) {
           )}
         </li>
         <li>
-          <form className="ligne-reglage ligne-formulaire" onSubmit={enregistrerPays}>
+          <form className="ligne-reglage ligne-formulaire ligne-pays" onSubmit={enregistrerPays}>
             <Globe taille={22} />
             <label htmlFor="pays-profil" className="ligne-libelle">{t.pageProfil.pays}</label>
             <select id="pays-profil" value={pays}
@@ -141,19 +176,6 @@ export default function ProfilClient({ langue }: { langue: Langue }) {
               ))}
               {listePays.autres.map((c) => (
                 <option key={c.code} value={c.code}>{c.nom}</option>
-              ))}
-            </select>
-            <button type="submit">{t.pageProfil.enregistrer}</button>
-          </form>
-        </li>
-        <li>
-          <form className="ligne-reglage ligne-formulaire" onSubmit={enregistrerLangue}>
-            <Globe taille={22} />
-            <label htmlFor="langue-defaut" className="ligne-libelle">{t.pageProfil.langueDefaut}</label>
-            <select id="langue-defaut" value={langueChoisie}
-                    onChange={(e) => setLangueChoisie(e.target.value as Langue)}>
-              {LANGUES.map((l) => (
-                <option key={l} value={l} lang={l}>{dictionnaire(l).langues[l]}</option>
               ))}
             </select>
             <button type="submit">{t.pageProfil.enregistrer}</button>
@@ -214,6 +236,21 @@ export default function ProfilClient({ langue }: { langue: Langue }) {
           </Link>
         </li>
       </ul>
+
+      <div className="profil-langues" role="group" aria-label={t.pageProfil.langueDefaut}>
+        {LANGUES.map((l) => (
+          <button
+            key={l}
+            type="button"
+            lang={l}
+            aria-pressed={langue === l}
+            onClick={() => void enregistrerLangue(l)}
+          >
+            <span aria-hidden="true">{l === "fr" ? "🇫🇷" : "🇬🇧"}</span>
+            {dictionnaire(l).langues[l]}
+          </button>
+        ))}
+      </div>
 
       <Fenetre
         ouverte={compteOuvert}

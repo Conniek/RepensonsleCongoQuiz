@@ -5,22 +5,49 @@ import Link from "next/link";
 import { creerClientNavigateur } from "@/lib/supabase/client";
 import { assurerSession } from "@/lib/session";
 import { dictionnaire, type Langue } from "@/lib/i18n";
-import { Personne, Flamme, Livre, Etoile, Coupe, PictoBadge, Verrou } from "../pictos";
+import { PictoBadge, Verrou } from "../pictos";
 import Fenetre from "../fenetre";
 import Classement from "./classement";
+import Card from "@/ui/Card";
+import Meter from "@/ui/Meter";
+import Ring from "@/ui/Ring";
+import Stars from "@/ui/Stars";
 
 type Badge = {
   id: string; libelle: string; condition: string;
   objectif: number; avancement: number; obtenu: boolean;
 };
 type Categorie = { categorie_id: string; libelle: string; slug: string };
+type MaitriseCategorie = { categorie_id: string; etoiles: number };
+const TEINTES_THEMATIQUES = [
+  "pastel-creme",
+  "pastel-bleu",
+  "pastel-rose",
+  "pastel-vert",
+  "pastel-violet",
+  "pastel-menthe",
+] as const;
+
+function iconeThematique(categorie: Categorie): string {
+  const texte = `${categorie.slug} ${categorie.libelle}`.toLocaleLowerCase();
+  if (texte.includes("histoire") || texte.includes("history")) return "🏛️";
+  if (texte.includes("géograph") || texte.includes("geograph")) return "🗺️";
+  if (texte.includes("culture") || texte.includes("art")) return "🎭";
+  if (texte.includes("nature") || texte.includes("faune")) return "🦁";
+  if (texte.includes("politique") || texte.includes("politic")) return "⚖️";
+  if (texte.includes("économ") || texte.includes("econom")) return "💰";
+  return "📚";
+}
 
 type Etat = {
   pseudo: string | null; rang: string; anonyme: boolean;
-  serie_jours: number; parties: number;
+  xp: number; rang_seuil: number; rang_suivant: string | null;
+  xp_rang_suivant: number | null; taux_reussite: number | null;
+  serie_jours: number; serie_record: number; parties: number; bonnes_total: number;
   etoiles_total: number; etoiles_max: number;
   theme_favori: string | null;
   categories_jouees: Categorie[];
+  maitrise: MaitriseCategorie[];
   badges: Badge[];
 };
 
@@ -29,6 +56,15 @@ export default function PageProgressionClient({ langue }: { langue: Langue }) {
   const [etat, setEtat] = useState<Etat | null>(null);
   const [echec, setEchec] = useState(false);
   const [fenetre, setFenetre] = useState(false);
+  const entete = (
+    <header className="progression-entete">
+      <div className="brand-mark" aria-hidden="true">
+        <div className="brand-mark__crest" aria-hidden="true"><span /></div>
+        <p className="brand-mark__name">Repensons<br />le Congo</p>
+      </div>
+      <h1 className="visuellement-masque">{t.pageProgression.titre}</h1>
+    </header>
+  );
 
   useEffect(() => {
     let annule = false;
@@ -47,7 +83,7 @@ export default function PageProgressionClient({ langue }: { langue: Langue }) {
   if (echec) {
     return (
       <>
-        <h1 tabIndex={-1}>{t.pageProgression.titre}</h1>
+        {entete}
         <p role="alert">{t.profil.erreur}</p>
       </>
     );
@@ -55,7 +91,7 @@ export default function PageProgressionClient({ langue }: { langue: Langue }) {
   if (!etat) {
     return (
       <>
-        <h1 tabIndex={-1}>{t.pageProgression.titre}</h1>
+        {entete}
         <p>{t.commun.chargement}</p>
       </>
     );
@@ -63,30 +99,61 @@ export default function PageProgressionClient({ langue }: { langue: Langue }) {
 
   const obtenus = etat.badges.filter((b) => b.obtenu);
   const aVenir = etat.badges.filter((b) => !b.obtenu);
+  const pseudo = etat.pseudo?.trim() || t.pageProgression.invite;
+  const tauxReussite = etat.taux_reussite ?? 0;
+  const avancementRang =
+    etat.xp_rang_suivant != null && etat.xp_rang_suivant > 0
+      ? Math.min(100, Math.round((100 * etat.xp) / etat.xp_rang_suivant))
+    : 100;
 
   return (
     <>
-      <h1 className="visuellement-masque" tabIndex={-1}>{t.pageProgression.titre}</h1>
+      {entete}
 
-      {/* Identité du joueur : avatar par défaut, pseudo, rang, série. */}
-      <section className="identite" aria-label={t.pageProgression.titre}>
-        <span className="avatar" aria-hidden="true"><Personne taille={40} /></span>
-        <div>
-          {etat.pseudo ? (
-            <p className="pseudo">{etat.pseudo}</p>
-          ) : (
-            <p className="pseudo">
-              <Link href={`/${langue}/compte`}>{t.pageProgression.ajouterPseudo}</Link>
+      <section className="progression-resume" aria-labelledby="titre-resume-progression">
+        <h2 id="titre-resume-progression">
+          {t.pageProgression.salutation(pseudo)}
+        </h2>
+        <Card tone="bleu-roi" shadow="flottante" className="flex items-center gap-4">
+          <h3 className="visuellement-masque">{t.progression.titre}</h3>
+
+          <Ring value={tauxReussite} label={t.progression.reussite} />
+
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] uppercase tracking-widest opacity-70 m-0 p-0">
+              {t.progression.rangActuel}
             </p>
-          )}
-          <p className="rang-joueur">{etat.rang}</p>
-          {etat.serie_jours > 0 && (
-            <p className="serie-joueur">
-              <Flamme taille={18} />
-              {t.progression.serie(etat.serie_jours)}
+            <p className="font-black text-xl leading-tight m-0">{etat.rang}</p>
+
+            <p className="mt-2 mb-1">
+              <Meter
+                value={avancementRang}
+                tone="xp"
+                label={
+                  etat.xp_rang_suivant != null
+                    ? t.progression.xpSurSeuil(etat.xp, etat.xp_rang_suivant)
+                    : t.progression.rangMaximal(etat.xp)
+                }
+              />
+              <span className="block text-[10px] opacity-70">
+                {etat.xp_rang_suivant != null
+                  ? t.progression.xpSurSeuil(etat.xp, etat.xp_rang_suivant)
+                  : t.progression.rangMaximal(etat.xp)}
+              </span>
             </p>
-          )}
-        </div>
+          </div>
+
+          <p className="m-0 flex flex-col items-center shrink-0">
+            <span aria-hidden="true" className="text-xl">🔥</span>
+            <span className="font-black text-lg leading-none">{etat.serie_jours}</span>
+            <span className="text-[9px] uppercase tracking-wide opacity-70 leading-none">
+              {t.progression.jours}
+            </span>
+            <span className="visuellement-masque">
+              {t.progression.serieJours(etat.serie_jours)}
+            </span>
+          </p>
+        </Card>
       </section>
 
       {/* Le classement passe avant les thématiques : c'est la première
@@ -109,12 +176,32 @@ export default function PageProgressionClient({ langue }: { langue: Langue }) {
         {etat.categories_jouees.length === 0 ? (
           <p>{t.pageProgression.aucuneThematique}</p>
         ) : (
-          <ul className="etiquettes">
-            {etat.categories_jouees.map((c) => (
-              <li key={c.categorie_id}>
-                <Link href={`/${langue}/categorie/${c.slug}`}>{c.libelle}</Link>
-              </li>
-            ))}
+          <ul className="progression-thematiques">
+            {etat.categories_jouees.map((c, index) => {
+              const etoiles = etat.maitrise.find((m) => m.categorie_id === c.categorie_id)?.etoiles ?? 0;
+              return (
+                <li key={c.categorie_id}>
+                  <Link href={`/${langue}/categorie/${c.slug}`}>
+                    <Card
+                      tone={TEINTES_THEMATIQUES[index % TEINTES_THEMATIQUES.length]}
+                      className="progression-theme"
+                    >
+                      <span className="progression-theme-icone" aria-hidden="true">
+                        {iconeThematique(c)}
+                      </span>
+                      <span className="progression-theme-nom">{c.libelle}</span>
+                      <Stars
+                        value={etoiles}
+                        label={t.quizHub.etoilesSur(etoiles, 6)}
+                      />
+                      <span className="progression-theme-compteur" aria-hidden="true">
+                        {etoiles}/6
+                      </span>
+                    </Card>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         )}
       </section>
@@ -135,20 +222,32 @@ export default function PageProgressionClient({ langue }: { langue: Langue }) {
         <h2 id="titre-indicateurs">{t.pageProgression.indicateurs}</h2>
         <dl className="indicateurs">
           <div>
-            <dt><Livre taille={22} /> {t.pageProgression.kpiQuiz}</dt>
+            <dt>
+              <span aria-hidden="true">🎮</span>
+              <span>{t.pageProgression.kpiQuiz}</span>
+            </dt>
             <dd>{etat.parties}</dd>
           </div>
           <div>
-            <dt><Flamme taille={22} /> {t.pageProgression.kpiSerie}</dt>
-            <dd>{etat.serie_jours}</dd>
+            <dt>
+              <span aria-hidden="true">✅</span>
+              <span>{t.pageProgression.kpiBonnes}</span>
+            </dt>
+            <dd>{etat.bonnes_total}</dd>
           </div>
           <div>
-            <dt><Coupe taille={22} /> {t.pageProgression.kpiTheme}</dt>
-            <dd>{etat.theme_favori ?? t.commun.sansValeur}</dd>
+            <dt>
+              <span aria-hidden="true">🔥</span>
+              <span>{t.pageProgression.kpiSerie}</span>
+            </dt>
+            <dd>{t.pageProgression.jours(etat.serie_jours)}</dd>
           </div>
           <div>
-            <dt><Etoile taille={22} /> {t.pageProgression.kpiEtoiles}</dt>
-            <dd>{t.pageProgression.kpiEtoilesValeur(etat.etoiles_total, etat.etoiles_max)}</dd>
+            <dt>
+              <span aria-hidden="true">🏅</span>
+              <span>{t.pageProgression.kpiRecordSerie}</span>
+            </dt>
+            <dd>{t.pageProgression.jours(etat.serie_record)}</dd>
           </div>
         </dl>
       </section>

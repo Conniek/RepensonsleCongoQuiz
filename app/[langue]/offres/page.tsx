@@ -26,105 +26,94 @@ export default async function PageOffres({
   const t = dictionnaire(langue);
   const { offres } = t;
 
-  /* Un thème verrouillé renvoie ici avec son produit : on met en avant
-     l'offre correspondante plutôt que de laisser chercher dans la page. */
   const viseePlus = produit === "plus";
   const viseeLangue = produit === "langue_lingala" || produit === "pack_langues";
 
   return (
     <>
-      <nav aria-label={t.navigation.filAriane}>
-        <ol className="ariane">
-          <li><Link href={`/${langue}`}>{t.navigation.accueil}</Link></li>
-          <li aria-current="page">{offres.titre}</li>
-        </ol>
-      </nav>
+      <header className="offres-hero">
+        <div className="brand-mark offres-brand">
+          <div className="brand-mark__crest" aria-hidden="true"><span /></div>
+          <h1 className="brand-mark__name">Repensons le Congo</h1>
+        </div>
+        <p className="offres-intro">{offres.intro}</p>
+      </header>
 
-      <h1 tabIndex={-1}>{offres.titre}</h1>
-      <p className="intro">{offres.intro}</p>
-      <p className="independantes">{offres.independantes}</p>
-
-      <div className="cartes-offres">
-        {/* Gratuit */}
-        <article className="carte-offre gratuit">
-          <div className="offre-entete">
-            <span className="etiquette">{offres.gratuitEtiquette}</span>
-            <h2>{offres.gratuitTitre}</h2>
-          </div>
-
-          <div className="offre-contenu">
-            <p className="categorie">{offres.gratuitCategorie}</p>
-            <p className="description">{offres.gratuitTexte(1445, 12)}</p>
-
-            <ul className="points">
-              <li>{offres.gratuitPoint1}</li>
-              <li>{offres.gratuitPoint2}</li>
-              <li>{offres.gratuitPoint3}</li>
-            </ul>
-
-            <p className="note">{offres.gratuitPublicite}</p>
-
-            <Link href={`/${langue}`} className="btn btn-primaire">
-              {t.navigation.accueil}
-            </Link>
-          </div>
-        </article>
-
-        {/* Plus */}
-        <article className={`carte-offre plus${viseePlus ? " en-avant" : ""}`}>
-          {viseePlus && <p className="offre-visee">{offres.offreMiseEnAvant}</p>}
-          <div className="offre-entete">
-            <span className="etiquette">{offres.plusEtiquette}</span>
-            <h2>{offres.plusTitre}</h2>
-          </div>
-
-          <div className="offre-contenu">
-            <p className="categorie">{offres.plusCategorie}</p>
-            <p className="description">{offres.plusTexte}</p>
-
-            <ul className="points">
-              <li>{offres.plusPoint1}</li>
-              <li>{offres.plusPoint2}</li>
-            </ul>
-
-            <div className="prix">
-              <strong>{offres.plusPrix}</strong>
-              <small>{offres.plusPrixDetail}</small>
+      <section className="page-offres" aria-labelledby="titre-offres">
+        <h2 id="titre-offres" className="visuellement-masque">{offres.titre}</h2>
+        <div className="cartes-offres">
+          <article className="carte-offre gratuit">
+            <div className="offre-entete">
+              <div>
+                <h3>{offres.gratuitTitre}</h3>
+                <p className="offre-sous-titre">{offres.gratuitSousTitre}</p>
+              </div>
+              <span className="etiquette">{offres.gratuitEtiquette}</span>
             </div>
+            <ul className="points">
+              {offres.gratuitAvantages(1445, 12).map((point: string) => (
+                <li key={point}>{point}</li>
+              ))}
+            </ul>
+          </article>
 
-            <button className="btn btn-secondaire" disabled>
-              {offres.plusAction}
-            </button>
-            <p className="note">{offres.bientotDisponible} — {offres.paiementBientot}</p>
-          </div>
-        </article>
-
-        {/* Langue */}
-        <article className={`carte-offre langue${viseeLangue ? " en-avant" : ""}`}>
-          {viseeLangue && <p className="offre-visee">{offres.offreMiseEnAvant}</p>}
-          <div className="offre-entete">
-            <span className="etiquette">{offres.langueBientot("Lingala")}</span>
-            <h2>{offres.langueTitre}</h2>
-          </div>
-
-          <div className="offre-contenu">
-            <p className="categorie">{offres.langueCategorie}</p>
-            <p className="description">{offres.langueTexte}</p>
-
-            <p className="disponible">{offres.langueDisponible}</p>
-
-            <div className="prix">
-              <strong>{offres.languePrix}</strong>
-              <small>{offres.languePrixDetail}</small>
+          <article className={`carte-offre plus${viseePlus ? " en-avant" : ""}`}>
+            {viseePlus && <p className="offre-visee">{offres.offreMiseEnAvant}</p>}
+            <div className="offre-entete">
+              <div>
+                <h3>{offres.plusTitre}</h3>
+                <p className="offre-sous-titre">{offres.plusCategorie}</p>
+              </div>
+              <span className="etiquette">{offres.plusEtiquette}</span>
             </div>
+            <ul className="points">
+              {offres.plusAvantages.map((point: string) => (
+                <li key={point}>{point}</li>
+              ))}
+            </ul>
+            <div className="offre-contenu">
+              <div className="prix">
+                <strong>{offres.plusPrix}</strong>
+                <small>{offres.plusPrixDetail}</small>
+              </div>
+              <button className="btn btn-secondaire" disabled>
+                {offres.plusAction}
+              </button>
+              <p className="note">{offres.bientotDisponible} — {offres.paiementBientot}</p>
+            </div>
+          </article>
 
-            <button className="btn btn-secondaire" disabled>
-              {offres.langueAction}
-            </button>
-            <p className="note">{offres.bientotDisponible} — {offres.paiementBientot}</p>
-          </div>
-        </article>
-      </div>
+          <article className={`carte-offre langue${viseeLangue ? " en-avant" : ""}`}>
+            {viseeLangue && <p className="offre-visee">{offres.offreMiseEnAvant}</p>}
+            <div className="offre-entete">
+              <span className="offre-icone" aria-hidden="true">abc</span>
+              <div className="offre-titre">
+                <h3>{offres.langueTitre}</h3>
+                <p className="offre-sous-titre">{offres.langueCategorie}</p>
+              </div>
+            </div>
+            <ul className="points">
+              {offres.langueAvantages.map((point: string) => (
+                <li key={point}>{point}</li>
+              ))}
+            </ul>
+            <div className="offre-contenu">
+              <div className="prix">
+                <strong>{offres.languePrix}</strong>
+                <small>{offres.languePrixDetail}</small>
+              </div>
+              <button className="btn btn-secondaire" disabled>
+                {offres.langueAction}
+              </button>
+              <p className="note">{offres.bientotDisponible} — {offres.paiementBientot}</p>
+            </div>
+          </article>
+        </div>
+
+        <footer className="offres-footer">
+          <Link href={`/${langue}/conditions`}>{t.conditions.titre}</Link>
+        </footer>
+      </section>
     </>
   );
 }

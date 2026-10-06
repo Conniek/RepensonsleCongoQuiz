@@ -67,7 +67,11 @@ export default function Classement({ langue }: { langue: Langue }) {
       {/* Deux groupes de boutons plutôt que des listes déroulantes : le choix
           est court, et l'état courant reste visible sans ouvrir un menu. */}
       <div className="classement-filtres">
-        <div role="group" aria-label={t.classement.portee} className="segment">
+        <div
+          role="group"
+          aria-label={t.classement.portee}
+          className="segment classement-portee"
+        >
           {PORTEES.map((p) => (
             <button
               key={p}
@@ -75,12 +79,17 @@ export default function Classement({ langue }: { langue: Langue }) {
               aria-pressed={portee === p}
               onClick={() => setPortee(p)}
             >
+              <span aria-hidden="true">{p === "monde" ? "🌍" : "🇨🇩"}</span>
               {t.classement[p]}
             </button>
           ))}
         </div>
 
-        <div role="group" aria-label={t.classement.periode} className="segment">
+        <div
+          role="group"
+          aria-label={t.classement.periode}
+          className="segment classement-periode"
+        >
           {PERIODES.map((p) => (
             <button
               key={p}
@@ -117,7 +126,7 @@ export default function Classement({ langue }: { langue: Langue }) {
               <tbody>
                 {resultat.top.map((l) => (
                   <tr key={`${l.position}-${l.pseudo}`} className={l.moi ? "moi" : undefined}>
-                    <td>{l.position}</td>
+                    <td><span className="classement-position">{l.position}</span></td>
                     <td>
                       {l.pseudo}
                       {l.pays && portee === "monde" && (
@@ -125,7 +134,7 @@ export default function Classement({ langue }: { langue: Langue }) {
                       )}
                       {l.moi && <span className="visuellement-masque"> {t.classement.moi}</span>}
                     </td>
-                    <td>{l.points}</td>
+                    <td><span className="classement-xp">{l.points} XP</span></td>
                   </tr>
                 ))}
               </tbody>
@@ -135,7 +144,8 @@ export default function Classement({ langue }: { langue: Langue }) {
                 reste lisible sans faire défiler cent lignes. */}
             {!dansLeTop && resultat.moi && (
               <p className="classement-moi">
-                {t.classement.maPosition(resultat.moi.position)} — {resultat.moi.points}
+                {t.classement.maPosition(resultat.moi.position)} —{" "}
+                <span className="classement-xp">{resultat.moi.points} XP</span>
               </p>
             )}
           </>
