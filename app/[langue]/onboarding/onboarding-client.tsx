@@ -158,14 +158,16 @@ export default function OnboardingClient({ langue }: { langue: Langue }) {
 
       {etape === 1 && (
         <section className="onb-etape-contenu">
+          <div className="onb-embleme" aria-hidden="true">🇨🇩</div>
           <h1 ref={titreRef} tabIndex={-1}>{t.onboarding.pseudoTitre}</h1>
           <p className="onb-intro">{t.onboarding.pseudoTexte}</p>
 
-          <label htmlFor="pseudo">{t.onboarding.pseudoLabel}</label>
+          <label className="onb-label-accessible" htmlFor="pseudo">{t.onboarding.pseudoLabel}</label>
           <input
             id="pseudo"
             type="text"
             value={pseudo}
+            placeholder={t.onboarding.pseudoPlaceholder}
             autoComplete="nickname"
             maxLength={24}
             aria-describedby="pseudo-aide"
@@ -180,7 +182,12 @@ export default function OnboardingClient({ langue }: { langue: Langue }) {
 
           {erreur && <p className="onb-erreur" role="alert">{erreur}</p>}
 
-          <button type="button" className="onb-action" disabled={envoi} onClick={validerPseudo}>
+          <button
+            type="button"
+            className="onb-action"
+            disabled={envoi || pseudo.trim().length < 2 || pseudo.trim().length > 24}
+            onClick={validerPseudo}
+          >
             {envoi ? t.onboarding.enCours : t.onboarding.suivant}
           </button>
         </section>
@@ -188,11 +195,17 @@ export default function OnboardingClient({ langue }: { langue: Langue }) {
 
       {etape === 2 && (
         <section className="onb-etape-contenu">
+          <div className="onb-embleme" aria-hidden="true">🇨🇩</div>
           <h1 ref={titreRef} tabIndex={-1}>{t.onboarding.paysTitre}</h1>
           <p className="onb-intro">{t.onboarding.paysTexte}</p>
 
-          <label htmlFor="pays">{t.onboarding.paysLabel}</label>
-          <select id="pays" value={pays} onChange={(e) => setPays(e.target.value)}>
+          <label className="onb-label-accessible" htmlFor="pays">{t.onboarding.paysLabel}</label>
+          <select
+            id="pays"
+            className={pays ? "" : "onb-sans-pays"}
+            value={pays}
+            onChange={(e) => setPays(e.target.value)}
+          >
             <option value="">{t.onboarding.paysVide}</option>
             {listePays.prioritaires.map((p) => (
               <option key={`tete-${p.code}`} value={p.code}>{p.nom}</option>
@@ -214,40 +227,44 @@ export default function OnboardingClient({ langue }: { langue: Langue }) {
 
       {etape === 3 && (
         <section className="onb-etape-contenu">
+          <div className="onb-embleme" aria-hidden="true">🇨🇩</div>
           <h1 ref={titreRef} tabIndex={-1}>{t.onboarding.motDePasseTitre}</h1>
           <p className="onb-intro">{t.onboarding.motDePasseTexte}</p>
 
-          <label htmlFor="email">{t.onboarding.emailLabel}</label>
+          <label className="onb-label-accessible" htmlFor="email">{t.onboarding.emailLabel}</label>
           <input
             id="email"
             type="email"
             value={email}
+            placeholder={t.onboarding.emailPlaceholder}
             autoComplete="email"
-            aria-describedby="email-aide"
             onChange={(e) => setEmail(e.target.value)}
           />
-          <p id="email-aide" className="onb-aide">{t.onboarding.emailAide}</p>
 
-          <label htmlFor="mot-de-passe">{t.onboarding.motDePasseLabel}</label>
+          <label className="onb-label-accessible" htmlFor="mot-de-passe">{t.onboarding.motDePasseLabel}</label>
           <div className="onb-champ-mot-de-passe">
             <input
               id="mot-de-passe"
               type={motDePasseVisible ? "text" : "password"}
               value={motDePasse}
+              placeholder={t.onboarding.motDePassePlaceholder}
               autoComplete="new-password"
-              aria-describedby="mot-de-passe-aide"
               onChange={(e) => setMotDePasse(e.target.value)}
             />
             <button
               type="button"
               className="onb-bascule"
               aria-pressed={motDePasseVisible}
+              aria-label={motDePasseVisible ? t.onboarding.masquerMotDePasse : t.onboarding.afficherMotDePasse}
               onClick={() => setMotDePasseVisible((v) => !v)}
             >
-              {motDePasseVisible ? t.onboarding.masquerMotDePasse : t.onboarding.afficherMotDePasse}
+              <span aria-hidden="true">👁️</span>
             </button>
           </div>
-          <p id="mot-de-passe-aide" className="onb-aide">{t.onboarding.motDePasseAide}</p>
+
+          <p className="onb-note-compte">
+            <strong>{t.onboarding.noteCompteTitre}</strong> {t.onboarding.noteCompte}
+          </p>
 
           {erreur && <p className="onb-erreur" role="alert">{erreur}</p>}
 

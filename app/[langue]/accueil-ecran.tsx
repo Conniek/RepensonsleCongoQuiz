@@ -254,7 +254,7 @@ export default function AccueilEcran({
         <SectionHeader
           id="titre-categories"
           title={t.accueil.titreCategories}
-          linkHref={`/${langue}/categorie`}
+          linkHref={`/${langue}/quiz`}
           linkLabel={t.commun.voirTout}
           linkDescription={t.accueil.voirToutesCategories(vues.length)}
         />

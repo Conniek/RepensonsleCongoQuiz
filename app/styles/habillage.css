@@ -207,7 +207,7 @@ nav a { display: inline-flex; align-items: center; min-height: var(--cible-tacti
   outline: var(--trait-focus) solid var(--encre);
   outline-offset: var(--espace-1);
 }
-.entete-quiz-logo {
+.brand-mark.entete-quiz-logo {
   justify-content: flex-start;
   margin: var(--espace-3) 0 0;
 }

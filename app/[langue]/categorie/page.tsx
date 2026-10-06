@@ -53,6 +53,11 @@ export default async function PageCategories({
 
   return (
     <>
+      <div className="brand-mark entete-quiz-logo" aria-hidden="true">
+        <div className="brand-mark__crest"><span /></div>
+        <p className="brand-mark__name">Repensons<br />le Congo</p>
+      </div>
+
       <nav aria-label={t.navigation.filAriane}>
         <ol className="ariane">
           <li><Link href={`/${langue}`}>{t.navigation.accueil}</Link></li>
